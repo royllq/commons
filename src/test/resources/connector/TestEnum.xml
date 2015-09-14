@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE InterFaceMapping SYSTEM "D:\workspace\commons-util\src\test\resources\connector\dynabean.dtd">
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="single" type="enums" className="net.wicp.tams.commons.test.beans.SexEnum" defaultValue="F">简单单值</COL>
+		<COL name="ary" type="enums" gtype="array" className="net.wicp.tams.commons.test.beans.SexEnum">数组</COL>
+		<COL name="map" type="enums" gtype="map" className="net.wicp.tams.commons.test.beans.SexEnum">Map</COL>
+		<COL name="list" type="enums" gtype="list" className="net.wicp.tams.commons.test.beans.SexEnum">List</COL>
+	</PropertyIn>
+	<PropertyOut>
+		<COL name="retMsg" type="string" convert="yesorno">返回信息</COL>
+	</PropertyOut>
+</InterFaceMapping>

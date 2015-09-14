@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE InterFaceMapping SYSTEM "D:\workspace\commons-util\src\test\resources\connector\dynabean.dtd">
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="format" alias="format" type="string" format="^[0-9]{4}\\-[0-9]{1\,2}\\-[0-9]{1\,2}">格式注意，号也要转义</COL>
+		<COL name="single" alias="single" type="string">简单单值</COL>
+		<COL name="len" alias="len" type="string" length="5">限长单值</COL>
+		<COL name="isnotnull" alias="isnotnull" type="string" isnull="false">不允许为空4444</COL>
+		<COL name="defaultValue" alias="defaultValue" type="string" defaultValue="平安健康">带默认值</COL>
+		<COL name="ary" alias="ary" type="string" gtype="array" length="10">数组</COL>
+		<COL name="map" alias="map" type="string" gtype="map" length="10">Map</COL>
+		<COL name="list" alias="list" type="string" gtype="list" length="10">List</COL>
+	</PropertyIn>
+	<PropertyOut>
+		<COL name="retMsg" type="string" convert="yesorno">返回信息</COL>
+	</PropertyOut>
+</InterFaceMapping>

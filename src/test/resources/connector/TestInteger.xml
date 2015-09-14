@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="integer" type="integer">整型</COL>
+		<COL name="limit" type="integer" min="3" max="30">限定大小</COL>
+
+		<COL name="ary"  type="integer" gtype="array">数组</COL>
+		<COL name="map" type="integer" gtype="map">Map</COL>
+		<COL name="list"  type="integer" gtype="list">List</COL>
+	</PropertyIn>
+	<PropertyOut>
+		<COL name="retMsg" type="string" convert="yesorno">返回信息</COL>
+	</PropertyOut>
+</InterFaceMapping>

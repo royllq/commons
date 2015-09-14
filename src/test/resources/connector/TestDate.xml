@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="datetime" type="datetime">时间类型</COL>
+		<COL name="limit" type="datetime" min="2001-01-01" max="2002-01-01">时间跨度为2011整年</COL>
+		<COL name="format" type="datetime" format="yyyy-MM-dd HH:mm:ss"  defaultValue="2013-01-01 10:10:10">时间格式</COL>
+
+
+		<COL name="ary" type="datetime" gtype="array">数组</COL>
+		<COL name="map" type="datetime" gtype="map">Map</COL>
+		<COL name="list" type="datetime" gtype="list">List</COL>
+	</PropertyIn>
+	<PropertyOut>
+		<COL name="retMsg" type="string" convert="yesorno">返回信息</COL>
+	</PropertyOut>
+</InterFaceMapping>

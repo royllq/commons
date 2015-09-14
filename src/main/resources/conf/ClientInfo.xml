@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="msgId"  type="string">消息唯一标识符，缺省会使用时间戳</COL>
+		<COL name="senderSystem" type="string">发送方系统名称</COL>	
+		<COL name="senderApplication"  type="string">发送方应用名称</COL>
+		<COL name="version"  type="string" isnull="false">版本，用于控制解析的过程，以及适应未来可能出现的变化</COL>
+		<COL name="requestCommand"  type="string">请求的命令代码</COL>
+	</PropertyIn>
+	<PropertyOut>
+	    <COL name="respInfo" type="dynaBean" strict="false">
+	       	<COL name="receiptSystem" type="string">接收方系统名称</COL>
+			<COL name="receiptApplication" type="string">接收方应用名称</COL>	
+			<COL name="msgId"  type="string">请求的消息Id</COL>	
+			<COL name="msgIdResp"  type="string">回应的消息唯一标识符，缺省会使用对方消息ID</COL>
+	    </COL>
+	    <COL name="result" type="integer">响应结果，1：成功，-1：失败</COL>
+	    <COL name="errorCode" type="string">错误代码</COL>
+	</PropertyOut>
+</InterFaceMapping>

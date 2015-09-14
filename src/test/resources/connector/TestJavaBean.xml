@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="single" type="javaBean"
+			className="net.wicp.tams.commons.connector.beans.AddrInfo" defaultValue="{&quot;addr&quot;:&quot;娄山关路3号&quot;\,&quot;post&quot;:&quot;244100&quot;}">单个</COL>
+		<COL name="array" type="javaBean"
+			className="net.wicp.tams.commons.connector.beans.AddrInfo" gtype="array">
+			数组
+		</COL>
+		<COL name="list" type="javaBean"
+			className="net.wicp.tams.commons.connector.beans.AddrInfo" gtype="list">
+			list
+		</COL>
+		<COL name="map" type="javaBean"
+			className="net.wicp.tams.commons.connector.beans.AddrInfo" gtype="map">
+			map
+		</COL>
+	</PropertyIn>
+	<PropertyOut>
+		<COL name="retMsg" type="string" convert="yesorno">返回信息</COL>
+	</PropertyOut>
+</InterFaceMapping>

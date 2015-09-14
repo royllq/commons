@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<InterFaceMapping>
+	<PropertyIn>
+		<COL name="single" type="dynaBean" defaultValue="{&quot;addr&quot;:&quot;娄山关路2号&quot;\,&quot;post&quot;:&quot;244100&quot;}">
+			<COL name="addr" type="string">地址</COL>
+			<COL name="post" type="string">邮编</COL>
+		</COL>
+		<COL name="array" type="dynaBean" gtype="array" defaultValue="{&quot;addr&quot;:&quot;娄山关路9号&quot;\,&quot;post&quot;:&quot;244100&quot;}">
+			<COL name="addr" type="string">地址</COL>
+			<COL name="post" type="string">邮编</COL>
+		</COL>
+		<COL name="list" type="dynaBean" gtype="list">
+			<COL name="addr" type="string">地址</COL>
+			<COL name="post" type="string">邮编</COL>
+		</COL>
+		<COL name="map" type="dynaBean" gtype="map">
+			<COL name="addr" type="string">地址</COL>
+			<COL name="post" type="string">邮编</COL>
+		</COL>
+	</PropertyIn>
+	<PropertyOut>
+		<COL name="retMsg" type="string" convert="yesorno">返回信息</COL>
+	</PropertyOut>
+</InterFaceMapping>
