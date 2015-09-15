@@ -27,10 +27,15 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/***
+ * 反身辅助类
+ * 
+ * @author andy.zhou
+ *
+ */
 @SuppressWarnings("rawtypes")
 public class ReflectAsset {
-	private final static Logger logger = LogHelp
-			.getLogger(ReflectAsset.class);
+	private final static Logger logger = LogHelp.getLogger(ReflectAsset.class);
 	private final static String[] excludeGet = new String[] { "getClass" };
 
 	/***
@@ -40,14 +45,15 @@ public class ReflectAsset {
 	 *            拥有此方法的对象
 	 * 
 	 * @param methodName
+	 *            方法名
 	 * 
 	 * @param param
 	 *            调用参数
-	 * @return
+	 * @return 调用结果
 	 * @throws ProjectException
+	 *             执行失败
 	 */
-	public static Object invokeMothed(Object invokeObj, String methodName,
-			Object... param) throws ProjectException {
+	public static Object invokeMothed(Object invokeObj, String methodName, Object... param) throws ProjectException {
 		if (invokeObj == null || StringUtils.isBlank(methodName)) {
 			throw new ProjectException(ExceptAll.Project_default, "反射中缺少类或方法");
 		}
@@ -63,8 +69,7 @@ public class ReflectAsset {
 			if (classAry.length != param.length) {// 方法的参数不匹配
 				continue;
 			}
-			if ((param == null && classAry == null)
-					|| (classAry.length == 0 && param.length == 0)) {// 无参数调用
+			if ((param == null && classAry == null) || (classAry.length == 0 && param.length == 0)) {// 无参数调用
 				exeMethod = tempMethod;
 				break;
 			}
@@ -77,18 +82,15 @@ public class ReflectAsset {
 																				// 参数是数组的如何查询它的元类型？？？？？
 					try {
 						Object[] paramArry = (Object[]) param;
-						Object[] classInstArry = (Object[]) classAryEle
-								.newInstance();
-						if (paramArry[0].getClass().isAssignableFrom(
-								classInstArry[0].getClass())) {
+						Object[] classInstArry = (Object[]) classAryEle.newInstance();
+						if (paramArry[0].getClass().isAssignableFrom(classInstArry[0].getClass())) {
 							isthisMethod = false;
 							break;
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else if (!paramEle.getClass().isArray()
-						&& !classAryEle.isArray()) {
+				} else if (!paramEle.getClass().isArray() && !classAryEle.isArray()) {
 					if (!paramEle.getClass().isAssignableFrom(classAryEle)) {
 						isthisMethod = false;
 						break;
@@ -123,7 +125,8 @@ public class ReflectAsset {
 	 * 是否是基本数据类型
 	 * 
 	 * @param clz
-	 * @return
+	 *            要检查的类型
+	 * @return true 是，false 不是
 	 */
 	public static boolean isPrimitieClass(Class clz) {
 		try {
@@ -133,10 +136,12 @@ public class ReflectAsset {
 		}
 	}
 
-	/****
+	/***
 	 * 找到get方法且没有参数的方法
 	 * 
-	 * @return
+	 * @param clz
+	 *            指定的类
+	 * @return 所有get方法
 	 */
 	public static List<String> findGetMethod(Class clz) {
 		List<String> methList = new ArrayList<String>();
@@ -165,7 +170,8 @@ public class ReflectAsset {
 	 * 找到get方法对应的域
 	 * 
 	 * @param clz
-	 * @return
+	 *            指定的类
+	 * @return 所有get方法对应的域
 	 */
 	public static List<String> findGetField(Class clz) {
 		List<String> retList = new ArrayList<String>();
@@ -186,10 +192,10 @@ public class ReflectAsset {
 	 *            要转换的规则
 	 * @param allowNull
 	 *            空值要不要进入Map
-	 * @return
+	 * @return 转换结果
 	 */
-	public static Map<String, String> convertMapFromBean(Object obj,
-			Map<String, IConvertValue> convermap, boolean allowNull) {
+	public static Map<String, String> convertMapFromBean(Object obj, Map<String, IConvertValue> convermap,
+			boolean allowNull) {
 		Map<String, String> retmap = new HashMap<String, String>();
 		if (obj == null) {
 			return retmap;
@@ -203,14 +209,12 @@ public class ReflectAsset {
 						value = BeanUtils.getProperty(obj, field);
 					} else {
 						IConvertValue convert = convermap.get(field);
-						value = convert.getStr(BeanUtils
-								.getProperty(obj, field));
+						value = convert.getStr(BeanUtils.getProperty(obj, field));
 					}
 					if (!allowNull && StringUtils.isBlank(value)) {// 不允许为空但又是空值
 						continue;
 					}
-					if (StringUtils.isBlank(value)
-							&& value.startsWith("org.apache.openjpa.enhance")) {// 由jpa生成的对象不放入
+					if (StringUtils.isBlank(value) && value.startsWith("org.apache.openjpa.enhance")) {// 由jpa生成的对象不放入
 						continue;
 					}
 					retmap.put(field, value);
@@ -225,8 +229,10 @@ public class ReflectAsset {
 	 * 判断类是否实现某个接口
 	 * 
 	 * @param c
+	 *            类
 	 * @param szInterface
-	 * @return
+	 *            接口
+	 * @return true 实现，false没有实现
 	 */
 	public static boolean isInterface(Class c, String szInterface) {
 		Class[] face = c.getInterfaces();
@@ -254,7 +260,8 @@ public class ReflectAsset {
 	 * 得到对象的属性描述
 	 * 
 	 * @param clazz
-	 * @return
+	 *            类
+	 * @return 属性描述
 	 */
 	public static PropertyDescriptor[] getPropertyDescriptors(Class clazz) {
 		BeanInfo beanInfo = null;
@@ -270,11 +277,11 @@ public class ReflectAsset {
 	 * 通过属性描述得到该属性对应的Class类型
 	 * 
 	 * @param propertyDescriptor
-	 * @return
+	 *            属性描述
+	 * @return 异性的类型
 	 */
 	public static Class getClassRefType(PropertyDescriptor propertyDescriptor) {
-		Field[] fields = propertyDescriptor.getClass().getSuperclass()
-				.getDeclaredFields();
+		Field[] fields = propertyDescriptor.getClass().getSuperclass().getDeclaredFields();
 		if (fields == null || fields.length <= 0) {
 			return null;
 		} else {
@@ -282,8 +289,7 @@ public class ReflectAsset {
 				if ("classRef".equals(field.getName())) {
 					try {
 						field.setAccessible(true); // 一定要设置为可访问
-						return (Class) ((Reference) field
-								.get(propertyDescriptor)).get();
+						return (Class) ((Reference) field.get(propertyDescriptor)).get();
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (IllegalAccessException e) {
@@ -299,7 +305,8 @@ public class ReflectAsset {
 	 * 得到类的域对应的类型，如果是Map，则值Class[]有两个值，key和value的类型，其它Class[]只有一个值
 	 * 
 	 * @param classz
-	 * @return
+	 *            指定类
+	 * @return 域类型Map
 	 */
 	public static Map<String, Class[]> getContextType(Class classz) {
 		Field[] fs = classz.getDeclaredFields(); // 得到所有的fields
@@ -335,8 +342,7 @@ public class ReflectAsset {
 					retMap.put(f.getName(), new Class[] { param0, param1 });
 				}
 			} else if (fieldClazz.isArray()) {
-				retMap.put(f.getName(),
-						new Class[] { fieldClazz.getComponentType() });
+				retMap.put(f.getName(), new Class[] { fieldClazz.getComponentType() });
 			}
 		}
 		return retMap;

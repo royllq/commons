@@ -76,10 +76,9 @@ public class CusDynaBean extends BasicDynaBean {
 	 * @param aliasName
 	 *            别名
 	 * @return 属性值
-	 * */
+	 */
 	public Object getByAliasName(String aliasName) {
-		AbstractDynaClassProperty col = ((CusDynaClass) super.dynaClass)
-				.findPropertyByAlais(aliasName);
+		AbstractDynaClassProperty col = ((CusDynaClass) super.dynaClass).findPropertyByAlais(aliasName);
 		if (col != null) {
 			return super.get(col.getName());
 		} else {
@@ -87,9 +86,13 @@ public class CusDynaBean extends BasicDynaBean {
 		}
 	}
 
-	/**
+	/***
 	 * 通过列名得到json的string值，如果是单值则都原值，其它或是非基础类型则为json值
-	 * */
+	 * 
+	 * @param name
+	 *            属性名称
+	 * @return 属性值
+	 */
 	public String getStrValueByName(String name) {
 		AbstractDynaClassProperty col = getDynaClass().findProperty(name);
 		JSONObject json = col.getJsonObj(this);
@@ -98,7 +101,7 @@ public class CusDynaBean extends BasicDynaBean {
 				return "";
 			}
 			return json.getString(name);
-		}else {
+		} else {
 			if (json == null) {
 				return "{}";
 			}
@@ -108,24 +111,20 @@ public class CusDynaBean extends BasicDynaBean {
 
 	@Override
 	public void set(String name, Object value) {
-		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass
-				.getDynaProperty(name);
+		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass.getDynaProperty(name);
 		checkValue(name, value, prop);
 		PackObject packObject = new PackObject(prop); // new
 														// PackObject(prop,super);
 		Result ret = packObject.opt(prop.getGType(), value);// 设置值
 		if (!ret.isSuc()) {
-			throw new IllegalArgumentException(String.format("对属性%s设置值%s失败",
-					name, value));
+			throw new IllegalArgumentException(String.format("对属性%s设置值%s失败", name, value));
 		}
 	}
 
 	@Override
 	public void set(String name, int index, Object value) {
-		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass
-				.getDynaProperty(name);
-		if (prop.getGType() == ColGType.array
-				|| prop.getGType() == ColGType.list) {
+		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass.getDynaProperty(name);
+		if (prop.getGType() == ColGType.array || prop.getGType() == ColGType.list) {
 			checkValue(name, value, prop);
 			super.set(name, index, value);
 		} else {
@@ -136,8 +135,7 @@ public class CusDynaBean extends BasicDynaBean {
 
 	@Override
 	public void set(String name, String key, Object value) {
-		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass
-				.getDynaProperty(name);
+		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass.getDynaProperty(name);
 		if (prop.getGType() == ColGType.map) {
 			checkValue(name, value, prop);
 			super.set(name, key, value);
@@ -150,12 +148,11 @@ public class CusDynaBean extends BasicDynaBean {
 	/***
 	 * 返回Json对象
 	 * 
-	 * @return
+	 * @return json对象
 	 */
 	public JSONObject getJsonObj() {
 		JSONObject retobj = new JSONObject();
-		AbstractDynaClassProperty[] props = ((CusDynaClass) super.dynaClass)
-				.getDynaProperties();
+		AbstractDynaClassProperty[] props = ((CusDynaClass) super.dynaClass).getDynaProperties();
 		for (AbstractDynaClassProperty prop : props) {
 			JSONObject tempjson = prop.getJsonObj(this);
 			if (tempjson != null) {
@@ -175,8 +172,7 @@ public class CusDynaBean extends BasicDynaBean {
 		if (obj == null || obj.length() == 0) {
 			return;
 		}
-		HashMap<String, AbstractDynaClassProperty> propmap = ((CusDynaClass) super.dynaClass)
-				.getAllPropertys();
+		HashMap<String, AbstractDynaClassProperty> propmap = ((CusDynaClass) super.dynaClass).getAllPropertys();
 		for (String key : obj.keys()) {
 			AbstractDynaClassProperty prop = propmap.get(key);
 			ColGType gtype = prop.getGType();
@@ -205,7 +201,7 @@ public class CusDynaBean extends BasicDynaBean {
 	/****
 	 * 得到此动态Bean的Ｃlass对象的克隆类，这样就保证对Class不被修改
 	 * 
-	 * @return
+	 * @return 动态Class
 	 */
 	public CusDynaClass copyClass() {
 		try {
@@ -215,9 +211,7 @@ public class CusDynaBean extends BasicDynaBean {
 		}
 	}
 
-	/***
-	 * 动态Bean的克隆
-	 */
+	
 	@Override
 	public CusDynaBean clone() {
 		try {
@@ -247,8 +241,7 @@ public class CusDynaBean extends BasicDynaBean {
 				if (param.getClass().isAssignableFrom(byte[].class)) {
 					parentSet(prop.getName(), param);
 				} else if (param.getClass().isAssignableFrom(byte[][].class)) {
-					logger.warn("属性[{}]在参数定义中为单值对象.但在接受参数中却又多个值,系统将自动过滤后面得值",
-							prop.getName());
+					logger.warn("属性[{}]在参数定义中为单值对象.但在接受参数中却又多个值,系统将自动过滤后面得值", prop.getName());
 					byte[][] tempValue = (byte[][]) param;
 					parentSet(prop.getName(), tempValue[0]);
 				}
@@ -256,8 +249,7 @@ public class CusDynaBean extends BasicDynaBean {
 			}
 
 			if (param != null && param.getClass().isArray()) {// 要求不是数组，传过来的是数组
-				logger.warn("属性[{}]在参数定义中为单值对象.但在接受参数中却又多个值,系统将自动过滤后面得值",
-						prop.getName());
+				logger.warn("属性[{}]在参数定义中为单值对象.但在接受参数中却又多个值,系统将自动过滤后面得值", prop.getName());
 				Object[] tempValue = (Object[]) param;
 				parentSet(prop.getName(), tempValue[0]);
 			} else {
@@ -292,8 +284,7 @@ public class CusDynaBean extends BasicDynaBean {
 				parentSet(prop.getName(), param);
 				return Result.getSuc();
 			} else {
-				logger.error("属性[{}]要求Map类型，却传来来{}类型", prop.getName(),
-						param.getClass());
+				logger.error("属性[{}]要求Map类型，却传来来{}类型", prop.getName(), param.getClass());
 				return new Result(ExceptAll.Param_typenofit);
 			}
 		}
@@ -304,8 +295,7 @@ public class CusDynaBean extends BasicDynaBean {
 				parentSet(prop.getName(), param);
 				return Result.getSuc();
 			} else {
-				logger.error("属性[{}]要求List类型，却传来来{}类型", prop.getName(),
-						param.getClass());
+				logger.error("属性[{}]要求List类型，却传来来{}类型", prop.getName(), param.getClass());
 				return new Result(ExceptAll.Param_typenofit);
 			}
 		}
@@ -322,12 +312,10 @@ public class CusDynaBean extends BasicDynaBean {
 	 * @return
 	 */
 	public CusDynaBean newCusDynaBean(String name, boolean saveDefault) {
-		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass
-				.getDynaProperty(name);
+		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass.getDynaProperty(name);
 		if (prop instanceof DynaBeanHandler) {
 			if (saveDefault) {
-				CusDynaBean retobj = (CusDynaBean) prop
-						.getSingleDefaultColValue();
+				CusDynaBean retobj = (CusDynaBean) prop.getSingleDefaultColValue();
 				if (retobj != null) {// 有默认值则直接用默认值
 					return retobj;
 				}
@@ -337,8 +325,7 @@ public class CusDynaBean extends BasicDynaBean {
 			return retBean;
 		} else {
 			logger.error("方法[newCusDynaBean]只支持DynaBeanHandler的类型");
-			throw new IllegalArgumentException(
-					"方法[newCusDynaBean]只支持DynaBeanHandler的类型");
+			throw new IllegalArgumentException("方法[newCusDynaBean]只支持DynaBeanHandler的类型");
 		}
 	}
 
@@ -353,28 +340,23 @@ public class CusDynaBean extends BasicDynaBean {
 	 * @return
 	 */
 	public Object newDefaultObj(String name) {
-		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass
-				.getDynaProperty(name);
+		AbstractDynaClassProperty prop = (AbstractDynaClassProperty) this.dynaClass.getDynaProperty(name);
 		if (prop instanceof JavaBeanHandler) {
 			return prop.getSingleDefaultColValue();
 		} else {
 			logger.error("方法[newDefaultObj]只支持JavaBeanHandler的类型");
-			throw new IllegalArgumentException(
-					"方法[newDefaultObj]只支持JavaBeanHandler的类型");
+			throw new IllegalArgumentException("方法[newDefaultObj]只支持JavaBeanHandler的类型");
 		}
 	}
 
 	// ////////////////////////////////////帮助方法///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	private void checkValue(String name, Object value,
-			AbstractDynaClassProperty prop) {
+	private void checkValue(String name, Object value, AbstractDynaClassProperty prop) {
 		if (prop == null) {
-			throw new IllegalArgumentException(String.format("不存在名为[%s]的参数。",
-					name));
+			throw new IllegalArgumentException(String.format("不存在名为[%s]的参数。", name));
 		}
 		Result checkRest = prop.checkValue(value);
 		if (!checkRest.isSuc()) {// 检查值是否合法
-			throw new IllegalArgumentException(String.format("参数[%s]检查不通过,%s",
-					name, checkRest.getMessage()));
+			throw new IllegalArgumentException(String.format("参数[%s]检查不通过,%s", name, checkRest.getMessage()));
 		}
 	}
 
@@ -383,8 +365,7 @@ public class CusDynaBean extends BasicDynaBean {
 			return;
 		}
 		// 设置好默认值
-		AbstractDynaClassProperty[] allProperty = ((CusDynaClass) this.dynaClass)
-				.getDynaProperties();
+		AbstractDynaClassProperty[] allProperty = ((CusDynaClass) this.dynaClass).getDynaProperties();
 		if (ArrayUtils.isNotEmpty(allProperty)) {
 			for (AbstractDynaClassProperty abstractDynaClassProperty : allProperty) {
 				abstractDynaClassProperty.setDefaultColValue(this);

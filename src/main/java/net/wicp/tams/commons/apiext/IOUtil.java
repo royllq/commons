@@ -14,12 +14,11 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @ClassName: IOUtil
- * @Description: TODO(这里用一句话描述这个类的作用)
- * @author 周俊辉
- * @date 2010-11-13 上午11:01:04
+/***
+ * 文件加载、操作等辅助类
  * 
+ * @author andy.zhou
+ *
  */
 public abstract class IOUtil {
 	private final static Logger logger = LogHelp.getLogger(IOUtil.class);
@@ -31,6 +30,7 @@ public abstract class IOUtil {
 	 *            输入流
 	 * @return java.lang.String 转换后的字符串
 	 * @throws IOException
+	 *             转换出错
 	 */
 	public static String slurp(InputStream in) throws IOException {
 		StringBuffer out = new StringBuffer();
@@ -47,7 +47,6 @@ public abstract class IOUtil {
 	 * @param filePath
 	 *            文件路径
 	 * @return Properties 属性对象
-	 * @throws ProjectException
 	 */
 	public static Properties fileToProperties(String filePath) {
 		Properties returnPro = new Properties();
@@ -70,9 +69,8 @@ public abstract class IOUtil {
 	 * @param fileName
 	 *            文件名
 	 * @return String 合并后的文件路径
-	 * */
-	public static String mergeFolderAndFilePath(String folderPath,
-			String fileName) {
+	 */
+	public static String mergeFolderAndFilePath(String folderPath, String fileName) {
 		if (StringUtils.isBlank(folderPath)) {
 			return fileName;
 		}
@@ -90,8 +88,10 @@ public abstract class IOUtil {
 	 * 得到指定Class下的文件的目录
 	 * 
 	 * @param classStr
+	 *            指定的class
 	 * @param filePath
-	 * @return
+	 *            文件的相对路径
+	 * @return 目录
 	 */
 	@SuppressWarnings("rawtypes")
 	public static String getDirForFilePath(Class classStr, String filePath) {
@@ -107,7 +107,8 @@ public abstract class IOUtil {
 	 * 得到此项目下的文件目录路径
 	 * 
 	 * @param filePath
-	 * @return
+	 *            文件路径
+	 * @return 真实路径
 	 */
 	public static String getDirForCommonUtilFilePath(String filePath) {
 		return getDirForFilePath(IOUtil.class, filePath);
@@ -117,12 +118,14 @@ public abstract class IOUtil {
 	 * 把InputStream复制到OutputStream
 	 * 
 	 * @param from
+	 *            输入流
 	 * @param to
-	 * @return
+	 *            输出流
+	 * @return 流字节数
 	 * @throws IOException
+	 *             操作异常
 	 */
-	public static long copyInToOut(InputStream from, OutputStream to)
-			throws IOException {
+	public static long copyInToOut(InputStream from, OutputStream to) throws IOException {
 		byte[] buf = new byte[1024];
 		long total = 0;
 		while (true) {

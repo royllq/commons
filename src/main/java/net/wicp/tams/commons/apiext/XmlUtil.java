@@ -26,6 +26,7 @@ import org.xml.sax.XMLReader;
 public abstract class XmlUtil {
 
 	private static SAXParserFactory saxFactory;
+
 	static {
 		saxFactory = SAXParserFactory.newInstance();
 		saxFactory.setNamespaceAware(true);
@@ -36,8 +37,7 @@ public abstract class XmlUtil {
 		try {
 			SAXParser parser = saxFactory.newSAXParser();
 			XMLReader reader = parser.getXMLReader();
-			reader.setFeature("http://xml.org/sax/features/namespace-prefixes",
-					false);
+			reader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
 			return parser.getXMLReader();
 		} catch (ParserConfigurationException e) {
 			return null;
@@ -51,9 +51,11 @@ public abstract class XmlUtil {
 	 * 
 	 * @param src
 	 *            要解析的字符串
-	 * */
-	public static final Document parserDocment(String src)
-			throws ProjectException {
+	 * @return 解析后文档
+	 * @throws ProjectException
+	 *             解析错误
+	 */
+	public static final Document parserDocment(String src) throws ProjectException {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
@@ -70,7 +72,8 @@ public abstract class XmlUtil {
 	 *            文档
 	 * @param tagName
 	 *            标签名
-	 * */
+	 * @return 元素
+	 */
 	public static Element getElementByTagName(Document doc, String tagName) {
 		NodeList nodes = doc.getElementsByTagName(tagName);
 		if (nodes == null || nodes.getLength() == 0)
@@ -85,7 +88,7 @@ public abstract class XmlUtil {
 	 * @param element
 	 *            文档元素
 	 * @return String 元素的值
-	 * */
+	 */
 	public static String getElementValue(Element element) {
 		if (element.hasChildNodes())
 			return element.getFirstChild().getNodeValue();
@@ -97,11 +100,12 @@ public abstract class XmlUtil {
 	 * 通过名称得到指定节点下第一个元素
 	 * 
 	 * @param node
+	 *            指定节点
 	 * @param name
-	 * @return
+	 *            子节点名称
+	 * @return 节点
 	 */
-	public static final ConfigurationNode getFirstNodeByNodeName(
-			DefaultConfigurationNode node, String name) {
+	public static final ConfigurationNode getFirstNodeByNodeName(DefaultConfigurationNode node, String name) {
 		List<ConfigurationNode> nodes = node.getChildren(name);
 		if (CollectionUtils.isEmpty(nodes)) {
 			return null;
@@ -115,9 +119,9 @@ public abstract class XmlUtil {
 	 * @param beanObj
 	 *            要取值的对象
 	 * @param xpath
-	 *            取值 xpath 路径　
+	 *            取值 xpath 路径
 	 * @return 返回的值
-	 * */
+	 */
 	public static Object getValueByXpath(Object beanObj, String xpath) {
 		JXPathContext context = JXPathContext.newContext(beanObj);
 		return context.getValue(xpath);

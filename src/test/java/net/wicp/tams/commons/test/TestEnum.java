@@ -5,16 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.wicp.tams.commons.connector.beans.CusDynaBean;
-import net.wicp.tams.commons.connector.config.AbstractConfigClass;
-import net.wicp.tams.commons.connector.config.xmlParser.ConfigClassXml;
-import net.wicp.tams.commons.constant.ColType;
-import net.wicp.tams.commons.exception.ProjectException;
-import net.wicp.tams.commons.test.beans.SexEnum;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import net.wicp.tams.commons.connector.beans.CusDynaBean;
+import net.wicp.tams.commons.connector.config.AbstractConfigClass;
+import net.wicp.tams.commons.connector.config.xmlParser.ConfigClassXml;
+import net.wicp.tams.commons.exception.ProjectException;
+import net.wicp.tams.commons.test.beans.SexEnum;
 
 /****
  * enum类型定义

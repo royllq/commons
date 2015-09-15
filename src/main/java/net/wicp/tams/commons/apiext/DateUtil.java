@@ -20,11 +20,11 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.impl.cookie.DateUtils;
 
-/**
- * @ClassName: DateUtil
- * @Description: 时间相关的常用用法
- * @author 周俊辉
+/***
+ * 时间相关的常用用法
  * 
+ * @author andy.zhou
+ *
  */
 public abstract class DateUtil {
 
@@ -49,10 +49,8 @@ public abstract class DateUtil {
 					if (StrPattern.date.checkStrFormat(strDate)) {
 						strDate = strDate + " 00:00:00";
 					}
-					if (StrPattern.date_time.checkStrFormat(String
-							.valueOf(strDate))
-							&& !"0001-01-01 00:00:00".equals(ojbDate)
-							&& !"1970-01-01 00:00:00".equals(ojbDate)) {
+					if (StrPattern.date_time.checkStrFormat(String.valueOf(strDate))
+							&& !"0001-01-01 00:00:00".equals(ojbDate) && !"1970-01-01 00:00:00".equals(ojbDate)) {
 						SimpleDateFormat format = null;
 						if (strDate.length() == 19) {
 							format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -80,15 +78,14 @@ public abstract class DateUtil {
 	 * @param bean
 	 *            要格式化的Bean
 	 * @param path
-	 *            　　　要格式化的字段所在路径
+	 *            要格式化的字段所在路径
 	 * @param format
 	 *            要格式化的格式
 	 * @param isTime
 	 *            是不是时间，默认为日期
-	 * @return
+	 * @return 格式化后的字符串
 	 */
-	public static String formatDate(Object bean, String path, String format,
-			Boolean isTime) {
+	public static String formatDate(Object bean, String path, String format, Boolean isTime) {
 		if (StringUtils.isBlank(path)) {
 			return "";
 		}
@@ -114,15 +111,14 @@ public abstract class DateUtil {
 	 *            要格式化的格式
 	 * @param isTime
 	 *            是不是时间，默认为日期
-	 * @return
+	 * @return 格式化后的字符串
 	 */
 	public static String formatDate(Date oriDate, String format, Boolean isTime) {
 		if (oriDate == null) {
 			return "";
 		}
 		String formatStr = StringUtil.hasNull(format,
-				(isTime != null && isTime) ? "yyyy-MM-dd HH:mm:ss"
-						: "yyyy-MM-dd");
+				(isTime != null && isTime) ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd");
 		SimpleDateFormat curFormat = new SimpleDateFormat(formatStr);
 		return curFormat.format(oriDate);
 	}
@@ -130,16 +126,22 @@ public abstract class DateUtil {
 	/****
 	 * 把对象转换成Date Formate为 yyyy-MM-dd HH:mm:ss
 	 * 
-	 * @param xmlDate
-	 * @return
+	 * @param ojbDate
+	 *            要转换的对象
+	 * @return 时间类型
 	 */
 	public static Date objToDate(Object ojbDate) {
 		return objToDate(ojbDate, null);
 	}
 
-	/**
-	 * 今天的0时0分0秒0毫秒
-	 * */
+	/****
+	 * 指定时间的0时0分0秒0毫秒
+	 * 
+	 * @param date
+	 *            指定时间
+	 * @return 指定日的0时0分0秒0毫秒
+	 */
+
 	public static Date setDayBeginTime(Date date) {
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
@@ -154,8 +156,10 @@ public abstract class DateUtil {
 	 * 指定时间的相隔一定天数的0时0分0秒0毫秒
 	 * 
 	 * @param date
+	 *            指定时间
 	 * @param num
-	 * @return
+	 *            指定时间后的天数
+	 * @return 日期的0时0分0秒0毫秒
 	 */
 	public static Date setDayAfterBeginTime(Date date, int num) {
 		Calendar ca = Calendar.getInstance();
@@ -169,11 +173,13 @@ public abstract class DateUtil {
 	}
 
 	/****
-	 * 指定时间的相隔一定月份的　0时0分0秒0毫秒
+	 * 指定时间的相隔一定月份的 0时0分0秒0毫秒
 	 * 
 	 * @param date
+	 *            指定时间
 	 * @param monthNum
-	 * @return
+	 *            相隔的月数
+	 * @return 结果日期的0时0分0秒0毫秒
 	 */
 	public static Date setDayAfterMonthTime(Date date, int monthNum) {
 		Calendar ca = Calendar.getInstance();
@@ -186,9 +192,15 @@ public abstract class DateUtil {
 		return ca.getTime();
 	}
 
-	/**
+	/***
 	 * 两个时间的相差天数
-	 * */
+	 * 
+	 * @param beginData
+	 *            开始时间
+	 * @param endDate
+	 *            结束时间
+	 * @return 相隔的天数
+	 */
 	public static int differDays(Date beginData, Date endDate) {
 		long resL = endDate.getTime() - beginData.getTime();
 		long dayInt = resL / 1000 * 60 * 60 * 24;
@@ -205,7 +217,7 @@ public abstract class DateUtil {
 	 * @param endDate
 	 *            比较时间
 	 * @return 0等于 -1小于 1大于
-	 * */
+	 */
 	public static int compareTo(Date beginData, int days, Date endDate) {
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(beginData);
@@ -225,7 +237,7 @@ public abstract class DateUtil {
 	 * @param endDate
 	 *            比较时间
 	 * @return 0等于 -1小于 1大于
-	 * */
+	 */
 	public static int compareMonthTo(Date beginData, int month, Date endDate) {
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(beginData);
@@ -235,9 +247,13 @@ public abstract class DateUtil {
 		return ca.compareTo(otherCal);
 	}
 
-	/**
-	 * 这个月的最后一天开始
-	 * */
+	/***
+	 * 指定时间的那个月的最后一天开始时间
+	 * 
+	 * @param date
+	 *            指定时间
+	 * @return 那个月的第一天0时0分0秒
+	 */
 	public static Date getLastDayOfMonth(Date date) {
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
@@ -259,22 +275,18 @@ public abstract class DateUtil {
 	 * @param dateStr2
 	 *            取时间 如：1970-01-01T07:00:00Z
 	 * @throws ProjectException
-	 * */
-	public static Date getDateByTwoIso(String dateStr1, String dateStr2)
-			throws ProjectException {
+	 *             解析异常
+	 */
+	public static Date getDateByTwoIso(String dateStr1, String dateStr2) throws ProjectException {
 		try {
 			int jIndex = dateStr1.indexOf("+");
-			dateStr1 = dateStr1.substring(0, jIndex) + "GMT"
-					+ dateStr1.substring(jIndex);
+			dateStr1 = dateStr1.substring(0, jIndex) + "GMT" + dateStr1.substring(jIndex);
 			int j2Index = dateStr2.indexOf("+");
-			dateStr2 = dateStr2.substring(0, j2Index) + "GMT"
-					+ dateStr2.substring(j2Index);
+			dateStr2 = dateStr2.substring(0, j2Index) + "GMT" + dateStr2.substring(j2Index);
 
 			Calendar returnDateTime = Calendar.getInstance();
-			Date dateD = DateFormatCase.TyyyyMMddHHmmss.getInstanc().parse(
-					dateStr1);
-			Date dateT = DateFormatCase.TyyyyMMddHHmmss.getInstanc().parse(
-					dateStr2);
+			Date dateD = DateFormatCase.TyyyyMMddHHmmss.getInstanc().parse(dateStr1);
+			Date dateT = DateFormatCase.TyyyyMMddHHmmss.getInstanc().parse(dateStr2);
 			Calendar calDateT = Calendar.getInstance();
 			returnDateTime.setTime(dateD);
 			calDateT.setTime(dateT);
@@ -295,16 +307,15 @@ public abstract class DateUtil {
 	 * @param dateStr2
 	 *            取时间 如：T16:00:00
 	 * @throws ProjectException
-	 * */
-	public static Date getDateByDojo(String dateStr1, String dateStr2)
-			throws ProjectException {
+	 *             解析异常
+	 */
+	public static Date getDateByDojo(String dateStr1, String dateStr2) throws ProjectException {
 		if (StringUtils.isBlank(dateStr1) || StringUtils.isBlank(dateStr2)) {
 			throw new ProjectException(ExceptAll.param_error);
 		}
 		String tempDateStr = dateStr1 + dateStr2;
 		try {
-			Date dateT = DateFormatCase.TyyyyMMddHHmmssNoZ.getInstanc().parse(
-					tempDateStr);
+			Date dateT = DateFormatCase.TyyyyMMddHHmmssNoZ.getInstanc().parse(tempDateStr);
 			return dateT;
 		} catch (ParseException e) {
 			throw new ProjectException(ExceptAll.Project_default, "解析时间错误");
@@ -315,17 +326,19 @@ public abstract class DateUtil {
 	 * XMLGregorianCalendar 转为Date
 	 * 
 	 * @param xmlDate
-	 * @return
+	 *            xmlDate时间
+	 * @return util时间
 	 */
 	public static Date xmlDateToDate(XMLGregorianCalendar xmlDate) {
 		return xmlDate.toGregorianCalendar().getTime();
 	}
 
 	/***
-	 * Dae　转为 XMLGregorianCalendar
+	 * Dae 转为 XMLGregorianCalendar
 	 * 
 	 * @param date
-	 * @return
+	 *            util时间
+	 * @return xmlDate时间
 	 */
 	public static XMLGregorianCalendar dateToXmlDate(Date date) {
 		Calendar cal = Calendar.getInstance();
@@ -350,7 +363,8 @@ public abstract class DateUtil {
 	 * 得到明天的０点时间
 	 * 
 	 * @param ojbDate
-	 * @return
+	 *            指定时间，支持yyyy-MM-dd和yyyy-MM-dd HH:mm:ss
+	 * @return 得到明天的０点时间
 	 */
 	public static Date getTomorrow(Object ojbDate) {
 		Date ret = objToDate(ojbDate);
@@ -359,10 +373,11 @@ public abstract class DateUtil {
 	}
 
 	/***
-	 * 得到明天的０点时间
+	 * 得到明天的０点时间字符串形式,格式为yyyy-MM-dd
 	 * 
 	 * @param ojbDate
-	 * @return
+	 *            指定时间，支持yyyy-MM-dd和yyyy-MM-dd HH:mm:ss
+	 * @return 得到明天的０点时间
 	 */
 	public static String getTomorrowStr(Object ojbDate) {
 		Date ori = getTomorrow(ojbDate);

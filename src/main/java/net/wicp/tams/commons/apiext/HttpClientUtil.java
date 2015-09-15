@@ -25,9 +25,14 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/***
+ * http辅助使用类
+ * 
+ * @author andy.zhou
+ *
+ */
 public abstract class HttpClientUtil {
-	private final static Logger logger = LogHelp
-			.getLogger(HttpClientUtil.class);
+	private final static Logger logger = LogHelp.getLogger(HttpClientUtil.class);
 
 	/**
 	 * 发送Get请求
@@ -35,9 +40,11 @@ public abstract class HttpClientUtil {
 	 * @param url
 	 *            发送请求地址
 	 * @return 返回内容
-	 * */
-	public static String sendGet(String url, String ecode)
-			throws ProjectException {
+	 * 
+	 * @throws ProjectException
+	 *             请求异常
+	 */
+	public static String sendGet(String url, String ecode) throws ProjectException {
 		String result = null;
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet get = new HttpGet(url);
@@ -87,14 +94,14 @@ public abstract class HttpClientUtil {
 	 * @param params
 	 *            发送请求的参数
 	 * @return 返回内容
-	 * */
-	public static String sendGet(String url, Map<String, String> params)
-			throws ProjectException {
+	 * @throws ProjectException
+	 *             请求异常
+	 */
+	public static String sendGet(String url, Map<String, String> params) throws ProjectException {
 		Set<String> keys = params.keySet();
 		StringBuilder urlBuilder = new StringBuilder(url + "?");
 		for (String key : keys) {
-			urlBuilder.append(key).append("=").append(params.get(key))
-					.append("&");
+			urlBuilder.append(key).append("=").append(params.get(key)).append("&");
 		}
 		urlBuilder.delete(urlBuilder.length() - 1, urlBuilder.length());
 		return sendGet(urlBuilder.toString());
@@ -108,9 +115,10 @@ public abstract class HttpClientUtil {
 	 * @param params
 	 *            发送请求的参数
 	 * @return 返回内容
-	 * */
-	public static String sendPost(String url, Map<String, String> params)
-			throws ProjectException {
+	 * @throws ProjectException
+	 *             请求异常
+	 */
+	public static String sendPost(String url, Map<String, String> params) throws ProjectException {
 		String result = null;
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost get = new HttpPost(url);
@@ -122,8 +130,7 @@ public abstract class HttpClientUtil {
 		}
 		try {
 			// 填充表单
-			get.setEntity(new UrlEncodedFormEntity(qparams, Config
-					.getValue("common.encode")));
+			get.setEntity(new UrlEncodedFormEntity(qparams, Config.getValue("common.encode")));
 
 			HttpResponse response = httpClient.execute(get);
 			HttpEntity entity = response.getEntity();

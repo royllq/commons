@@ -19,7 +19,7 @@ public abstract class JqueryAssist {
 	 *            label的字段名
 	 * @param codeFiled
 	 *            code的字段名
-	 * @param attrName
+	 * @param idName
 	 *            属性字段名
 	 * @return String
 	 *         [{label:'男',value:'M'},{label:'女',value:'F'},{label:'未知',value:''}

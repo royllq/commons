@@ -5,12 +5,11 @@ import java.util.Date;
 
 import net.wicp.tams.commons.constant.DateFormatCase;
 
-/**
- * @ClassName: NumberUtil
- * @Description: 计算类型的处理
- * @author 周俊辉
- * @date 2010-10-29 下午01:37:46
+/***
+ * 计算类型的处理
  * 
+ * @author andy.zhou
+ *
  */
 public abstract class NumberUtil {
 	/**
@@ -20,8 +19,8 @@ public abstract class NumberUtil {
 	 *            要处理的值
 	 * @param scale
 	 *            精度
-	 * @return
-	 * */
+	 * @return BigDecimal 转换结果
+	 */
 	public static BigDecimal handleScale(BigDecimal input, int scale) {
 		return input.setScale(scale, BigDecimal.ROUND_HALF_EVEN);
 	}
@@ -33,8 +32,8 @@ public abstract class NumberUtil {
 	 *            要处理的值
 	 * @param scale
 	 *            精度
-	 * @return
-	 * */
+	 * @return 转换结果
+	 */
 	public static BigDecimal handleScale(double input, int scale) {
 		BigDecimal bigDecimal = new BigDecimal(input);
 		return handleScale(bigDecimal, scale);
@@ -47,29 +46,30 @@ public abstract class NumberUtil {
 	 *            要处理的值
 	 * @param scale
 	 *            精度
-	 * @return
-	 * */
+	 * @return 转换结果
+	 */
 	public static BigDecimal handleScale(String input, int scale) {
 		BigDecimal bigDecimal = new BigDecimal(input);
 		return handleScale(bigDecimal, scale);
 	}
 
 	/**
-	 * 跟据时间产生yyyyMMddHHmmssSSSS格式的长整形
+	 * 得到当前时间产生yyyyMMddHHmmssSSSS格式的长整形
 	 * 
-	 * @return long
-	 * */
+	 * @return long 符合条件的结果
+	 */
 	public synchronized static long proUniqNumByTime() {
-		return new Long(DateFormatCase.yyyyMMddHHmmssSSSS.getInstanc().format(
-				new Date()));
+		return new Long(DateFormatCase.yyyyMMddHHmmssSSSS.getInstanc().format(new Date()));
 	}
 
 	/****
 	 * 两个BigDecimal相加，返回２位小数点精度的BigDecimal
 	 * 
 	 * @param b1
+	 *            加数一
 	 * @param b2
-	 * @return
+	 *            加数二
+	 * @return 和
 	 */
 	public static BigDecimal addBigDecimal(BigDecimal b1, BigDecimal b2) {
 		BigDecimal retObj = null;
@@ -89,7 +89,8 @@ public abstract class NumberUtil {
 	 * 把字符型/double型/BigDecimal型 转成２位小数点精度的BigDecimal
 	 * 
 	 * @param db
-	 * @return
+	 *            要转换的对象
+	 * @return 转换结果
 	 */
 	public static BigDecimal changeBD(Object db) {
 		if (db == null) {

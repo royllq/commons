@@ -26,7 +26,7 @@ public abstract class CollectionUtil {
 	 *            要连接的List
 	 * @param joinStr
 	 *            连接的字符串
-	 * @return String
+	 * @return String 连接后字符串
 	 */
 
 	public static String listJoin(List<?> fromList, String joinStr) {
@@ -51,9 +51,11 @@ public abstract class CollectionUtil {
 	 *            要连接的数组
 	 * @param joinStr
 	 *            连接的字符串
+	 * @return 连接后的字符串
+	 * @throws ProjectException  异常 
 	 */
-	public static String arrayJoin(Object[] fromList, String joinStr)
-			throws ProjectException {
+
+	public static String arrayJoin(Object[] fromList, String joinStr) throws ProjectException {
 		if (ArrayUtils.isEmpty(fromList))
 			return null;
 		List<?> objlist = Arrays.asList(fromList);
@@ -64,10 +66,15 @@ public abstract class CollectionUtil {
 	 * 数组的合并
 	 * 
 	 * @param clazz
+	 *            数组类型
 	 * @param a
+	 *            合并数组一
 	 * @param b
-	 * @return
+	 *            合并数组二
+	 * @return 全并后的数组
 	 */
+	
+	
 	public static <T> T[] arrayMerge(Class<T[]> clazz, T[] a, T[] b) {
 		if (ArrayUtils.isEmpty(a)) {
 			return b;
@@ -85,8 +92,10 @@ public abstract class CollectionUtil {
 	 * 通过类型创建数组
 	 * 
 	 * @param clazz
+	 *            类型
 	 * @param length
-	 * @return
+	 *            数组长度
+	 * @return 数组实例对象
 	 */
 	public static <T> T[] newArrayByArrayClass(Class<T[]> clazz, int length) {
 		return (T[]) Array.newInstance(clazz.getComponentType(), length);
@@ -99,7 +108,8 @@ public abstract class CollectionUtil {
 	 *            要分隔的List
 	 * @param sumPerRow
 	 *            第个List的个数
-	 * */
+	 * @return 二维List
+	 */
 	public static List<List<?>> splitList(List<?> inputList, int sumPerRow) {
 		if (CollectionUtils.isEmpty(inputList) || sumPerRow == 0) {
 			return null;
@@ -125,7 +135,7 @@ public abstract class CollectionUtil {
 	 * @param colName
 	 *            要提取的列名
 	 * @return List 提取预定列的List
-	 * */
+	 */
 	public static List<?> getColFromObj(List<?> fromList, String colName) {
 		List<Object> retList = new ArrayList<Object>();
 		if (CollectionUtils.isEmpty(fromList)) {
@@ -150,11 +160,9 @@ public abstract class CollectionUtil {
 	 * @param predicate
 	 *            规则
 	 * @return 返回符合条件的集合并把这个集合从inputCollection删除（即inputCollection只剩余不合条件的数据）
-	 * */
-	public static Collection selectFilter(Collection inputCollection,
-			Predicate predicate) {
-		Collection retCollection = (Collection) CollectionUtils.find(
-				inputCollection, predicate);
+	 */
+	public static Collection selectFilter(Collection inputCollection, Predicate predicate) {
+		Collection retCollection = (Collection) CollectionUtils.find(inputCollection, predicate);
 		CollectionUtils.filter(inputCollection, predicate);
 		return retCollection;
 	}
@@ -163,6 +171,7 @@ public abstract class CollectionUtil {
 	 * 过滤空值
 	 * 
 	 * @param orimap
+	 *            要处理的map
 	 */
 	public static void filterNull(Map<String, String> orimap) {
 		if (orimap == null) {
@@ -176,20 +185,19 @@ public abstract class CollectionUtil {
 	}
 
 	/*****
-	 * 过滤原始的　List
+	 * 过滤原始的 List
 	 * 
 	 * @param oriList
-	 *            　原对象列表
+	 *            原对象列表
 	 * @param colName
 	 *            对象列名
 	 * @param include
 	 *            允许的值
 	 * @param exclude
 	 *            排除的值
-	 * @return
+	 * @return 过滤后的list
 	 */
-	public static List filter(List oriList, final String colName,
-			String include, String exclude) {
+	public static List filter(List oriList, final String colName, String include, String exclude) {
 		List retAry = new ArrayList();
 		if (CollectionUtils.isEmpty(oriList)) {
 			return retAry;
@@ -200,19 +208,15 @@ public abstract class CollectionUtil {
 				String includeValue = iAry[i];
 				for (Object eleObj : oriList) {
 					try {
-						if (ReflectAsset.isInterface(eleObj.getClass(),
-								"java.util.Map")) {
+						if (ReflectAsset.isInterface(eleObj.getClass(), "java.util.Map")) {
 							Map tempObj = (Map) eleObj;
-							if (includeValue.equalsIgnoreCase(String
-									.valueOf(tempObj.get(colName)))) {
+							if (includeValue.equalsIgnoreCase(String.valueOf(tempObj.get(colName)))) {
 								retAry.add(eleObj);
 								break;// 退出本层循环
 							}
 						} else {
-							Object tempObj = PropertyUtils.getProperty(eleObj,
-									colName);
-							if (includeValue.equalsIgnoreCase(String
-									.valueOf(tempObj))) {
+							Object tempObj = PropertyUtils.getProperty(eleObj, colName);
+							if (includeValue.equalsIgnoreCase(String.valueOf(tempObj))) {
 								retAry.add(eleObj);
 								break;// 退出本层循环
 							}
@@ -231,16 +235,13 @@ public abstract class CollectionUtil {
 				@Override
 				public boolean evaluate(Object object) {
 					try {
-						if (ReflectAsset.isInterface(object.getClass(),
-								"java.util.Map")) {
+						if (ReflectAsset.isInterface(object.getClass(), "java.util.Map")) {
 							Map tempObj = (Map) object;
-							if (ArrayUtils.contains(eAry,
-									String.valueOf(tempObj.get(colName)))) {
+							if (ArrayUtils.contains(eAry, String.valueOf(tempObj.get(colName)))) {
 								return false;
 							}
 						} else {
-							Object tempObj = PropertyUtils.getProperty(object,
-									colName);
+							Object tempObj = PropertyUtils.getProperty(object, colName);
 							if (ArrayUtils.contains(eAry, tempObj)) {
 								return false;
 							}

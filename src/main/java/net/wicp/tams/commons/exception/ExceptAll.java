@@ -13,11 +13,12 @@ import net.wicp.tams.commons.constant.Config;
 
 import org.mvel2.templates.TemplateRuntime;
 
-/**
- * @ClassName: ExceptAll
- * @Description: 自定义异常编码与其解释（测试用）
- * @author 周俊辉
- * 
+
+
+/***
+ * 自定义异常编码与其解释（测试用）
+ * @author andy.zhou
+ *
  */
 public enum ExceptAll implements IExcept {
 	// 系统通用型错误(包括Java相关错误)

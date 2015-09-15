@@ -8,12 +8,11 @@ import java.text.ParsePosition;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
-/**
- * @ClassName: StringUtil
- * @Description: TODO(这里用一句话描述这个类的作用)
- * @author 周俊辉
- * @date 2010-10-29 下午01:36:36
+/***
+ * 字符串辅助类
  * 
+ * @author andy.zhou
+ *
  */
 public abstract class StringUtil {
 
@@ -33,7 +32,7 @@ public abstract class StringUtil {
 	 *            出现"null"值是否判断为true
 	 * @param inputObj
 	 *            要判断的字符串
-	 * @return
+	 * @return true是空值，false不是空值
 	 */
 	public static boolean isNull(boolean NullIsTrue, Object inputObj) {
 		if (inputObj == null) {
@@ -59,8 +58,8 @@ public abstract class StringUtil {
 	 *            是否要排除为"null"的字符串，因为String.value(null)=="null"
 	 * @param inputStr
 	 *            输入要转换的数组
-	 * @return String
-	 * */
+	 * @return String 处理后字符串
+	 */
 	public static String hasNull(boolean isDelNullStr, String... inputStr) {
 		if (inputStr == null)
 			return "";
@@ -94,7 +93,7 @@ public abstract class StringUtil {
 	 * 
 	 * @param str
 	 *            要处理的字符串
-	 * @return String
+	 * @return String 处理后字符串
 	 */
 	public static String trimSpace(String str) {
 		if (str == null || str.trim().length() == 0) {
@@ -106,8 +105,7 @@ public abstract class StringUtil {
 		int last = str.length() - 1;
 		char c;
 
-		for (c = str.charAt(first); (first < len)
-				&& (c == '\u3000' || c == ' '); first++) {
+		for (c = str.charAt(first); (first < len) && (c == '\u3000' || c == ' '); first++) {
 			c = str.charAt(first);
 		}
 		if (first > 0) {
@@ -132,9 +130,9 @@ public abstract class StringUtil {
 	 * 
 	 * @param fen
 	 *            要转换的分数值
-	 * @return String
+	 * @return String 返回元
 	 * 
-	 * */
+	 */
 	public static String convertFenToYuan(String fen) {
 		return convertFenToYuan(Double.parseDouble(fen));
 	}
@@ -144,7 +142,7 @@ public abstract class StringUtil {
 	 * 
 	 * @param fen
 	 *            要转换的分数值
-	 * @return String
+	 * @return String 返回元
 	 */
 	public static String convertFenToYuan(double fen) {
 		String result;
@@ -157,8 +155,12 @@ public abstract class StringUtil {
 		return result;
 	}
 
-	/**
-	 * 获取字符串中含数字和字母的个数<br>
+	/***
+	 * 获取字符串中含数字和字母的个数
+	 * 
+	 * @param src
+	 *            输计算的字符串
+	 * @return 计算的个数
 	 */
 	public static int sumOfNumLet(String src) {
 		String figures = "0123456789";
@@ -174,7 +176,7 @@ public abstract class StringUtil {
 
 	/**
 	 * tapestry输出变量 时要填此格式化对象
-	 * */
+	 */
 	public final static Format formatCommon = new Format() {
 		private static final long serialVersionUID = -8271124584977967310L;
 
@@ -184,8 +186,7 @@ public abstract class StringUtil {
 		}
 
 		@Override
-		public StringBuffer format(Object obj, StringBuffer toAppendTo,
-				FieldPosition pos) {
+		public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
 			return toAppendTo.append(obj);
 		}
 	};
@@ -199,8 +200,7 @@ public abstract class StringUtil {
 		String str2 = trimSpace(paramArrayOfString[0]);
 		int i = paramArrayOfString.length;
 		for (int j = 1; j < i; ++j)
-			str2 = new StringBuilder().append(str2).append(str1)
-					.append(trimSpace(paramArrayOfString[j])).toString();
+			str2 = new StringBuilder().append(str2).append(str1).append(trimSpace(paramArrayOfString[j])).toString();
 		return str2;
 	}
 
@@ -208,7 +208,8 @@ public abstract class StringUtil {
 	 * 首字母转成大写
 	 * 
 	 * @param s
-	 * @return
+	 *            要转换字符串
+	 * @return 转换后字符串
 	 */
 	public static String toUpperCaseFirstOne(String s) {
 		if (StringUtils.isBlank(s)) {
@@ -216,9 +217,7 @@ public abstract class StringUtil {
 		} else if (Character.isUpperCase(s.charAt(0))) {
 			return s;
 		} else {
-			return (new StringBuilder())
-					.append(Character.toUpperCase(s.charAt(0)))
-					.append(s.substring(1)).toString();
+			return (new StringBuilder()).append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).toString();
 		}
 	}
 
@@ -226,11 +225,11 @@ public abstract class StringUtil {
 	 * 产生MD5编码
 	 * 
 	 * @param s
-	 * @return
+	 *            要编码的字符串
+	 * @return MD5编码
 	 */
 	public final static String MD5(String s) {
-		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-				'A', 'B', 'C', 'D', 'E', 'F' };
+		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 		try {
 			byte[] strTemp = s.getBytes();
 			MessageDigest mdTemp = MessageDigest.getInstance("MD5");

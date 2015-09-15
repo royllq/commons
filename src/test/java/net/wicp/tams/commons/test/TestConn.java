@@ -29,8 +29,7 @@ public class TestConn extends AbsToDynaBean {
 	@BeforeClass
 	public static void initCalss() {
 		try {
-			conf = ConfigClassXml.createConfigClassXml("TestString", dir,
-					"TestString.xml");
+			conf = ConfigClassXml.createConfigClassXml("TestString", dir, "TestString.xml");
 		} catch (ProjectException e) {
 			e.printStackTrace();
 		}
@@ -49,24 +48,21 @@ public class TestConn extends AbsToDynaBean {
 	public void testClientOutBean() {
 		CusDynaBean outBean = HelperConn.getOutClass().newInstance();
 		outBean.set(Response.errorCode, "10000");
-		CusDynaBean resinfo = outBean.newCusDynaBean(Response.respInfo
-				.toString());
+		CusDynaBean resinfo = outBean.newCusDynaBean(Response.respInfo.toString());
 		resinfo.set(Response.respInfo.msgId, "aaa");
 		Assert.assertEquals(resinfo.get(Response.respInfo.msgId), "aaa");
 	}
 
 	@Test
 	public void testInitClientBean() {
-		Properties clientInfo = IOUtil
-				.fileToProperties("/connector/defaultClient.properties");
+		Properties clientInfo = IOUtil.fileToProperties("/connector/defaultClient.properties");
 		CusDynaBean clientbean = HelperConn.newControlInfo(clientInfo);
 		Assert.assertEquals(clientbean.getStrValueByName(Request.msgId), "aaaa");
 	}
 
 	@Test
 	public void testInputBean() {
-		Properties clientInfo = IOUtil
-				.fileToProperties("/connector/defaultClient.properties");
+		Properties clientInfo = IOUtil.fileToProperties("/connector/defaultClient.properties");
 		CusDynaBean inputBean = conf.newInputBean(clientInfo);
 		CusDynaBean clientbean = HelperConn.getControlInfo(inputBean);
 		Assert.assertEquals(clientbean.getStrValueByName(Request.msgId), "aaaa");
@@ -74,8 +70,7 @@ public class TestConn extends AbsToDynaBean {
 
 	@Test
 	public void testOutBean() {
-		CusDynaBean outBean = conf
-				.newOutBean(ExceptAll.project_undefined, "34555566");
+		CusDynaBean outBean = conf.newOutBean(ExceptAll.project_undefined, "34555566");
 		String errorCode = (String) outBean.get(Response.errorCode);
 		Assert.assertEquals(errorCode, "param_00000");
 	}

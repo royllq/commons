@@ -23,11 +23,9 @@ import org.apache.tapestry5.json.JSONObject;
 import org.slf4j.Logger;
 
 @SuppressWarnings("rawtypes")
-public abstract class AbstractDynaClassProperty extends DynaProperty implements
-		Cloneable {
+public abstract class AbstractDynaClassProperty extends DynaProperty implements Cloneable {
 	private static final long serialVersionUID = -5474164260071583692L;
-	private final static Logger logger = LogHelp
-			.getLogger(AbstractDynaClassProperty.class);
+	private final static Logger logger = LogHelp.getLogger(AbstractDynaClassProperty.class);
 	protected final Map<ColProperty, String> attributes = new HashMap<ColProperty, String>();// 属性
 
 	// ////////////////////////构造函数/////////////////////////////////////////////////////////////////////////////
@@ -84,7 +82,9 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 	 * 通过Json对象设置值
 	 * 
 	 * @param dynaBean
-	 * @param obj
+	 *            要设置值的Bean
+	 * @param json
+	 *            要设置的值，json对象
 	 */
 	public void setValueByJson(CusDynaBean dynaBean, Object json) {
 		OptAbsGType putobj = new PutJson(json);
@@ -105,8 +105,7 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 	 * @param dynaBean
 	 */
 	public void setDefaultColValue(CusDynaBean dynaBean) {
-		if (StringUtils.isNotBlank(getAttriValue(ColProperty.defaultValue))
-				&& getGType() == ColGType.single) {// 只有单值且有默认值时才进行设置
+		if (StringUtils.isNotBlank(getAttriValue(ColProperty.defaultValue)) && getGType() == ColGType.single) {// 只有单值且有默认值时才进行设置
 			Object defaultValue = getSingleDefaultColValue();
 			if (defaultValue != null) {
 				dynaBean.set(name, defaultValue);
@@ -117,7 +116,7 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 	// ////////////////////////////列的对应属性操作//////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * 通过ColProperty得到属性值
-	 * */
+	 */
 	public String getAttriValue(ColProperty attname) {
 		if (attname == null) {
 			return null;
@@ -127,7 +126,7 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 
 	/**
 	 * 集合类型
-	 * */
+	 */
 	public ColGType getGType() {
 		String gType = getAttriValue(ColProperty.gtype);
 		return ColGType.getByName(gType);
@@ -135,7 +134,7 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 
 	/**
 	 * 是否允许为空
-	 * */
+	 */
 	public boolean isNull() {
 		String isnullStr = getAttriValue(ColProperty.isnull);
 		return Boolean.parseBoolean(isnullStr);
@@ -186,25 +185,21 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 
 		@Override
 		protected Result doArray(Object param) {
-			if (param != null
-					&& !param.getClass().isArray()
-					|| (ColType.bytes.name().equals(
-							getAttriValue(ColProperty.type)) && param
-							.getClass().isAssignableFrom(byte[].class))) {
+			if (param != null && !param.getClass().isArray()
+					|| (ColType.bytes.name().equals(getAttriValue(ColProperty.type))
+							&& param.getClass().isAssignableFrom(byte[].class))) {
 				return doSingle(param);
 			}
 			Object[] values = (Object[]) param;
 			if (length >= 0 && values.length > length) {
-				logger.error("越界[{}]长度为：{} 但是传进来的值大小为：", name, length,
-						values.length);
+				logger.error("越界[{}]长度为：{} 但是传进来的值大小为：", name, length, values.length);
 				return new Result(ExceptAll.Param_lengthover);
 			} else {
 				StringBuffer retbuff = new StringBuffer("");
 				for (int i = 0; i < values.length; i++) {
 					Result rs = checkSingleValue(values[i]);
 					if (!rs.isSuc()) {
-						retbuff.append(String.format("第[%s]个参数不合法，原因：%s\n",
-								i + 1, rs.getMessage()));
+						retbuff.append(String.format("第[%s]个参数不合法，原因：%s\n", i + 1, rs.getMessage()));
 					}
 				}
 				return retValue(retbuff);
@@ -228,18 +223,15 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 			}
 			Map tempValue = (Map) param;
 			if (length >= 0 && tempValue.size() > length) {
-				logger.error("越界[{}]长度为：{} 但是传进来的值大小为：", name, length,
-						tempValue.size());
+				logger.error("越界[{}]长度为：{} 但是传进来的值大小为：", name, length, tempValue.size());
 				return new Result(ExceptAll.Param_lengthover);
 			} else {
 				StringBuffer retbuff = new StringBuffer("");
-				for (Iterator iterator = tempValue.keySet().iterator(); iterator
-						.hasNext();) {
+				for (Iterator iterator = tempValue.keySet().iterator(); iterator.hasNext();) {
 					String eleKey = (String) iterator.next();
 					Result rs = checkSingleValue(tempValue.get(eleKey));
 					if (!rs.isSuc()) {
-						retbuff.append(String.format("参数：{} 不合法，原因：{},",
-								eleKey, rs.getMessage()));
+						retbuff.append(String.format("参数：{} 不合法，原因：{},", eleKey, rs.getMessage()));
 					}
 				}
 				return retValue(retbuff);
@@ -253,8 +245,7 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 			}
 			List tempValue = (List) param;
 			if (length >= 0 && tempValue.size() > length) {
-				logger.error("越界[{}]长度为：{} 但是传进来的值大小为：", name, length,
-						tempValue.size());
+				logger.error("越界[{}]长度为：{} 但是传进来的值大小为：", name, length, tempValue.size());
 				return new Result(ExceptAll.Param_lengthover);
 			} else {
 				StringBuffer retbuff = new StringBuffer("");
@@ -262,8 +253,7 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 					Object object = tempValue.get(i);
 					Result rs = checkSingleValue(object);
 					if (!rs.isSuc()) {
-						retbuff.append(String.format("第{}个参数不合法，原因：{},", i + 1,
-								rs.getMessage()));
+						retbuff.append(String.format("第{}个参数不合法，原因：{},", i + 1, rs.getMessage()));
 					}
 				}
 				return retValue(retbuff);
@@ -336,11 +326,9 @@ public abstract class AbstractDynaClassProperty extends DynaProperty implements
 			JSONObject retobj = new JSONObject();
 			for (Object key : objmap.keySet()) {
 				if (objmap.get(key) instanceof CusDynaBean) {
-					retobj.put(String.valueOf(key),
-							singleObjToJson(objmap.get(key)));
+					retobj.put(String.valueOf(key), singleObjToJson(objmap.get(key)));
 				} else {
-					retobj.put(String.valueOf(key),
-							String.valueOf(objmap.get(key)));
+					retobj.put(String.valueOf(key), String.valueOf(objmap.get(key)));
 				}
 			}
 			Result ret = Result.getSuc();

@@ -29,8 +29,7 @@ public class UUIDGenerator {
 		}
 	}
 
-	public UUIDGenerator()
-	{
+	public UUIDGenerator() {
 		StringBuffer buffer = new StringBuffer(16);
 		buffer.append(midValueStatic);
 		buffer.append(toHex(System.identityHashCode(this), 8));
@@ -42,11 +41,11 @@ public class UUIDGenerator {
 	/**
 	 * 该方法用来产生一个32位的唯一的标记String
 	 *
-	 * @param obj 传入一个参考的对象
+	 * @param obj
+	 *            传入一个参考的对象
 	 * @return 返回结果字符串
 	 */
-	public static String generate(Object obj)
-	{
+	public static String generate(Object obj) {
 		StringBuffer uid = new StringBuffer(32);
 
 		// get the system time
@@ -65,11 +64,12 @@ public class UUIDGenerator {
 		return uid.toString();
 	}
 
-	/**
+	/***
 	 * 该方法用来产生一个32位的String唯一标记
+	 * 
+	 * @return 32位的String
 	 */
-	public String generate()
-	{
+	public String generate() {
 		StringBuffer uid = new StringBuffer(32);
 
 		// get the system time
@@ -85,9 +85,8 @@ public class UUIDGenerator {
 		return uid.toString();
 	}
 
-	private static String toHex(int value, int length)
-	{
-		char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+	private static String toHex(int value, int length) {
+		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 		StringBuffer buffer = new StringBuffer(length);
 		int shift = length - 1 << 2;
 		for (int i = -1; ++i < length;) {
@@ -98,8 +97,7 @@ public class UUIDGenerator {
 		return buffer.toString();
 	}
 
-	private static int toInt(byte bytes[])
-	{
+	private static int toInt(byte bytes[]) {
 		int value = 0;
 		for (int i = -1; ++i < bytes.length;) {
 			value <<= 8;
@@ -109,13 +107,11 @@ public class UUIDGenerator {
 		return value;
 	}
 
-	private static synchronized int getRandom()
-	{
+	private static synchronized int getRandom() {
 		return seederStatic.nextInt();
 	}
 
-	private static synchronized long getSystemTimeMillis()
-	{
+	private static synchronized long getSystemTimeMillis() {
 		long millis = System.currentTimeMillis();
 		if (millis > prevMillis) {
 			prevMillis = millis;
@@ -130,13 +126,12 @@ public class UUIDGenerator {
 	 *
 	 * @return 返回16位长整形数结果
 	 */
-	public static Long getUniqueLong()
-	{
+	public static Long getUniqueLong() {
 		long l = getSystemTimeMillis();
-		/*l = l * 1000000;
-		long b1 = addrBytes[3] & 0x0FF;
-		long b2 = (addrBytes[2] & 0x0FF) * 1000;
-		l = l + b2 +b1;*/
+		/*
+		 * l = l * 1000000; long b1 = addrBytes[3] & 0x0FF; long b2 =
+		 * (addrBytes[2] & 0x0FF) * 1000; l = l + b2 +b1;
+		 */
 		l = l * 1000;
 		long b1 = addrBytes[3] & 0x0FF;
 		l = l + b1;
