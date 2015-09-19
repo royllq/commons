@@ -121,6 +121,29 @@ public class ReflectAsset {
 		}
 	}
 
+	/****
+	 * 调用静态方法
+	 * 
+	 * @param className
+	 *            静态方法所在类名
+	 * @param methodName
+	 *            静态方法名
+	 * @param paramclass
+	 *            方法参数类型
+	 * @param param
+	 *            调用时传进来的参数
+	 * @return 返回对象
+	 * @throws Exception
+	 *             调用异常
+	 */
+	public static Object invokeStaticMothed(String className, String methodName, Class[] paramclass, Object... param)
+			throws Exception {
+		Class c = Class.forName(className);
+		Method m = c.getMethod(methodName, paramclass);
+		Object retobj = m.invoke(c, param);
+		return retobj;
+	}
+
 	/***
 	 * 是否是基本数据类型
 	 * 

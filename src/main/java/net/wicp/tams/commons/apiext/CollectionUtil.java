@@ -63,7 +63,8 @@ public abstract class CollectionUtil {
 	}
 
 	/****
-	 * 数组的合并
+	 * 数组的合并<br>
+	 * eg: CollectionUtil.arrayMerge(String[].class, ary1,ary2)
 	 * 
 	 * @param clazz
 	 *            数组类型

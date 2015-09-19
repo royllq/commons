@@ -1,12 +1,16 @@
 package net.wicp.tams.commons.apiext;
 
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
+import java.util.Date;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+
+import net.wicp.tams.commons.callback.IValueEncoder;
 
 /***
  * 字符串辅助类
@@ -48,6 +52,10 @@ public abstract class StringUtil {
 
 	public static boolean isNull(Object inputObj) {
 		return isNull(true, inputObj);
+	}
+
+	public static boolean isNotNull(Object inputObj) {
+		return !isNull(true, inputObj);
 	}
 
 	/**
@@ -247,5 +255,72 @@ public abstract class StringUtil {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	/***
+	 * String转为对象，handler为空就是基本数据类型
+	 *
+	 * @param type
+	 *            对象类型
+	 * @param v
+	 *            对象值
+	 * @param handler
+	 *            转换规则
+	 * @return 对象
+	 */
+	public static final <T> T str2Object(Class<T> type, String v, IValueEncoder<T> handler) {
+		Object param = null;
+		if (handler != null)
+			return handler.toValue(v);
+
+		if (type != String.class && StringUtils.isEmpty(v)) {
+			return null;
+		}
+		if (type == String.class)
+			param = v;
+		else if (type == int.class || type == Integer.class)
+			param = Integer.parseInt(v);
+		else if (type == long.class || type == Long.class)
+			param = Long.parseLong(v);
+		else if (type == byte.class || type == Byte.class)
+			param = Byte.parseByte(v);
+		else if (type == char.class || type == Character.class)
+			param = v.charAt(0);
+		else if (type == float.class || type == Float.class)
+			param = Float.parseFloat(v);
+		else if (type == double.class || type == Double.class)
+			param = Double.parseDouble(v);
+		else if (type == short.class || type == Short.class)
+			param = Short.parseShort(v);
+		else if (type == boolean.class || type == Boolean.class)
+			param = Boolean.parseBoolean(v);
+		else if (Date.class.isAssignableFrom(type))
+			param = DateUtil.objToDate(v);
+		else if (Enum.class.isAssignableFrom(type)) {
+			try {
+				param = type.getField(v).get(null);
+			} catch (Exception e) {
+			}
+		} else if (type == BigDecimal.class) {
+			try {
+				param = new BigDecimal(v);
+			} catch (Exception e) {
+			}
+		} else
+			throw new IllegalArgumentException(String.format("object type '%s' not valid", type));
+		return (T) param;
+	}
+
+	/***
+	 * String转为基本数据类型
+	 * 
+	 * @param type
+	 *            对象类型
+	 * @param v
+	 *            简单值
+	 * @return 简单对象
+	 */
+	public static final <T> T str2Object(Class<T> type, String v) {
+		return str2Object(type, v, null);
 	}
 }
