@@ -24,8 +24,12 @@ import net.wicp.tams.commons.exception.ProjectException;
 import net.wicp.tams.commons.web.easyuibean.EasyUINode;
 import net.wicp.tams.commons.web.easyuibean.EasyUINodeConf;
 
-
-
+/***
+ * easyui辅助类
+ * 
+ * @author andy.zhou
+ *
+ */
 public abstract class EasyUiAssist {
 
 	// {"total":28,"rows":[
@@ -110,7 +114,7 @@ public abstract class EasyUiAssist {
 			titles = fields.toArray(new String[fields.size()]);
 		}
 		if (aliasTitles != null && aliasTitles.length > 0) {
-			titles = CollectionUtil.arrayMerge(String[].class,titles, aliasTitles);
+			titles = CollectionUtil.arrayMerge(String[].class, titles, aliasTitles);
 		}
 		return getJsonForGrid(fromList, titles, convertsMap, recordNum);
 	}
@@ -161,7 +165,7 @@ public abstract class EasyUiAssist {
 	 *            label的字段名
 	 * @param codeFiled
 	 *            code的字段名
-	 * @param attrName
+	 * @param idName
 	 *            属性字段名
 	 * @return String
 	 *         [{label:'男',value:'M'},{label:'女',value:'F'},{label:'未知',value:''
