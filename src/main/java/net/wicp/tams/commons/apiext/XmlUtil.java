@@ -82,6 +82,23 @@ public abstract class XmlUtil {
 			return (Element) nodes.item(0);
 	}
 
+	/****
+	 * 通过属性名得到属性的值
+	 * 
+	 * @param node
+	 *            含有属性的节点
+	 * @param attrName
+	 *            属性名
+	 * @return 属性值
+	 */
+	public static final String findValueByAttrName(ConfigurationNode node, String attrName) {
+		List typeAry = node.getAttributes(attrName);
+		if (CollectionUtils.isEmpty(typeAry)) {
+			return null;
+		}
+		return String.valueOf(((DefaultConfigurationNode) typeAry.get(0)).getValue());
+	}
+
 	/**
 	 * 得到元素的值
 	 * 
@@ -105,7 +122,7 @@ public abstract class XmlUtil {
 	 *            子节点名称
 	 * @return 节点
 	 */
-	public static final ConfigurationNode getFirstNodeByNodeName(DefaultConfigurationNode node, String name) {
+	public static final ConfigurationNode getFirstNodeByNodeName(ConfigurationNode node, String name) {
 		List<ConfigurationNode> nodes = node.getChildren(name);
 		if (CollectionUtils.isEmpty(nodes)) {
 			return null;
