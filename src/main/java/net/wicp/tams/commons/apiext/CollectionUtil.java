@@ -52,7 +52,8 @@ public abstract class CollectionUtil {
 	 * @param joinStr
 	 *            连接的字符串
 	 * @return 连接后的字符串
-	 * @throws ProjectException  异常 
+	 * @throws ProjectException
+	 *             异常
 	 */
 
 	public static String arrayJoin(Object[] fromList, String joinStr) throws ProjectException {
@@ -74,8 +75,7 @@ public abstract class CollectionUtil {
 	 *            合并数组二
 	 * @return 全并后的数组
 	 */
-	
-	
+
 	public static <T> T[] arrayMerge(Class<T[]> clazz, T[] a, T[] b) {
 		if (ArrayUtils.isEmpty(a)) {
 			return b;
@@ -258,6 +258,58 @@ public abstract class CollectionUtil {
 		retAry = CollectionUtils.isEmpty(retAry) ? oriList : retAry;
 		return retAry;
 
+	}
+
+	/***
+	 * int数组转为List,因为Arrays.asList只支持对象的数组转成List
+	 * 
+	 * @param oriAry
+	 *            源数组
+	 * @return List
+	 */
+	public static List<Integer> asList(int[] oriAry) {
+		List<Integer> ret = new ArrayList<Integer>();
+		if (org.apache.commons.lang3.ArrayUtils.isNotEmpty(oriAry)) {
+			for (int integer : oriAry) {
+				ret.add(integer);
+			}
+		}
+		return ret;
+	}
+
+	/***
+	 * 把string数据转成整形List
+	 * 
+	 * @param oriAry
+	 *            源数组
+	 * @return List
+	 */
+	public static List<Integer> asList(String[] oriAry) {
+		List<Integer> ret = new ArrayList<Integer>();
+		if (org.apache.commons.lang3.ArrayUtils.isNotEmpty(oriAry)) {
+			for (String ele : oriAry) {
+				ret.add(Integer.parseInt(ele));
+			}
+		}
+		return ret;
+	}
+
+	/***
+	 * 把任意数组转成List
+	 * 
+	 * @param oriList
+	 *            源数组
+	 * @return List
+	 */
+	public static List<String> asList(List<?> oriList) {
+		if (oriList == null) {
+			return null;
+		}
+		List<String> ret = new ArrayList<String>();
+		for (Object object : oriList) {
+			ret.add(String.valueOf(object));
+		}
+		return ret;
 	}
 
 }
