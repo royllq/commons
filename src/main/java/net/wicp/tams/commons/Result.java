@@ -2,6 +2,7 @@ package net.wicp.tams.commons;
 
 import java.util.Locale;
 
+
 import net.wicp.tams.commons.exception.ExceptAll;
 import net.wicp.tams.commons.exception.IExcept;
 import net.wicp.tams.commons.exception.ProjectException;
@@ -13,7 +14,8 @@ import org.apache.tapestry5.json.JSONObject;
 /**
  * 操作返回的对象，exceptAll是必须要有的对象
  * */
-public class Result {
+public class Result implements java.io.Serializable{
+	private static final long serialVersionUID = 1L;
 	private boolean result;// true:正确,false:业务出错
 	private String message;
 	private IExcept except;// 异常编码
@@ -92,6 +94,7 @@ public class Result {
 	 * 
 	 * @return
 	 */
+	@java.beans.Transient
 	public Object[] getRetObjs() {
 		return retObjs;
 	}
