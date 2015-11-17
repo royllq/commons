@@ -69,7 +69,7 @@ public abstract class Conf {
 						logger.info("成功刷新配置文件");
 					}
 				} catch (Exception e) {
-					logger.error("加载配置文件失败", e);
+					logger.error("classpath的根目录下没有commonsUtil.properties文件，将使用commons.jar包的缺少配置。", e);
 				} finally {
 					if (fileInputStream != null) {
 						try {
@@ -79,7 +79,7 @@ public abstract class Conf {
 					}
 				}
 			}
-		}, 0, 30 * 1000);
+		}, 0, 60 * 1000);
 
 	}
 
