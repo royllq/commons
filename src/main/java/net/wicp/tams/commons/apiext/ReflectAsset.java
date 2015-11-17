@@ -4,60 +4,70 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.wicp.tams.commons.LogHelp;
-import net.wicp.tams.commons.callback.IConvertValue;
-import net.wicp.tams.commons.exception.ExceptAll;
-import net.wicp.tams.commons.exception.ProjectException;
-
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/***
- * 反身辅助类
- * 
- * @author andy.zhou
- *
- */
-@SuppressWarnings("rawtypes")
-public class ReflectAsset {
-	private final static Logger logger = LogHelp.getLogger(ReflectAsset.class);
-	private final static String[] excludeGet = new String[] { "getClass" };
+import net.wicp.tams.commons.callback.IConvertValue;
+import net.wicp.tams.commons.constant.DateFormatCase;
 
-	/***
-	 * 方法调用
+@SuppressWarnings("rawtypes")
+public abstract class ReflectAsset {
+	public static Logger logger = LoggerFactory.getLogger(ReflectAsset.class);
+
+	private static String[] excludeGet = new String[] { "getClass" };
+
+	public static Object invokeStaticMothed(String className, String methodName, Class[] paramclass, Object... param)
+			throws Exception {
+		Class c = Class.forName(className);
+		Method m = c.getMethod(methodName, paramclass);
+		Object retobj = m.invoke(c, param);
+		return retobj;
+	}
+
+	/****
+	 * 简单参数
 	 * 
-	 * @param invokeObj
-	 *            拥有此方法的对象
-	 * 
+	 * @param className
 	 * @param methodName
-	 *            方法名
-	 * 
 	 * @param param
-	 *            调用参数
-	 * @return 调用结果
-	 * @throws ProjectException
-	 *             执行失败
+	 * @return
+	 * @throws Exception
 	 */
-	public static Object invokeMothed(Object invokeObj, String methodName, Object... param) throws ProjectException {
-		if (invokeObj == null || StringUtils.isBlank(methodName)) {
-			throw new ProjectException(ExceptAll.Project_default, "反射中缺少类或方法");
+	public static Object invokeStaticMothed(String className, String methodName, Object... param) throws Exception {
+		Class[] paramClass = null;
+		if (!org.apache.commons.lang3.ArrayUtils.isEmpty(param)) {
+			paramClass = new Class[param.length];
+			for (int i = 0; i < param.length; i++) {
+				paramClass[i] = param.getClass();
+			}
 		}
+		return invokeStaticMothed(className, methodName, paramClass, param);
+	}
+
+	public static Object invokeMothed(Object invokeObj, String methodName, Object... param) {
 		Class c = invokeObj.getClass();
+		if (StringUtil.isNull(methodName)) {
+			logger.error("反射中缺少方法");
+			return null;
+		}
 		Method[] m = c.getMethods();// .getMethod(methodName,ptypes);
 		Method exeMethod = null;
 		for (int i = 0; i < m.length; i++) {
@@ -109,47 +119,18 @@ public class ReflectAsset {
 		if (exeMethod != null) {
 			try {
 				return exeMethod.invoke(invokeObj, param);
-			} catch (IllegalArgumentException e) {
-				throw new ProjectException(ExceptAll.Project_default);
-			} catch (IllegalAccessException e) {
-				throw new ProjectException(ExceptAll.Project_default);
-			} catch (InvocationTargetException e) {
-				throw new ProjectException(ExceptAll.Project_default);
+			} catch (Exception e) {
+				logger.error("反射调用方法出错。");
 			}
-		} else {
-			return null;
 		}
-	}
-
-	/****
-	 * 调用静态方法
-	 * 
-	 * @param className
-	 *            静态方法所在类名
-	 * @param methodName
-	 *            静态方法名
-	 * @param paramclass
-	 *            方法参数类型
-	 * @param param
-	 *            调用时传进来的参数
-	 * @return 返回对象
-	 * @throws Exception
-	 *             调用异常
-	 */
-	public static Object invokeStaticMothed(String className, String methodName, Class[] paramclass, Object... param)
-			throws Exception {
-		Class c = Class.forName(className);
-		Method m = c.getMethod(methodName, paramclass);
-		Object retobj = m.invoke(c, param);
-		return retobj;
+		return null;
 	}
 
 	/***
 	 * 是否是基本数据类型
 	 * 
 	 * @param clz
-	 *            要检查的类型
-	 * @return true 是，false 不是
+	 * @return
 	 */
 	public static boolean isPrimitieClass(Class clz) {
 		try {
@@ -159,12 +140,10 @@ public class ReflectAsset {
 		}
 	}
 
-	/***
+	/****
 	 * 找到get方法且没有参数的方法
 	 * 
-	 * @param clz
-	 *            指定的类
-	 * @return 所有get方法
+	 * @return
 	 */
 	public static List<String> findGetMethod(Class clz) {
 		List<String> methList = new ArrayList<String>();
@@ -193,8 +172,7 @@ public class ReflectAsset {
 	 * 找到get方法对应的域
 	 * 
 	 * @param clz
-	 *            指定的类
-	 * @return 所有get方法对应的域
+	 * @return
 	 */
 	public static List<String> findGetField(Class clz) {
 		List<String> retList = new ArrayList<String>();
@@ -210,14 +188,10 @@ public class ReflectAsset {
 	 * 把Bean对象转为Map
 	 * 
 	 * @param obj
-	 *            要转换的对象
-	 * @param convermap
-	 *            要转换的规则
-	 * @param allowNull
-	 *            空值要不要进入Map
-	 * @return 转换结果
+	 * @return
 	 */
-	public static Map<String, String> convertMapFromBean(Object obj, Map<String, IConvertValue> convermap,
+	@SuppressWarnings("unchecked")
+	public static Map<String, String> convertMapFromBeanForConvert(Object obj, Map<String, IConvertValue> convermap,
 			boolean allowNull) {
 		Map<String, String> retmap = new HashMap<String, String>();
 		if (obj == null) {
@@ -232,12 +206,17 @@ public class ReflectAsset {
 						value = BeanUtils.getProperty(obj, field);
 					} else {
 						IConvertValue convert = convermap.get(field);
-						value = convert.getStr(BeanUtils.getProperty(obj, field));
+						if(convert!=null){
+							Object oriDate =  PropertyUtils.getProperty(obj, field);
+							value=convert.getStr(oriDate);
+						}else{
+							value = BeanUtils.getProperty(obj, field);
+						}
 					}
-					if (!allowNull && StringUtils.isBlank(value)) {// 不允许为空但又是空值
+					if (!allowNull && StringUtil.isNull(value)) {// 不允许为空但又是空值
 						continue;
 					}
-					if (StringUtils.isBlank(value) && value.startsWith("org.apache.openjpa.enhance")) {// 由jpa生成的对象不放入
+					if (StringUtil.isNotNull(value) && value.startsWith("org.apache.openjpa.enhance")) {// 由jpa生成的对象不放入
 						continue;
 					}
 					retmap.put(field, value);
@@ -249,13 +228,91 @@ public class ReflectAsset {
 	}
 
 	/***
+	 * 把对象转为Map值, 主要用于把对象放到redis中(未测试)
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static <T extends Serializable> Map<String, String> convertMapFromBean(T obj) {
+		Map<String, String> retmap = new HashMap<String, String>();
+		if (obj == null) {
+			return retmap;
+		}
+		List<String> fields = findGetField(obj.getClass());
+		if (CollectionUtils.isNotEmpty(fields)) {
+			for (String field : fields) {
+				packMap(retmap, null, obj, field);
+			}
+		}
+		return retmap;
+	}
+
+	/**
+	 * 把对象的某个域设置到map中(未测试)
+	 * 
+	 * @param map
+	 * @param obj
+	 * @param field
+	 */
+	private static void packMap(Map<String, String> map, String oldfield, Object obj, String field) {
+		String key = StringUtil.isNull(oldfield) ? field : String.format("%s.%s", oldfield, field);
+		Object fieldObj = null;
+		try {
+			fieldObj = PropertyUtils.getProperty(obj, field);
+		} catch (Exception e) {
+		}
+		if (fieldObj == null) {
+			return;
+		}
+		if (isPrimitieClass(fieldObj.getClass())||fieldObj instanceof String||fieldObj instanceof Enum) {
+			String value = String.valueOf(fieldObj);
+			if (StringUtil.isNotNull(value) && value.startsWith("org.apache.openjpa.enhance")) {// 由jpa生成的对象不放入
+				return;
+			}
+			map.put(key, value);
+		} else if (fieldObj instanceof Date) {
+			String datestr = DateFormatCase.YYYY_MM_DD_hhmmss.getInstanc().format(fieldObj);
+			map.put(key, datestr);
+		} else {
+			// 可能是一个复合对象
+			List<String> fields = findGetField(fieldObj.getClass());
+			if (CollectionUtils.isNotEmpty(fields)) {
+				for (String subFields : fields) {
+					packMap(map, key, fieldObj, subFields);
+				}
+			}
+		}
+	}
+
+	/***
+	 * 把map对象转为可序列化的对象，支持用.来级联 主要用于把redis的Map值转为相应的对象
+	 * 
+	 * @param clazz
+	 * @param valueMap
+	 * @return
+	 */
+	public static <T extends Serializable> T convertMapToBean(Class clazz, Map<String, String> valueMap) {
+		if (MapUtils.isEmpty(valueMap)) {
+			return null;
+		}
+		try {
+			T t = (T) clazz.newInstance();
+			for (String key : valueMap.keySet()) {
+				String value = valueMap.get(key);
+				StringUtil.packObj(t, key, value);
+			}
+			return t;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/***
 	 * 判断类是否实现某个接口
 	 * 
 	 * @param c
-	 *            类
 	 * @param szInterface
-	 *            接口
-	 * @return true 实现，false没有实现
+	 * @return
 	 */
 	public static boolean isInterface(Class c, String szInterface) {
 		Class[] face = c.getInterfaces();
@@ -283,8 +340,7 @@ public class ReflectAsset {
 	 * 得到对象的属性描述
 	 * 
 	 * @param clazz
-	 *            类
-	 * @return 属性描述
+	 * @return
 	 */
 	public static PropertyDescriptor[] getPropertyDescriptors(Class clazz) {
 		BeanInfo beanInfo = null;
@@ -296,13 +352,6 @@ public class ReflectAsset {
 		return beanInfo.getPropertyDescriptors();
 	}
 
-	/***
-	 * 通过属性描述得到该属性对应的Class类型
-	 * 
-	 * @param propertyDescriptor
-	 *            属性描述
-	 * @return 异性的类型
-	 */
 	public static Class getClassRefType(PropertyDescriptor propertyDescriptor) {
 		Field[] fields = propertyDescriptor.getClass().getSuperclass().getDeclaredFields();
 		if (fields == null || fields.length <= 0) {
@@ -324,13 +373,6 @@ public class ReflectAsset {
 		return null;
 	}
 
-	/****
-	 * 得到类的域对应的类型，如果是Map，则值Class[]有两个值，key和value的类型，其它Class[]只有一个值
-	 * 
-	 * @param classz
-	 *            指定类
-	 * @return 域类型Map
-	 */
 	public static Map<String, Class[]> getContextType(Class classz) {
 		Field[] fs = classz.getDeclaredFields(); // 得到所有的fields
 		Map<String, Class[]> retMap = new HashMap<String, Class[]>();
@@ -371,14 +413,6 @@ public class ReflectAsset {
 		return retMap;
 	}
 
-	/***
-	 * 对象的复制
-	 * 
-	 * @param dest
-	 *            目标对象
-	 * @param orig
-	 *            原对象
-	 */
 	public static void copyProperties(Object dest, Object orig) {
 		try {
 			BeanUtils.copyProperties(dest, orig);

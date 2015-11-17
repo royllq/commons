@@ -1,5 +1,6 @@
 package net.wicp.tams.commons.apiext;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.text.FieldPosition;
@@ -7,7 +8,7 @@ import java.text.Format;
 import java.text.ParsePosition;
 import java.util.Date;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 
 import net.wicp.tams.commons.callback.IValueEncoder;
@@ -322,5 +323,42 @@ public abstract class StringUtil {
 	 */
 	public static final <T> T str2Object(Class<T> type, String v) {
 		return str2Object(type, v, null);
+	}
+
+	/****
+	 * 用值设置对象的域，支持级联
+	 *
+	 * @param retobj
+	 * @param fieldName
+	 * @param value
+	 * @throws Exception
+	 */
+	public static void packObj(Object retobj, String fieldName, String value) throws Exception {
+		int indexdot = fieldName.indexOf(".");
+		if (indexdot <= 0) {
+			Field field = null;
+			try {
+				field = retobj.getClass().getDeclaredField(fieldName);
+			} catch (Exception e) {
+				return;
+			}
+			Class<?> fildeClass = field.getType();
+			Object valueObj = StringUtil.str2Object(fildeClass, value);
+			if (valueObj != null) {
+				BeanUtils.setProperty(retobj, fieldName, valueObj);
+			}
+		} else {
+			String fieldNameTrue = fieldName.substring(0, indexdot);
+			Field field = null;
+			try {
+				field = retobj.getClass().getDeclaredField(fieldNameTrue);
+			} catch (Exception e) {
+				return;
+			}
+			Class<?> filedClass = field.getType();
+			Object fieldvalue = filedClass.newInstance();
+			packObj(fieldvalue, fieldName.substring(indexdot + 1), value);
+			BeanUtils.setProperty(retobj, fieldNameTrue, fieldvalue);
+		}
 	}
 }
