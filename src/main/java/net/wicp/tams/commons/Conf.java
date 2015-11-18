@@ -10,11 +10,12 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.wicp.tams.commons.apiext.IOUtil;
-import net.wicp.tams.commons.apiext.RedisClient;
+import net.wicp.tams.commons.apiext.StringUtil;
 
 /****
  * 配置文件会在30秒刷一下是否更新
@@ -27,23 +28,13 @@ public abstract class Conf {
 	public static final Properties utilProperties = IOUtil.fileToProperties("/commonsUtil.properties");// 属性配置
 	public static long lastModified = 0L;
 	private static final Map<String, Callback> reshBacks = new HashMap<>();// 重新加载配置文件时需要的回调函数,key：模块名
+	private static final Map<String, String[]> props = new HashMap<>();
 
 	public static interface Callback {
 		public void doReshConf(Properties newProperties);
 	}
 
 	static {
-		reshBacks.put("commons", new Callback() {
-			@Override
-			public void doReshConf(Properties newProperties) {
-				utilProperties.clear();
-				for (Object key : newProperties.keySet()) {
-					utilProperties.put(key, newProperties.get(key));
-				}
-				RedisClient.setInitPool(true);// Redis动态刷新
-			}
-		});
-
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -55,15 +46,36 @@ public abstract class Conf {
 					long curmodified = file.lastModified();
 					if (curmodified > lastModified) {
 						lastModified = curmodified;
+						Properties oldProperties = (Properties) utilProperties.clone();// 旧配置属性
 						Properties newProperties = new Properties();
 						fileInputStream = new FileInputStream(file);
 						newProperties.load(fileInputStream);
-
+						// 重新装配新的属性
+						utilProperties.clear();
+						for (Object key : newProperties.keySet()) {
+							utilProperties.put(key, newProperties.get(key));
+						}
 						for (String moudle : reshBacks.keySet()) {
-							try {
-								reshBacks.get(moudle).doReshConf(newProperties);
-							} catch (Exception e) {
-								logger.error("加载配置文件失败，回调模块[" + moudle + "]错误", e);
+							String[] propNames = props.get(moudle);
+							if (ArrayUtils.isEmpty(propNames)) {// 没有观察的属性名称不做调用
+								continue;
+							}
+							// 查找是否观察的属性有变化
+							boolean ischange = false;
+							for (String propName : propNames) {
+								String oldValue = oldProperties.getProperty(propName);
+								String newValue = newProperties.getProperty(propName);
+								if (!StringUtil.hasNull(oldValue).equals(StringUtil.hasNull(newValue))) {
+									ischange = true;
+									break;
+								}
+							}
+							if (ischange) {
+								try {
+									reshBacks.get(moudle).doReshConf(newProperties);
+								} catch (Exception e) {
+									logger.error("加载配置文件失败，回调模块[" + moudle + "]错误", e);
+								}
 							}
 						}
 						logger.info("成功刷新配置文件");
@@ -106,7 +118,18 @@ public abstract class Conf {
 		return retMap;
 	}
 
-	public static void addCallBack(String moudle, Callback callback) {
+	/***
+	 * 添加回调方法
+	 * 
+	 * @param moudle
+	 *            模块名
+	 * @param callback
+	 *            回调类
+	 * @param proNames
+	 *            关心的属性名
+	 */
+	public static void addCallBack(String moudle, Callback callback, String... proNames) {
+		props.put(moudle, proNames);
 		reshBacks.put(moudle, callback);
 	}
 }

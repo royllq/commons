@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.wicp.tams.commons.Conf;
+import net.wicp.tams.commons.Conf.Callback;
 import net.wicp.tams.commons.exception.ProjectException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -33,6 +34,15 @@ public class RedisClient {
 	private final static Object lockObj = new Object();
 
 	public final static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();// gson的格式化
+
+	static {
+		Conf.addCallBack("commons", new Callback() {
+			@Override
+			public void doReshConf(Properties newProperties) {
+				RedisClient.setInitPool(true);// Redis动态刷新
+			}
+		}, "redisname_default", "rjzjh.redisserver.redis1.host", "rjzjh.redisserver.redis1.port");
+	}
 
 	/****
 	 * 通过配置得到 Jedis
@@ -71,7 +81,7 @@ public class RedisClient {
 					jedisPool = new JedisPool(config, confMap.get("host"), Integer.parseInt(confMap.get("port")),
 							Integer.parseInt(confMap.get("maxIdle")), password);
 				}
-
+				logger.info("初始化池成功");
 			}
 		}
 		Jedis retJedis = jedisPool.getResource();
