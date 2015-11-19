@@ -36,12 +36,12 @@ public class RedisClient {
 	public final static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();// gson的格式化
 
 	static {
-		Conf.addCallBack("commons", new Callback() {
+		Conf.addCallBack("redis", new Callback() {
 			@Override
 			public void doReshConf(Properties newProperties) {
 				RedisClient.setInitPool(true);// Redis动态刷新
 			}
-		}, "redisname_default", "rjzjh.redisserver.redis1.host", "rjzjh.redisserver.redis1.port");
+		}, "redisserver%s");
 	}
 
 	/****
@@ -66,8 +66,7 @@ public class RedisClient {
 				if (StringUtils.isBlank(redisName)) {
 					redisName = "default";
 				}
-				String appName = (String) connProp.get(String.format("redisname_%s", redisName));
-				Map<String, String> confMap = Conf.getRedisServerPropByKey(connProp, appName);
+				Map<String, String> confMap = CollectionUtil.getPropsByKeypre(Conf.utilProperties, "redisserver");
 				JedisPoolConfig config = new JedisPoolConfig();
 				config.setMaxTotal(Integer.parseInt(confMap.get("maxTotal")));
 				config.setMaxIdle(Integer.parseInt(confMap.get("maxIdle")));

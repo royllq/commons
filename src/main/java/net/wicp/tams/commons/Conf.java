@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.wicp.tams.commons.apiext.CollectionUtil;
 import net.wicp.tams.commons.apiext.IOUtil;
 import net.wicp.tams.commons.apiext.StringUtil;
 
@@ -63,12 +64,31 @@ public abstract class Conf {
 							// 查找是否观察的属性有变化
 							boolean ischange = false;
 							for (String propName : propNames) {
-								String oldValue = oldProperties.getProperty(propName);
-								String newValue = newProperties.getProperty(propName);
-								if (!StringUtil.hasNull(oldValue).equals(StringUtil.hasNull(newValue))) {
-									ischange = true;
-									break;
+								if (propName.endsWith("%s")) {//取多个属性值，如redisserver%s
+									String keyPre = propName.substring(0, propName.length() - 2);
+									Map<String, String> oldmap = CollectionUtil.getPropsByKeypre(oldProperties, keyPre);
+									Map<String, String> newmap = CollectionUtil.getPropsByKeypre(newProperties, keyPre);
+									for (String key : oldmap.keySet()) {
+										String oldValue = oldmap.get(key);
+										String newValue = newmap.get(key);
+										if (!StringUtil.hasNull(oldValue).equals(StringUtil.hasNull(newValue))) {
+											ischange = true;
+											break;
+										}
+
+									}
+									if (ischange) {
+										break;
+									}
+								} else {
+									String oldValue = oldProperties.getProperty(propName);
+									String newValue = newProperties.getProperty(propName);
+									if (!StringUtil.hasNull(oldValue).equals(StringUtil.hasNull(newValue))) {
+										ischange = true;
+										break;
+									}
 								}
+
 							}
 							if (ischange) {
 								try {
@@ -95,29 +115,6 @@ public abstract class Conf {
 
 	}
 
-	/**
-	 * 取到Redis配置服务器配置示例： <br/>
-	 * defaultRedisName=redis1<br/>
-	 * rjzjh.redisserver.redis1.host=localhost<br/>
-	 * rjzjh.redisserver.redis1.port=6379 rjzjh.redisserver.redis1.maxTotal=20
-	 * <br/>
-	 * rjzjh.redisserver.redis1.maxidle=5<br/>
-	 * rjzjh.redisserver.redis1.maxWaitMillis=10001<br/>
-	 * rjzjh.redisserver.redis1.testonborrow=false<br/>
-	 */
-	public static Map<String, String> getRedisServerPropByKey(final Properties prop, final String key) {
-		Set<Object> propKeys = prop.keySet();
-		Map<String, String> retMap = new HashMap<String, String>();
-		for (Object object : propKeys) {
-			String tempKey = String.valueOf(object);
-			String tempStr = String.format("rjzjh.redisserver.%s.", key);
-			if (tempKey.startsWith(tempStr)) {
-				retMap.put(tempKey.replace(tempStr, ""), prop.getProperty(tempKey));
-			}
-		}
-		return retMap;
-	}
-
 	/***
 	 * 添加回调方法
 	 * 
@@ -129,7 +126,9 @@ public abstract class Conf {
 	 *            关心的属性名
 	 */
 	public static void addCallBack(String moudle, Callback callback, String... proNames) {
+		Validate.isTrue(ArrayUtils.isNotEmpty(proNames));
 		props.put(moudle, proNames);
 		reshBacks.put(moudle, callback);
 	}
+
 }

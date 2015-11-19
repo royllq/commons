@@ -4,9 +4,12 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import net.wicp.tams.commons.exception.ProjectException;
 
@@ -310,6 +313,32 @@ public abstract class CollectionUtil {
 			ret.add(String.valueOf(object));
 		}
 		return ret;
+	}
+
+	/****
+	 * 得到Properties中key以 keyPre+"." 开头的所有属性的集合
+	 * 
+	 * @param prop
+	 *            源属性
+	 * @param keyPre
+	 *            开始值
+	 * @return 满足条件的属性集合
+	 */
+	public static Map<String, String> getPropsByKeypre(Properties prop, String keyPre) {
+		if (prop == null || prop.size() == 0 || StringUtil.isNull(keyPre)) {
+			return new HashMap<>();
+		}
+		Set<Object> propKeys = prop.keySet();
+		Map<String, String> retMap = new HashMap<String, String>();
+		for (Object object : propKeys) {
+			String tempStr = String.format("%s.",
+					keyPre.endsWith(".") ? keyPre.substring(0, keyPre.length() - 2) : keyPre);
+			String key = String.valueOf(object);
+			if (key.startsWith(tempStr)) {
+				retMap.put(key, prop.getProperty(key));
+			}
+		}
+		return retMap;
 	}
 
 }
