@@ -26,7 +26,7 @@ import net.wicp.tams.commons.apiext.StringUtil;
  */
 public abstract class Conf {
 	private static Logger logger = LoggerFactory.getLogger(Conf.class);
-	public static final Properties utilProperties = IOUtil.fileToProperties("/commonsUtil.properties");// 属性配置
+	public static final Properties utilProperties = IOUtil.fileToProperties("/commonsUtil.properties",Conf.class);// 属性配置
 	public static long lastModified = 0L;
 	private static final Map<String, Callback> reshBacks = new HashMap<>();// 重新加载配置文件时需要的回调函数,key：模块名
 	private static final Map<String, String[]> props = new HashMap<>();

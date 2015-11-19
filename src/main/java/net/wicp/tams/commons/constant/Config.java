@@ -24,7 +24,7 @@ public abstract class Config {
 		return Config.locale;
 	}
 
-	public final static Properties utilProperties = IOUtil.fileToProperties("/conf/commonsUtil.properties");
+	public final static Properties utilProperties = IOUtil.fileToProperties("/conf/commonsUtil.properties",Config.class);
 
 	public static Locale locale = new Locale(Config.getValue("common.i18n"));// 配置默认语言，如果在多语言版本项目切换语言时需要调用setCurLocale方法进行切换
 

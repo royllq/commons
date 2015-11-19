@@ -46,19 +46,45 @@ public abstract class IOUtil {
 	 * 
 	 * @param filePath
 	 *            文件路径
+	 * @param classz
+	 *            要加载属性文件同jar包的类
 	 * @return Properties 属性对象
 	 */
-	public static Properties fileToProperties(String filePath) {
+	public static Properties fileToProperties(String filePath, Class classz) {
 		Properties returnPro = new Properties();
+		InputStream inputFile = null;
 		try {
-			InputStream inputFile = IOUtil.class.getResourceAsStream(filePath);
+			if (classz != null) {
+				inputFile = classz.getResourceAsStream(filePath);
+			} else {
+				inputFile = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+			}
 			returnPro.load(inputFile);
 		} catch (FileNotFoundException e) {
 			logger.error("找不到文件{}", filePath);
 		} catch (IOException e) {
 			logger.error("读取属性文件{}错误", filePath);
+		} finally {
+			if (inputFile != null) {
+				try {
+					inputFile.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		return returnPro;
+	}
+
+	/***
+	 * classpath的属性文件转为属性
+	 * 
+	 * @param filePath
+	 * @return
+	 */
+	public static Properties fileToProperties(String filePath) {
+		return fileToProperties(filePath, null);
 	}
 
 	/**
