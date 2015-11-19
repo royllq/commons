@@ -5,9 +5,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import net.wicp.tams.commons.constant.Config;
-
 import org.apache.commons.lang.StringUtils;
+
+import net.wicp.tams.commons.Conf;
 
 /***
  * 得到国际化信息
@@ -24,7 +24,7 @@ public abstract class MessageUtils {
 	public static ResourceBundle getInstance(Locale localhost) {
 		Locale queryLocal = null;
 		if (localhost == null) {
-			queryLocal = Config.getLocale();
+			queryLocal = Conf.getCurLocale();
 		}
 		ResourceBundle retobj = I18Resource.get(queryLocal);
 		if (retobj == null) {

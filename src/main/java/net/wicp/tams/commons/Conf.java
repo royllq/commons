@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
@@ -26,10 +27,14 @@ import net.wicp.tams.commons.apiext.StringUtil;
  */
 public abstract class Conf {
 	private static Logger logger = LoggerFactory.getLogger(Conf.class);
-	public static final Properties utilProperties = IOUtil.fileToProperties("/commonsUtil.properties",Conf.class);// 属性配置
-	public static long lastModified = 0L;
+	private static final Properties utilProperties = IOUtil.fileToProperties("/commonsUtil.properties", Conf.class);// 属性配置
+	private static long lastModified = 0L;
 	private static final Map<String, Callback> reshBacks = new HashMap<>();// 重新加载配置文件时需要的回调函数,key：模块名
 	private static final Map<String, String[]> props = new HashMap<>();
+	// 默认区域
+	private static Locale curLocale = new Locale(get("common.i18n"));
+
+	
 
 	public static interface Callback {
 		public void doReshConf(Properties newProperties);
@@ -64,7 +69,7 @@ public abstract class Conf {
 							// 查找是否观察的属性有变化
 							boolean ischange = false;
 							for (String propName : propNames) {
-								if (propName.endsWith("%s")) {//取多个属性值，如redisserver%s
+								if (propName.endsWith("%s")) {// 取多个属性值，如redisserver%s
 									String keyPre = propName.substring(0, propName.length() - 2);
 									Map<String, String> oldmap = CollectionUtil.getPropsByKeypre(oldProperties, keyPre);
 									Map<String, String> newmap = CollectionUtil.getPropsByKeypre(newProperties, keyPre);
@@ -129,6 +134,23 @@ public abstract class Conf {
 		Validate.isTrue(ArrayUtils.isNotEmpty(proNames));
 		props.put(moudle, proNames);
 		reshBacks.put(moudle, callback);
+	}
+
+	public static String get(String key) {
+		return String.valueOf(utilProperties.get(key));
+	}
+
+	public static Map<String, String> getPre(String key) {
+		return CollectionUtil.getPropsByKeypre(utilProperties, key);
+	}
+
+	public static void setCurLocale(Locale curLocale) {
+		if (curLocale != null) {
+			Conf.curLocale = curLocale;
+		}
+	}
+	public static Locale getCurLocale() {
+		return curLocale;
 	}
 
 }

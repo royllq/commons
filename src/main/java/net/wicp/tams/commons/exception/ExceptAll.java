@@ -8,10 +8,10 @@
  */
 package net.wicp.tams.commons.exception;
 
-import net.wicp.tams.commons.callback.impl.convertvalue.ConvertValueExcept;
-import net.wicp.tams.commons.constant.Config;
-
 import org.mvel2.templates.TemplateRuntime;
+
+import net.wicp.tams.commons.Conf;
+import net.wicp.tams.commons.callback.impl.convertvalue.ConvertValueExcept;
 
 
 
@@ -69,7 +69,7 @@ public enum ExceptAll implements IExcept {
 
 	@Override
 	public String getErrMsg(Object errBean) {
-		ConvertValueExcept cv = new ConvertValueExcept(Config.getLocale());
+		ConvertValueExcept cv = new ConvertValueExcept(Conf.getCurLocale());
 		return packmsg(cv.getStr(this), errBean);
 	}
 

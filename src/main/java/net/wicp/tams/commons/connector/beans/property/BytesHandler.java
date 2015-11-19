@@ -2,14 +2,14 @@ package net.wicp.tams.commons.connector.beans.property;
 
 import java.io.UnsupportedEncodingException;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+
+import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.constant.ColProperty;
-import net.wicp.tams.commons.constant.Config;
 import net.wicp.tams.commons.exception.ExceptAll;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
 
 /****
  * 二进制
@@ -55,7 +55,7 @@ public class BytesHandler extends BasicNoHandler {
 	protected Object singleObjToJson(Object json) {
 		byte[] tempobj = (byte[]) json;
 		try {
-			return new String(tempobj, Config.getValue("common.encode"));
+			return new String(tempobj, Conf.get("common.encode"));
 		} catch (UnsupportedEncodingException e) {
 			logger.error(String.format("字段[{}]二进制转为string对象出错", name), e);
 			return null;
@@ -65,7 +65,7 @@ public class BytesHandler extends BasicNoHandler {
 	protected Object jsonTosingleObj(Object obj) {
 		String tempstr = (String) obj;
 		try {
-			return tempstr.getBytes(Config.getValue("common.encode"));
+			return tempstr.getBytes(Conf.get("common.encode"));
 		} catch (UnsupportedEncodingException e) {
 			logger.error(String.format("字段[{}] String转为二进制时出错", name), e);
 			return null;

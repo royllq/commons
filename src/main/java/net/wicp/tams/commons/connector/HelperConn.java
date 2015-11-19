@@ -4,21 +4,18 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
-import net.wicp.tams.commons.apiext.IOUtil;
-import net.wicp.tams.commons.apiext.StringUtil;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
+
 import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.connector.beans.CusDynaClass;
 import net.wicp.tams.commons.connector.beans.property.AbstractDynaClassProperty;
 import net.wicp.tams.commons.connector.config.AbstractConfigClass;
 import net.wicp.tams.commons.connector.config.xmlParser.ConfigClassXml;
 import net.wicp.tams.commons.connector.config.xmlParser.XMLNameSpace;
-import net.wicp.tams.commons.constant.Config;
 import net.wicp.tams.commons.constant.param.conn.Response;
 import net.wicp.tams.commons.exception.ExceptAll;
 import net.wicp.tams.commons.exception.ProjectException;
-
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
 
 /****
  * 通讯帮助

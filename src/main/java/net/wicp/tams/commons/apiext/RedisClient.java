@@ -51,12 +51,8 @@ public class RedisClient {
 	 * @return
 	 * @throws ProjectException
 	 */
-	private static Jedis getConnection(Properties connProp) {
-		if (connProp == null || connProp.size() == 0) {
-			return null;
-		}
+	public static Jedis getConnection() {
 		if (jedisPool == null || initPool) {
-
 			synchronized (lockObj) {
 				initPool = false;
 				if (jedisPool != null) {
@@ -66,7 +62,7 @@ public class RedisClient {
 				if (StringUtils.isBlank(redisName)) {
 					redisName = "default";
 				}
-				Map<String, String> confMap = CollectionUtil.getPropsByKeypre(Conf.utilProperties, "redisserver");
+				Map<String, String> confMap = Conf.getPre("redisserver");
 				JedisPoolConfig config = new JedisPoolConfig();
 				config.setMaxTotal(Integer.parseInt(confMap.get("maxTotal")));
 				config.setMaxIdle(Integer.parseInt(confMap.get("maxIdle")));
@@ -86,15 +82,6 @@ public class RedisClient {
 		Jedis retJedis = jedisPool.getResource();
 		retJedis.select(defautlDb);
 		return retJedis;
-	}
-
-	/***
-	 * 得到默认的配置连接
-	 * 
-	 * @return
-	 */
-	public static Jedis getConnectionDefault() {
-		return getConnection(Conf.utilProperties);
 	}
 
 	/***

@@ -7,11 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.wicp.tams.commons.LogHelp;
-import net.wicp.tams.commons.constant.Config;
-import net.wicp.tams.commons.exception.ExceptAll;
-import net.wicp.tams.commons.exception.ProjectException;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,7 +18,11 @@ import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import net.wicp.tams.commons.Conf;
+import net.wicp.tams.commons.LogHelp;
+import net.wicp.tams.commons.exception.ExceptAll;
+import net.wicp.tams.commons.exception.ProjectException;
 
 /***
  * http辅助使用类
@@ -83,7 +82,7 @@ public abstract class HttpClientUtil {
 	}
 
 	public static String sendGet(String url) throws ProjectException {
-		return sendGet(url, Config.getValue("common.encode"));
+		return sendGet(url, Conf.get("common.encode"));
 	}
 
 	/**
@@ -130,7 +129,7 @@ public abstract class HttpClientUtil {
 		}
 		try {
 			// 填充表单
-			get.setEntity(new UrlEncodedFormEntity(qparams, Config.getValue("common.encode")));
+			get.setEntity(new UrlEncodedFormEntity(qparams, Conf.get("common.encode")));
 
 			HttpResponse response = httpClient.execute(get);
 			HttpEntity entity = response.getEntity();
