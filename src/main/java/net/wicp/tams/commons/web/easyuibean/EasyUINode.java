@@ -62,12 +62,8 @@ public class EasyUINode implements Comparable<EasyUINode> {
 	public JSONObject toJson() {
 		Validate.notBlank(this.id);
 		Validate.notBlank(this.text);
-		JSONObject retobj = new JSONObject("id", this.id, "text", this.text,
-				"index", index);
-		retobj.put(
-				"parentId",
-				parent == null ? "" : StringUtil.hasNull(parent.getIconCls(),
-						""));
+		JSONObject retobj = new JSONObject("id", this.id, "text", this.text, "index", index);
+		retobj.put("parentId", parent == null ? "" : StringUtil.hasNull(parent.getIconCls(), ""));
 		if (StringUtils.isNotBlank(this.iconCls))
 			retobj.put("iconCls", this.iconCls);
 		if (checked != null)
@@ -225,6 +221,10 @@ public class EasyUINode implements Comparable<EasyUINode> {
 
 	public void setParent(EasyUINode parent) {
 		this.parent = parent;
+	}
+
+	public List<EasyUINode> getChildrens() {
+		return childrens;
 	}
 
 }
