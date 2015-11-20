@@ -13,29 +13,53 @@ import org.mvel2.templates.TemplateRuntime;
 import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.callback.impl.convertvalue.ConvertValueExcept;
 
-
-
 /***
  * 自定义异常编码与其解释（测试用）
+ * 
  * @author andy.zhou
  *
  */
 public enum ExceptAll implements IExcept {
 	// 系统通用型错误(包括Java相关错误)
-	no("没有异常", 1000), project_undefined("未定义异常", 1001), project_user("自定义异常",
-			1002), Project_default("系统错误", 1003), project_noservice(
-			"错误的服务，没有定义的服务", 1004), project_clienterror("客户端连接错误", 1005), project_streamclose(
-			"流关闭错误", 1006), project_nonull("不允许为空值", 1007), project_overflow(
-			"数据值超出许可范围", 1008), project_overarry("数据元素越界", 1009), project_formatnofit(
-			"格式不匹配", 1010), project_datenofitformate("时间格式不对", 1011), param_error(
-			"参数错误", 1012), Param_dynaerror("动态参数错误", 1013, new IDynaMsg() {
+	no("没有异常", 1000),
+
+	project_undefined("未定义异常", 1001),
+
+	project_user("自定义异常", 1002),
+
+	Project_default("系统错误", 1003),
+
+	project_noservice("错误的服务，没有定义的服务", 1004),
+
+	project_clienterror("客户端连接错误", 1005),
+
+	project_streamclose("流关闭错误", 1006),
+
+	project_nonull("不允许为空值", 1007),
+
+	project_overflow("数据值超出许可范围", 1008),
+
+	project_overarry("数据元素越界", 1009),
+
+	project_formatnofit("格式不匹配", 1010),
+
+	project_datenofitformate("时间格式不对", 1011),
+
+	param_error("参数错误", 1012),
+
+	Param_dynaerror("动态参数错误", 1013, new IDynaMsg() {
 		@Override
 		public String packMsg(String msg, Object ctx) {
 			String retstr = (String) TemplateRuntime.eval(msg, ctx);
 			return retstr;
 		}
-	}), Param_typenofit("参数类型不匹配", 1014), Param_lengthover("参数长度越界", 1015), conn_nocontrol(
-			"输入参数没有控制信息", 1016);
+	}),
+
+	Param_typenofit("参数类型不匹配", 1014),
+
+	Param_lengthover("参数长度越界", 1015),
+
+	conn_nocontrol("输入参数没有控制信息", 1016);
 
 	private String desc;
 	private int value;
