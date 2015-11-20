@@ -22,10 +22,7 @@ public abstract class MessageUtils {
 	// 系统设置的默认Locale
 
 	public static ResourceBundle getInstance(Locale localhost) {
-		Locale queryLocal = null;
-		if (localhost == null) {
-			queryLocal = Conf.getCurLocale();
-		}
+		Locale queryLocal=localhost == null? Conf.getCurLocale():localhost;		
 		ResourceBundle retobj = I18Resource.get(queryLocal);
 		if (retobj == null) {
 			retobj = ResourceBundle.getBundle("I18N/MessageBundleUtil",
