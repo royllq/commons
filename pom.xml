@@ -88,6 +88,11 @@
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 		</dependency>
+		<!--亚马逊 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>amazon-sqs-java-messaging-lib</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
