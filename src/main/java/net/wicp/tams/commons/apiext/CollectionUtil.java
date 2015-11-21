@@ -55,8 +55,6 @@ public abstract class CollectionUtil {
 	 * @param joinStr
 	 *            连接的字符串
 	 * @return 连接后的字符串
-	 * @throws ProjectException
-	 *             异常
 	 */
 
 	public static String arrayJoin(Object[] fromList, String joinStr) {
