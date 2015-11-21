@@ -129,7 +129,7 @@ public abstract class JSONUtil {
 		}
 		StringBuffer buff = new StringBuffer("[");
 		for (Object object : fromList) {
-			if (ReflectAsset.isInterface(object.getClass(), "java.util.Map")) {
+			if (ReflectAssist.isInterface(object.getClass(), "java.util.Map")) {
 				String singJoson = getJsonForMap((Map) object, converts, titles);
 				buff.append(singJoson + ",");
 			} else {
@@ -240,7 +240,7 @@ public abstract class JSONUtil {
 		}
 		Object object = fromList.get(0);
 		String[] titles = null;
-		if (ReflectAsset.isInterface(object.getClass(), "java.util.Map")) {
+		if (ReflectAssist.isInterface(object.getClass(), "java.util.Map")) {
 			Map temp = (Map) object;
 			titles = new String[temp.size()];
 			int i = 0;
@@ -248,7 +248,7 @@ public abstract class JSONUtil {
 				titles[i++] = String.valueOf(keyObj);
 			}
 		} else {
-			List<String> fields = ReflectAsset.findGetField(object.getClass());
+			List<String> fields = ReflectAssist.findGetField(object.getClass());
 			titles = fields.toArray(new String[fields.size()]);
 		}
 		if (aliasTitles != null && aliasTitles.length > 0) {

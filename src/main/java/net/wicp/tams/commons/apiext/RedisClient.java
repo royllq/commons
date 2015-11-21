@@ -101,7 +101,7 @@ public class RedisClient {
 	 * @param obj
 	 */
 	public static <T extends Serializable> void putObjByMap(Jedis jedis, String key, T obj, Integer expire) {
-		Map<String, String> inpumap = ReflectAsset.convertMapFromBean(obj);
+		Map<String, String> inpumap = ReflectAssist.convertMapFromBean(obj);
 		jedis.hmset(key, inpumap);
 		if (expire != null) {
 			jedis.expire(key, expire);
@@ -224,11 +224,11 @@ public class RedisClient {
 	 */
 	public static <T extends Serializable> T getObjByMapValue(Class clazz, Jedis jedis, String key, String... fields) {
 		if (ArrayUtils.isEmpty(fields)) {
-			List<String> classfields = ReflectAsset.findGetField(clazz);
+			List<String> classfields = ReflectAssist.findGetField(clazz);
 			fields = classfields.toArray(new String[classfields.size()]);
 		}
 		Map<String, String> retmap = getMapByField(jedis, key, fields);
-		T rett = (T) ReflectAsset.convertMapToBean(clazz, retmap);
+		T rett = (T) ReflectAssist.convertMapToBean(clazz, retmap);
 		return rett;
 	}
 

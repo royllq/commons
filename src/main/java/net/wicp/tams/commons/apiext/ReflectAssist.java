@@ -29,8 +29,8 @@ import net.wicp.tams.commons.callback.IConvertValue;
 import net.wicp.tams.commons.constant.DateFormatCase;
 
 @SuppressWarnings("rawtypes")
-public abstract class ReflectAsset {
-	public static Logger logger = LoggerFactory.getLogger(ReflectAsset.class);
+public abstract class ReflectAssist {
+	public static Logger logger = LoggerFactory.getLogger(ReflectAssist.class);
 
 	private static String[] excludeGet = new String[] { "getClass" };
 

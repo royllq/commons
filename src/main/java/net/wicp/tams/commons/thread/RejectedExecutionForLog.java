@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.wicp.tams.commons.apiext.ReflectAsset;
+import net.wicp.tams.commons.apiext.ReflectAssist;
 
 /****
  * 当线程被拒绝时采取的策略，如果线程实现cn.rjzjh.commons.util.thread.ICancelHandle接口则调用
@@ -23,7 +23,7 @@ public class RejectedExecutionForLog implements RejectedExecutionHandler {
 				+ " CorePoolSize:" + executor.getCorePoolSize());
 
 		if (!executor.isShutdown()) {
-			if (ReflectAsset.isInterface(r.getClass(), "net.wicp.tams.commons.thread.ICancelHandle")) {
+			if (ReflectAssist.isInterface(r.getClass(), "net.wicp.tams.commons.thread.ICancelHandle")) {
 				ICancelHandle cancelDo = (ICancelHandle) r;
 				cancelDo.doCancle();
 			}

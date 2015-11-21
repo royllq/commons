@@ -16,7 +16,7 @@ import org.mvel2.templates.TemplateRuntime;
 
 import net.wicp.tams.commons.apiext.CollectionUtil;
 import net.wicp.tams.commons.apiext.JSONUtil;
-import net.wicp.tams.commons.apiext.ReflectAsset;
+import net.wicp.tams.commons.apiext.ReflectAssist;
 import net.wicp.tams.commons.apiext.StringUtil;
 import net.wicp.tams.commons.callback.IConvertValue;
 import net.wicp.tams.commons.exception.ExceptAll;
@@ -102,7 +102,7 @@ public abstract class EasyUiAssist {
 		}
 		Object object = fromList.get(0);
 		String[] titles = null;
-		if (ReflectAsset.isInterface(object.getClass(), "java.util.Map")) {
+		if (ReflectAssist.isInterface(object.getClass(), "java.util.Map")) {
 			Map temp = (Map) object;
 			titles = new String[temp.size()];
 			int i = 0;
@@ -110,7 +110,7 @@ public abstract class EasyUiAssist {
 				titles[i++] = String.valueOf(keyObj);
 			}
 		} else {
-			List<String> fields = ReflectAsset.findGetField(object.getClass());
+			List<String> fields = ReflectAssist.findGetField(object.getClass());
 			titles = fields.toArray(new String[fields.size()]);
 		}
 		if (aliasTitles != null && aliasTitles.length > 0) {

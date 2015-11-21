@@ -147,7 +147,7 @@ public abstract class CollectionUtil {
 		}
 		for (Object object : fromList) {
 			Object result = null;
-			if (ReflectAsset.isInterface(object.getClass(), "java.util.Map")) {
+			if (ReflectAssist.isInterface(object.getClass(), "java.util.Map")) {
 				Map tempObjMap = (Map) object;
 				result = tempObjMap.get(colName);
 			} else {
@@ -212,7 +212,7 @@ public abstract class CollectionUtil {
 				String includeValue = iAry[i];
 				for (Object eleObj : oriList) {
 					try {
-						if (ReflectAsset.isInterface(eleObj.getClass(), "java.util.Map")) {
+						if (ReflectAssist.isInterface(eleObj.getClass(), "java.util.Map")) {
 							Map tempObj = (Map) eleObj;
 							if (includeValue.equalsIgnoreCase(String.valueOf(tempObj.get(colName)))) {
 								retAry.add(eleObj);
@@ -239,7 +239,7 @@ public abstract class CollectionUtil {
 				@Override
 				public boolean evaluate(Object object) {
 					try {
-						if (ReflectAsset.isInterface(object.getClass(), "java.util.Map")) {
+						if (ReflectAssist.isInterface(object.getClass(), "java.util.Map")) {
 							Map tempObj = (Map) object;
 							if (ArrayUtils.contains(eAry, String.valueOf(tempObj.get(colName)))) {
 								return false;
