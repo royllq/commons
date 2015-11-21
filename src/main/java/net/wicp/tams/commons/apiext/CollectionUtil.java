@@ -59,7 +59,7 @@ public abstract class CollectionUtil {
 	 *             异常
 	 */
 
-	public static String arrayJoin(Object[] fromList, String joinStr) throws ProjectException {
+	public static String arrayJoin(Object[] fromList, String joinStr) {
 		if (ArrayUtils.isEmpty(fromList))
 			return null;
 		List<?> objlist = Arrays.asList(fromList);
