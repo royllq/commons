@@ -25,14 +25,10 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisClient {
 	private static Logger logger = LoggerFactory.getLogger(RedisClient.class);
-	public static final String REDISENVNAME = "redisname";
 	private static JedisPool jedisPool;// 非切片连接池
 	private static int defautlDb = 0;// 默认数据库
-
 	private static boolean initPool = false;
-
 	private final static Object lockObj = new Object();
-
 	public final static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();// gson的格式化
 
 	static {
@@ -57,10 +53,6 @@ public class RedisClient {
 				initPool = false;
 				if (jedisPool != null) {
 					jedisPool.destroy();
-				}
-				String redisName = System.getenv(REDISENVNAME);
-				if (StringUtils.isBlank(redisName)) {
-					redisName = "default";
 				}
 				Map<String, String> confMap = Conf.getPre("redisserver");
 				JedisPoolConfig config = new JedisPoolConfig();
