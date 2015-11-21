@@ -21,14 +21,26 @@ public class ProjectException extends Exception {
 		this.except = except;
 	}
 
-	/**
+	/****
 	 * 当有自定义的错误原因时可用此构造函数
+	 * 
+	 * @param except
+	 *            异常
+	 * @param errMsg
+	 *            错误信息
 	 */
 	public ProjectException(IExcept except, String errMsg) {
 		super(errMsg);
 		this.except = except;
 	}
 
+	/****
+	 * 得到固定格式的异常信息
+	 * 
+	 * @param errBean
+	 *            带参数Bean时要传入的实例
+	 * @return 异常信息
+	 */
 	public String getMessage(Object errBean) {
 		String errmsg = null;
 		if (errBean == null) {
@@ -45,7 +57,6 @@ public class ProjectException extends Exception {
 				except.getErrorValue(), errmsg, sb.toString());
 	}
 
-	@Override
 	public String getMessage() {
 		return getMessage(null);
 	}

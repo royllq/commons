@@ -42,10 +42,8 @@ public class RedisClient {
 
 	/****
 	 * 通过配置得到 Jedis
-	 *
-	 * @param connProp
-	 * @return
-	 * @throws ProjectException
+	 * 
+	 * @return Jedis实例
 	 */
 	public static Jedis getConnection() {
 		if (jedisPool == null || initPool) {
