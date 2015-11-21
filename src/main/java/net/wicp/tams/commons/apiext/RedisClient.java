@@ -54,19 +54,23 @@ public class RedisClient {
 				if (jedisPool != null) {
 					jedisPool.destroy();
 				}
-				Map<String, String> confMap = Conf.getPre("redisserver");
+				String name = "redisserver";
+				Map<String, String> confMap = Conf.getPre(name);
 				JedisPoolConfig config = new JedisPoolConfig();
-				config.setMaxTotal(Integer.parseInt(confMap.get("maxTotal")));
-				config.setMaxIdle(Integer.parseInt(confMap.get("maxIdle")));
-				config.setMaxWaitMillis(Integer.parseInt(confMap.get("maxWaitMillis")));
-				config.setTestOnBorrow(Boolean.parseBoolean(confMap.get("testOnBorrow")));
-				defautlDb = confMap.get("defaultDb") == null ? 0 : Integer.parseInt(confMap.get("defaultDb"));
-				String password = confMap.get("password");
+				config.setMaxTotal(Integer.parseInt(confMap.get(name + ".maxTotal")));
+				config.setMaxIdle(Integer.parseInt(confMap.get(name + ".maxIdle")));
+				config.setMaxWaitMillis(Integer.parseInt(confMap.get(name + ".maxWaitMillis")));
+				config.setTestOnBorrow(Boolean.parseBoolean(confMap.get(name + ".testOnBorrow")));
+				defautlDb = confMap.get(name + ".defaultDb") == null ? 0
+						: Integer.parseInt(confMap.get(name + ".defaultDb"));
+				String password = confMap.get(name + ".password");
 				if (StringUtils.isBlank(password)) {// 有设置密码
-					jedisPool = new JedisPool(config, confMap.get("host"), Integer.parseInt(confMap.get("port")));
+					jedisPool = new JedisPool(config, confMap.get(name + ".host"),
+							Integer.parseInt(confMap.get(name + ".port")));
 				} else {
-					jedisPool = new JedisPool(config, confMap.get("host"), Integer.parseInt(confMap.get("port")),
-							Integer.parseInt(confMap.get("maxIdle")), password);
+					jedisPool = new JedisPool(config, confMap.get(name + ".host"),
+							Integer.parseInt(confMap.get(name + ".port")),
+							Integer.parseInt(confMap.get(name + ".maxIdle")), password);
 				}
 				logger.info("初始化池成功");
 			}
