@@ -1,7 +1,7 @@
 package net.wicp.tams.commons.constant.dic.intf;
 
 /****
- * 需要下拉列表必须要实现的接口
+ * 枚举类需要下拉列表必须要实现的接口
  * 
  * @author Administrator
  *
