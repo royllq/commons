@@ -8,10 +8,10 @@ import redis.clients.jedis.Jedis;
 
 /***
  * Redis的解释转换器,Redis存的是 hashmap的形式值。
- * keypattern :  key的模式，如：opt:sexf  和  opt:sexm的格式为 opt:%s <br/>
- * valueCol   :  传进来的值解释字段的字段名<br/>
- * jedis      ： 如果传此对象进来，此转换器转换所有选项时都只用此连接，且不会释放它，外部产生的连接由外部释放。<br/>
- *               如果没有传进来，则由RedisClient跟据配置信息来产生，用完自己释放<br/>
+ * keypattern :  key的模式，如：opt:sexf  和  opt:sexm的格式为 opt:%s 
+ * valueCol   :  传进来的值解释字段的字段名
+ * jedis      ： 如果传此对象进来，此转换器转换所有选项时都只用此连接，且不会释放它，外部产生的连接由外部释放。
+ *               如果没有传进来，则由RedisClient跟据配置信息来产生，用完自己释放
  * @author andy.zhou
  *
  */
