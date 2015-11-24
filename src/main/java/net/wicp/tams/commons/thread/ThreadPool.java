@@ -7,11 +7,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.security.auth.callback.Callback;
+
 import org.apache.commons.lang3.StringUtils;
+
+import net.wicp.tams.commons.Conf;
 
 public class ThreadPool {
 	private static final java.util.Map<String, ExecutorService> executorServiceMap = new java.util.HashMap<String, ExecutorService>();
-
+	private static Properties newProperties=null;
+	static{
+		Conf.addCallBack("ThreadPool", new Conf.Callback() {		
+			@Override
+			public void doReshConf(Properties newProperties) {
+				ThreadPool.newProperties=newProperties;
+				for (String poolname : executorServiceMap.keySet()) {
+					executorServiceMap.get(poolname).shutdown();
+				}
+				executorServiceMap.clear();
+			}
+		}, "thread.pool.%s");
+	}
 	/*****
 	 * 通过名字得到线程池
 	 * 
@@ -64,8 +80,8 @@ public class ThreadPool {
 	 * 
 	 * @return
 	 */
-	public static final ExecutorService getDefaultPool(Properties properties) {
-		return getThreadPoolByName("default", properties);
+	public static final ExecutorService getDefaultPool() {
+		return getThreadPoolByName("default", ThreadPool.newProperties);
 	}
 
 	private static TimeUnit getTimeUnit(String TimeUnitStr) {
