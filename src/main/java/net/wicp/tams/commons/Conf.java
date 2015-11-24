@@ -97,7 +97,7 @@ public abstract class Conf {
 							}
 							if (ischange) {
 								try {
-									reshBacks.get(moudle).doReshConf(newProperties);
+									reshBacks.get(moudle).doReshConf(utilProperties);//也是新的Properties
 								} catch (Exception e) {
 									logger.error("加载配置文件失败，回调模块[" + moudle + "]错误", e);
 								}
