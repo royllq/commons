@@ -34,8 +34,6 @@ public abstract class Conf {
 	// 默认区域
 	private static Locale curLocale = new Locale(get("common.i18n"));
 
-	
-
 	public static interface Callback {
 		public void doReshConf(Properties newProperties);
 	}
@@ -97,7 +95,7 @@ public abstract class Conf {
 							}
 							if (ischange) {
 								try {
-									reshBacks.get(moudle).doReshConf(utilProperties);//也是新的Properties
+									reshBacks.get(moudle).doReshConf(utilProperties);// 也是新的Properties
 								} catch (Exception e) {
 									logger.error("加载配置文件失败，回调模块[" + moudle + "]错误", e);
 								}
@@ -149,6 +147,11 @@ public abstract class Conf {
 			Conf.curLocale = curLocale;
 		}
 	}
+
+	public static Properties copyProperties() {
+		return (Properties) utilProperties.clone();
+	}
+
 	public static Locale getCurLocale() {
 		return curLocale;
 	}
