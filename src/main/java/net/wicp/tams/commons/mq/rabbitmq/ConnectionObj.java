@@ -45,32 +45,32 @@ public class ConnectionObj implements ShutdownListener {
 					factory.setVirtualHost(Conf.get("rabbitmq.virtual.host"));
 					try {
 						// 集群模式,会按照数组顺序获取连接，一旦获取连接成功则就是这样机器的connection
-						Map<String, String> hostMap=Conf.getPre("rabbitmq.server.");
-						List<Address> hostlist=new ArrayList<>();
-						if(MapUtils.isEmpty(hostMap)){
+						Map<String, String> hostMap = Conf.getPre("rabbitmq.server.");
+						List<Address> hostlist = new ArrayList<>();
+						if (MapUtils.isEmpty(hostMap)) {
 							throw new IllegalArgumentException("rabbitmq没有配置服务器地址");
 						}
-						Pattern pattern = Pattern.compile("rabbitmq\\.server\\.host.\\.ip"); 
+						Pattern pattern = Pattern.compile("rabbitmq\\.server\\.host.\\.ip");
 						for (String key : hostMap.keySet()) {
-							Matcher matcher = pattern.matcher(key);							
-							if(matcher.matches()){
-								String ip=hostMap.get(key);
-								String port=hostMap.get(key.replace("ip", "port"));
-								hostlist.add(new Address(ip,Integer.parseInt(port)));
+							Matcher matcher = pattern.matcher(key);
+							if (matcher.matches()) {
+								String ip = hostMap.get(key);
+								String port = hostMap.get(key.replace("ip", "port"));
+								hostlist.add(new Address(ip, Integer.parseInt(port)));
 							}
 						}
-						if(CollectionUtils.isEmpty(hostlist)){
+						if (CollectionUtils.isEmpty(hostlist)) {
 							throw new IllegalArgumentException("rabbitmq没有配置服务器地址");
 						}
 						tempobj.conn = factory.newConnection(hostlist.toArray(new Address[hostlist.size()]));
 						tempobj.conn.addShutdownListener(tempobj);
 						tempobj.channel = tempobj.conn.createChannel();
+						INSTANCE = tempobj;
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (TimeoutException e) {
 						e.printStackTrace();
 					}
-					INSTANCE = tempobj;
 				}
 			}
 		}
