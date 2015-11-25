@@ -20,7 +20,7 @@ import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.thread.ThreadPool;
 
 /***
- * RabbitMQ的接收者
+ * RabbitMQ的接收者，观察者模式
  * 
  * @author andy.zhou
  *
@@ -36,14 +36,25 @@ public class AcceptMsgRabbit extends Observable {
 		return INSTANCE;
 	}
 
-	/***
+	/**
 	 * 给默认的Query 增加观察者
+	 * 
+	 * @param observer
+	 *            要增加的观察者
 	 */
 	@Override
 	public synchronized void addObserver(Observer observer) {
 		addObserver(DefaultTQuery, observer);
 	}
 
+	/*****
+	 * 给指定的Query增加观察者
+	 * 
+	 * @param queryName
+	 *            队列名称
+	 * @param observer
+	 *            要增加的观察者
+	 */
 	public synchronized void addObserver(String queryName, Observer observer) {
 		boolean needConsumer = false;// 是否需要构建新消费者
 		if (obsmap.get(queryName) == null) {
@@ -59,6 +70,15 @@ public class AcceptMsgRabbit extends Observable {
 		}
 	}
 
+	/****
+	 * 
+	 * @param queryName
+	 *            队列名称
+	 * @param observer
+	 *            要增加的观察者
+	 * @param needConsumer
+	 *            是否需要增加消费者线程,true：需要 false：不需要
+	 */
 	public synchronized void addObserver(final String queryName, Observer observer, boolean needConsumer) {
 		if (obsmap.get(queryName) == null) {
 			obsmap.put(queryName, new ArrayList<Observer>());

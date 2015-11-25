@@ -11,13 +11,22 @@ import net.wicp.tams.commons.apiext.StringUtil;
 import net.wicp.tams.commons.constant.RabbitExchangeType;
 
 public abstract class SendMsgRabbit {
+	/***
+	 * 通过fanout类型转发器来发送消息
+	 * 
+	 * @param exchange
+	 *            转发器，一定是fanout类型的
+	 * @param message
+	 *            消息
+	 * @return
+	 */
 	public static Result sendFanoutMsg(String exchange, String message) {
 		if (StringUtil.isNull(exchange) || StringUtil.isNull(message)) {
 			return Result.getError("exchange或消费缺失");
 		}
 		Channel channel = ConnectionObj.getInstance().getChannel();
 		try {
-			channel.exchangeDeclare(exchange, RabbitExchangeType.fanout.name(),true);
+			channel.exchangeDeclare(exchange, RabbitExchangeType.fanout.name(), true);
 			channel.basicPublish(exchange, "", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			return Result.getSuc();
 		} catch (IOException e) {
@@ -53,7 +62,8 @@ public abstract class SendMsgRabbit {
 	 * 直接发送消息到默认的Query
 	 * 
 	 * @param message
-	 * @return
+	 *            消息
+	 * @return 返回的结果
 	 */
 	public static Result sendDicMsg(String message) {
 		return sendDicMsg(AcceptMsgRabbit.DefaultTQuery, message);
