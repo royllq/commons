@@ -108,11 +108,33 @@
 			<artifactId>amqp-client</artifactId>
 			<version>3.5.6</version>
 		</dependency>
-
+		<!-- rocketMq -->
 		<dependency>
-			<groupId>com.esotericsoftware.kryo</groupId>
-			<artifactId>kryo</artifactId>
-			<version>2.22</version>
+			<groupId>com.alibaba.rocketmq</groupId>
+			<artifactId>rocketmq-client</artifactId>
+			<version>3.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.rocketmq</groupId>
+			<artifactId>rocketmq-common</artifactId>
+			<version>3.2.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.rocketmq</groupId>
+			<artifactId>rocketmq-remoting</artifactId>
+			<version>3.2.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
