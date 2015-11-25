@@ -330,7 +330,7 @@ public abstract class CollectionUtil {
 		Map<String, String> retMap = new HashMap<String, String>();
 		for (Object object : propKeys) {
 			String tempStr = String.format("%s.",
-					keyPre.endsWith(".") ? keyPre.substring(0, keyPre.length() - 2) : keyPre);
+					keyPre.endsWith(".") ? keyPre.substring(0, keyPre.length() - 1) : keyPre);
 			String key = String.valueOf(object);
 			if (key.startsWith(tempStr)) {
 				retMap.put(key, prop.getProperty(key));
