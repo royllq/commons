@@ -25,11 +25,18 @@ public class TestRabbitMq {
 
 	@Test
 	public void testAccept() {
-		AcceptMsgRabbit.getInstance().addObserver(new Observer() {			
+		AcceptMsgRabbit.getInstance().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				System.out.println(arg);
 			}
 		});
+		try {
+			while (true) {
+				Thread.currentThread().sleep(3 * 60 * 1000);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
