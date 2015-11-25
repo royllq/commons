@@ -1,6 +1,7 @@
 package net.wicp.tams.commons.mq.rocketmq;
 
 import java.net.InetAddress;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 
@@ -8,9 +9,8 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
 
+import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.LogHelp;
-import net.wicp.tams.commons.Result;
-import net.wicp.tams.commons.mq.rabbitmq.ConnectionObj;
 
 public class SendMsgRocket {
 	private final static Logger logger = LogHelp.getLogger(SendMsgRocket.class);
@@ -18,15 +18,25 @@ public class SendMsgRocket {
 	private static Object lockobj = new Object();
 	private DefaultMQProducer producer;
 
+	static {
+		Conf.addCallBack("rocket", new Conf.Callback() {
+			@Override
+			public void doReshConf(Properties newProperties) {
+				destroy();
+				INSTANCE = null;
+			}
+		}, "rocketmq.server.%s");
+	}
+
 	public static final SendMsgRocket getInstance() {
 		if (INSTANCE == null) {
 			synchronized (lockobj) {
 				if (INSTANCE == null) {
 					SendMsgRocket tempobj = new SendMsgRocket();
 					try {
-						tempobj.producer = new DefaultMQProducer(group);
+						tempobj.producer = new DefaultMQProducer(Conf.get("rocketmq.server.defaultgroup"));// 组，一个项目一般只发到一个组里
 						tempobj.producer.setInstanceName("MSG_SENDER-" + InetAddress.getLocalHost().getHostName());
-						tempobj.producer.setNamesrvAddr(nameSrvAddr);
+						tempobj.producer.setNamesrvAddr(Conf.get("rocketmq.server.namesrvaddr"));// 地址
 						tempobj.producer.start();
 						logger.info("MQ发送端启动成功");
 						INSTANCE = tempobj;
@@ -41,15 +51,15 @@ public class SendMsgRocket {
 		return INSTANCE;
 	}
 
-	public void destroy() {
-		if (producer != null) {
-			producer.shutdown();
-			logger.info("[{}] metaq 发送端关闭成功.", nameSrvAddr);
+	private static void destroy() {
+		if (SendMsgRocket.INSTANCE != null && SendMsgRocket.INSTANCE.producer != null) {
+			SendMsgRocket.INSTANCE.producer.shutdown();
+			logger.info("[{}] metaq 发送端关闭成功.", Conf.get("rocketmq.server.namesrvaddr"));
 		}
 	}
 
-	public SendResult SendMsg(String msg, String doctype) {
-		Message sendMsg = new Message(topic, doctype, msg.getBytes());
+	public SendResult SendMsg(String topic, String tag, String msg) {
+		Message sendMsg = new Message(topic, tag, msg.getBytes());
 		try {
 			SendResult sendResult = producer.send(sendMsg);
 			return sendResult;
@@ -59,8 +69,12 @@ public class SendMsgRocket {
 		}
 	}
 
+	public SendResult SendMsg(String tag, String msg) {
+		return SendMsg(Conf.get("rocketmq.server.defaulttopic"), tag, msg);
+	}
+
 	public SendResult SendMsg(String msg) {
-		return SendMsg(msg, defaultTag);
+		return SendMsg(Conf.get("rocketmq.server.defaulttopic"), Conf.get("rocketmq.server.defaulttag"), msg);
 	}
 
 }
