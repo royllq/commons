@@ -62,7 +62,7 @@ public class AcceptMsgRabbit extends Observable {
 
 				@Override
 				public void run() {
-					Channel channel = null;// TODO 得到通道
+					Channel channel = ConnectionObj.getInstance().getChannel();
 					try {
 						QueueingConsumer consumer = new QueueingConsumer(channel);
 						// 默认是需要consumer收到消息后才进行ack
@@ -82,18 +82,16 @@ public class AcceptMsgRabbit extends Observable {
 							} catch (Exception e) {
 								logger.error("接收消息时失败", e);
 							}
-
 						}
 
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (ShutdownSignalException e) {
-						// AutoRetryConnectionFactory.getInstance().init();
-						e.printStackTrace();
+						ConnectionObj.closeChannelAndConnection();
 					} catch (ConsumerCancelledException e) {
 						e.printStackTrace();
 					} catch (InterruptedException e) {
-						// AutoRetryConnectionFactory.getInstance().closeChannelAndConnection();
+						ConnectionObj.closeChannelAndConnection();
 					}
 				}
 			});
