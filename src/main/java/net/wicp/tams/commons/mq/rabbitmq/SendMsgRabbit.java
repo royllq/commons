@@ -8,7 +8,6 @@ import com.rabbitmq.client.MessageProperties;
 import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.apiext.StringUtil;
-import net.wicp.tams.commons.constant.RabbitExchangeType;
 
 public abstract class SendMsgRabbit {
 	/***
