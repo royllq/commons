@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,10 +24,11 @@ import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.callback.IConvertValue;
 import net.wicp.tams.commons.constant.DateFormatCase;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class ReflectAssist {
 	public static Logger logger = LoggerFactory.getLogger(ReflectAssist.class);
 
@@ -43,13 +43,17 @@ public abstract class ReflectAssist {
 	}
 
 	/****
-	 * 简单参数
+	 * 用简单参数调用静态方法
 	 * 
 	 * @param className
+	 *            要调用的静态方法所在的类名
 	 * @param methodName
+	 *            静态方法名
 	 * @param param
+	 *            调用的参数
 	 * @return
 	 * @throws Exception
+	 *             调用时错误
 	 */
 	public static Object invokeStaticMothed(String className, String methodName, Object... param) throws Exception {
 		Class[] paramClass = null;
@@ -62,6 +66,17 @@ public abstract class ReflectAssist {
 		return invokeStaticMothed(className, methodName, paramClass, param);
 	}
 
+	/***
+	 * 调用对象中的方法
+	 * 
+	 * @param invokeObj
+	 *            方法所在的对象
+	 * @param methodName
+	 *            方法名
+	 * @param param
+	 *            调用的参数
+	 * @return 调用方法返回的结果
+	 */
 	public static Object invokeMothed(Object invokeObj, String methodName, Object... param) {
 		Class c = invokeObj.getClass();
 		if (StringUtil.isNull(methodName)) {
@@ -127,10 +142,11 @@ public abstract class ReflectAssist {
 	}
 
 	/***
-	 * 是否是基本数据类型
+	 * 判断类是否基本数据类型
 	 * 
 	 * @param clz
-	 * @return
+	 *            要判断的类
+	 * @return 是否基本数据类型 true:是，false:否
 	 */
 	public static boolean isPrimitieClass(Class clz) {
 		try {
@@ -140,10 +156,12 @@ public abstract class ReflectAssist {
 		}
 	}
 
-	/****
+	/***
 	 * 找到get方法且没有参数的方法
 	 * 
-	 * @return
+	 * @param clz
+	 *            get方法所在的类
+	 * @return 所有的get方法的方法名，排除"getClass"方法
 	 */
 	public static List<String> findGetMethod(Class clz) {
 		List<String> methList = new ArrayList<String>();
@@ -172,7 +190,8 @@ public abstract class ReflectAssist {
 	 * 找到get方法对应的域
 	 * 
 	 * @param clz
-	 * @return
+	 *            域所在的类
+	 * @return 所有的域的名称
 	 */
 	public static List<String> findGetField(Class clz) {
 		List<String> retList = new ArrayList<String>();
@@ -188,9 +207,13 @@ public abstract class ReflectAssist {
 	 * 把Bean对象转为Map
 	 * 
 	 * @param obj
-	 * @return
+	 *            要转换的Bean对象
+	 * @param convermap
+	 *            对象值的转换器，key：对象的域名称,value：转换器，它会把对应域的值按转换器规则转换值，把转换后的值放入结果Map
+	 * @param allowNull
+	 *            是否允许为空，true:允许，false：不允许，如果允许为空，则对象域的值为null也会加到结果map中
+	 * @return 转换后的结果
 	 */
-	@SuppressWarnings("unchecked")
 	public static Map<String, String> convertMapFromBeanForConvert(Object obj, Map<String, IConvertValue> convermap,
 			boolean allowNull) {
 		Map<String, String> retmap = new HashMap<String, String>();
@@ -206,10 +229,10 @@ public abstract class ReflectAssist {
 						value = BeanUtils.getProperty(obj, field);
 					} else {
 						IConvertValue convert = convermap.get(field);
-						if(convert!=null){
-							Object oriDate =  PropertyUtils.getProperty(obj, field);
-							value=convert.getStr(oriDate);
-						}else{
+						if (convert != null) {
+							Object oriDate = PropertyUtils.getProperty(obj, field);
+							value = convert.getStr(oriDate);
+						} else {
 							value = BeanUtils.getProperty(obj, field);
 						}
 					}
@@ -231,7 +254,8 @@ public abstract class ReflectAssist {
 	 * 把对象转为Map值, 主要用于把对象放到redis中(未测试)
 	 * 
 	 * @param obj
-	 * @return
+	 *            要转换的对象
+	 * @return 转换后的Map值
 	 */
 	public static <T extends Serializable> Map<String, String> convertMapFromBean(T obj) {
 		Map<String, String> retmap = new HashMap<String, String>();
@@ -247,12 +271,17 @@ public abstract class ReflectAssist {
 		return retmap;
 	}
 
-	/**
-	 * 把对象的某个域设置到map中(未测试)
+	/***
+	 * 把对象的某个域设置到map中(未测试)，使用递归的方法找出子对象的值放入map
 	 * 
 	 * @param map
+	 *            要放结果的map
+	 * @param oldfield
+	 *            父对象的域名称
 	 * @param obj
+	 *            要操作的对象
 	 * @param field
+	 *            要操作的域名称
 	 */
 	private static void packMap(Map<String, String> map, String oldfield, Object obj, String field) {
 		String key = StringUtil.isNull(oldfield) ? field : String.format("%s.%s", oldfield, field);
@@ -264,7 +293,7 @@ public abstract class ReflectAssist {
 		if (fieldObj == null) {
 			return;
 		}
-		if (isPrimitieClass(fieldObj.getClass())||fieldObj instanceof String||fieldObj instanceof Enum) {
+		if (isPrimitieClass(fieldObj.getClass()) || fieldObj instanceof String || fieldObj instanceof Enum) {
 			String value = String.valueOf(fieldObj);
 			if (StringUtil.isNotNull(value) && value.startsWith("org.apache.openjpa.enhance")) {// 由jpa生成的对象不放入
 				return;
@@ -288,8 +317,10 @@ public abstract class ReflectAssist {
 	 * 把map对象转为可序列化的对象，支持用.来级联 主要用于把redis的Map值转为相应的对象
 	 * 
 	 * @param clazz
+	 *            要返回对象的类
 	 * @param valueMap
-	 * @return
+	 *            要返回对象的值，key:如果是 a.b 那么它对应的value则是子对象的值
+	 * @return 转换后的对象值
 	 */
 	public static <T extends Serializable> T convertMapToBean(Class clazz, Map<String, String> valueMap) {
 		if (MapUtils.isEmpty(valueMap)) {
@@ -310,12 +341,14 @@ public abstract class ReflectAssist {
 	/***
 	 * 判断类是否实现某个接口
 	 * 
-	 * @param c
+	 * @param classz
+	 *            要判断的类
 	 * @param szInterface
-	 * @return
+	 *            要判断的接口
+	 * @return 是否继承了接口，true：是 false：否
 	 */
-	public static boolean isInterface(Class c, String szInterface) {
-		Class[] face = c.getInterfaces();
+	public static boolean isInterface(Class classz, String szInterface) {
+		Class[] face = classz.getInterfaces();
 		for (int i = 0, j = face.length; i < j; i++) {
 			if (face[i].getName().equals(szInterface)) {
 				return true;
@@ -330,17 +363,18 @@ public abstract class ReflectAssist {
 				}
 			}
 		}
-		if (null != c.getSuperclass()) {
-			return isInterface(c.getSuperclass(), szInterface);
+		if (null != classz.getSuperclass()) {
+			return isInterface(classz.getSuperclass(), szInterface);
 		}
 		return false;
 	}
 
 	/***
-	 * 得到对象的属性描述
+	 * 得到类的属性描述
 	 * 
 	 * @param clazz
-	 * @return
+	 *            要操作的类
+	 * @return 属性描述数组
 	 */
 	public static PropertyDescriptor[] getPropertyDescriptors(Class clazz) {
 		BeanInfo beanInfo = null;
@@ -352,6 +386,13 @@ public abstract class ReflectAssist {
 		return beanInfo.getPropertyDescriptors();
 	}
 
+	/***
+	 * 得到属性描述所对应的类
+	 * 
+	 * @param propertyDescriptor
+	 *            指定的属性描述
+	 * @return 对应的类
+	 */
 	public static Class getClassRefType(PropertyDescriptor propertyDescriptor) {
 		Field[] fields = propertyDescriptor.getClass().getSuperclass().getDeclaredFields();
 		if (fields == null || fields.length <= 0) {
@@ -373,6 +414,13 @@ public abstract class ReflectAssist {
 		return null;
 	}
 
+	/***
+	 * 得到类所有域及对应的类
+	 * 
+	 * @param classz
+	 *            要操作的类
+	 * @return 所有域及对应的类
+	 */
 	public static Map<String, Class[]> getContextType(Class classz) {
 		Field[] fs = classz.getDeclaredFields(); // 得到所有的fields
 		Map<String, Class[]> retMap = new HashMap<String, Class[]>();
@@ -413,11 +461,22 @@ public abstract class ReflectAssist {
 		return retMap;
 	}
 
-	public static void copyProperties(Object dest, Object orig) {
+	/***
+	 * 复制对象
+	 * 
+	 * @param dest
+	 *            目标对象
+	 * @param orig
+	 *            源对象
+	 * @return 复制是否成功 result.isSuc() 为true:成功，false失败
+	 */
+	public static Result copyProperties(Object dest, Object orig) {
 		try {
 			BeanUtils.copyProperties(dest, orig);
+			return Result.getSuc();
 		} catch (Exception e) {
 			logger.error("复制属性出错", e);
+			return Result.getError(e.getMessage());
 		}
 	}
 

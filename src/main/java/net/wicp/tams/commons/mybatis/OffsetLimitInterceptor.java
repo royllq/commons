@@ -15,16 +15,16 @@ import net.wicp.tams.commons.apiext.StringUtil;
 import net.wicp.tams.commons.mybatis.dialect.Dialect;
 import net.wicp.tams.commons.mybatis.dialect.PropertiesHelper;
 
-
 /****
  * 翻页拦截类
  * 
  * @author Administrator
  *
  */
-@Intercepts({ @org.apache.ibatis.plugin.Signature(type = org.apache.ibatis.executor.Executor.class, method = "query", args = {
-		MappedStatement.class, Object.class, RowBounds.class,
-		org.apache.ibatis.session.ResultHandler.class }) })
+@Intercepts({
+		@org.apache.ibatis.plugin.Signature(type = org.apache.ibatis.executor.Executor.class, method = "query", args = {
+				MappedStatement.class, Object.class, RowBounds.class,
+				org.apache.ibatis.session.ResultHandler.class }) })
 public class OffsetLimitInterceptor implements Interceptor {
 	static int MAPPED_STATEMENT_INDEX = 0;
 	static int PARAMETER_INDEX = 1;
@@ -45,8 +45,7 @@ public class OffsetLimitInterceptor implements Interceptor {
 		int j = localRowBounds.getLimit();
 		if ((!this.dialect.supportsLimit()) || ((i == 0) && (j == 2147483647)))
 			return;
-		BoundSql localBoundSql1 = localMappedStatement1
-				.getBoundSql(localObject);
+		BoundSql localBoundSql1 = localMappedStatement1.getBoundSql(localObject);
 		String str = localBoundSql1.getSql().trim();
 		if (this.dialect.supportsLimitOffset()) {
 			str = this.dialect.getLimitString(str, i, j);
@@ -56,27 +55,21 @@ public class OffsetLimitInterceptor implements Interceptor {
 		}
 		j = 2147483647;
 		paramArrayOfObject[ROWBOUNDS_INDEX] = new RowBounds(i, j);
-		BoundSql localBoundSql2 = new BoundSql(
-				localMappedStatement1.getConfiguration(), str,
-				localBoundSql1.getParameterMappings(),
-				localBoundSql1.getParameterObject());
-		MappedStatement localMappedStatement2 = copyFromMappedStatement(
-				localMappedStatement1, new BoundSqlSqlSource(localBoundSql2));
+		BoundSql localBoundSql2 = new BoundSql(localMappedStatement1.getConfiguration(), str,
+				localBoundSql1.getParameterMappings(), localBoundSql1.getParameterObject());
+		MappedStatement localMappedStatement2 = copyFromMappedStatement(localMappedStatement1,
+				new BoundSqlSqlSource(localBoundSql2));
 		paramArrayOfObject[MAPPED_STATEMENT_INDEX] = localMappedStatement2;
 	}
 
-	private MappedStatement copyFromMappedStatement(
-			MappedStatement paramMappedStatement, SqlSource paramSqlSource) {
-		MappedStatement.Builder localBuilder = new MappedStatement.Builder(
-				paramMappedStatement.getConfiguration(),
-				paramMappedStatement.getId(), paramSqlSource,
-				paramMappedStatement.getSqlCommandType());
+	private MappedStatement copyFromMappedStatement(MappedStatement paramMappedStatement, SqlSource paramSqlSource) {
+		MappedStatement.Builder localBuilder = new MappedStatement.Builder(paramMappedStatement.getConfiguration(),
+				paramMappedStatement.getId(), paramSqlSource, paramMappedStatement.getSqlCommandType());
 		localBuilder.resource(paramMappedStatement.getResource());
 		localBuilder.fetchSize(paramMappedStatement.getFetchSize());
 		localBuilder.statementType(paramMappedStatement.getStatementType());
 		localBuilder.keyGenerator(paramMappedStatement.getKeyGenerator());
-		localBuilder.keyProperty(StringUtil.combo(
-				paramMappedStatement.getKeyProperties(), ","));
+		localBuilder.keyProperty(combo(paramMappedStatement.getKeyProperties(), ","));
 		localBuilder.timeout(paramMappedStatement.getTimeout());
 		localBuilder.parameterMap(paramMappedStatement.getParameterMap());
 		localBuilder.resultMaps(paramMappedStatement.getResultMaps());
@@ -90,17 +83,13 @@ public class OffsetLimitInterceptor implements Interceptor {
 	}
 
 	public void setProperties(Properties paramProperties) {
-		String str = new PropertiesHelper(paramProperties)
-				.getRequiredString("dialectClass");
+		String str = new PropertiesHelper(paramProperties).getRequiredString("dialectClass");
 		try {
 			this.dialect = ((Dialect) Class.forName(str).newInstance());
 		} catch (Exception localException) {
-			throw new RuntimeException(
-					"cannot create dialect instance by dialectClass:" + str,
-					localException);
+			throw new RuntimeException("cannot create dialect instance by dialectClass:" + str, localException);
 		}
-		System.out.println(OffsetLimitInterceptor.class.getSimpleName()
-				+ ".dialect=" + str);
+		System.out.println(OffsetLimitInterceptor.class.getSimpleName() + ".dialect=" + str);
 	}
 
 	public static class BoundSqlSqlSource implements SqlSource {
@@ -113,5 +102,18 @@ public class OffsetLimitInterceptor implements Interceptor {
 		public BoundSql getBoundSql(Object paramObject) {
 			return this.boundSql;
 		}
+	}
+
+	private static String combo(String[] paramArrayOfString, String paramString) {
+		String str1 = paramString;
+		if ((paramArrayOfString == null) || (paramArrayOfString.length < 1))
+			return "";
+		if ((paramString == null) || (paramString.trim().equals("")))
+			str1 = ",";
+		String str2 = StringUtil.trimSpace(paramArrayOfString[0]);
+		int i = paramArrayOfString.length;
+		for (int j = 1; j < i; ++j)
+			str2 = new StringBuilder().append(str2).append(str1).append(StringUtil.trimSpace(paramArrayOfString[j])).toString();
+		return str2;
 	}
 }

@@ -51,10 +51,24 @@ public abstract class StringUtil {
 		}
 	}
 
+	/****
+	 * 判断对象是否为空"null"字符串也为空
+	 * 
+	 * @param inputObj
+	 *            要判断的对象
+	 * @return true:是空值 false：不是
+	 */
 	public static boolean isNull(Object inputObj) {
 		return isNull(true, inputObj);
 	}
 
+	/****
+	 * 判断对象是否不为空，"null"字符串也为空
+	 * 
+	 * @param inputObj
+	 *            要判断的对象
+	 * @return true:不是空 false：是
+	 */
 	public static boolean isNotNull(Object inputObj) {
 		return !isNull(true, inputObj);
 	}
@@ -200,19 +214,6 @@ public abstract class StringUtil {
 		}
 	};
 
-	public static String combo(String[] paramArrayOfString, String paramString) {
-		String str1 = paramString;
-		if ((paramArrayOfString == null) || (paramArrayOfString.length < 1))
-			return "";
-		if ((paramString == null) || (paramString.trim().equals("")))
-			str1 = ",";
-		String str2 = trimSpace(paramArrayOfString[0]);
-		int i = paramArrayOfString.length;
-		for (int j = 1; j < i; ++j)
-			str2 = new StringBuilder().append(str2).append(str1).append(trimSpace(paramArrayOfString[j])).toString();
-		return str2;
-	}
-
 	/**
 	 * 首字母转成大写
 	 * 
@@ -269,6 +270,7 @@ public abstract class StringUtil {
 	 *            转换规则
 	 * @return 对象
 	 */
+	@SuppressWarnings("unchecked")
 	public static final <T> T str2Object(Class<T> type, String v, IValueEncoder<T> handler) {
 		Object param = null;
 		if (handler != null)
@@ -329,9 +331,13 @@ public abstract class StringUtil {
 	 * 用值设置对象的域，支持级联
 	 *
 	 * @param retobj
+	 *            要设置的对象
 	 * @param fieldName
+	 *            要设置的对象的域名, a.b 表示子对象
 	 * @param value
+	 *            要设置的值
 	 * @throws Exception
+	 *             设置时异常
 	 */
 	public static void packObj(Object retobj, String fieldName, String value) throws Exception {
 		int indexdot = fieldName.indexOf(".");

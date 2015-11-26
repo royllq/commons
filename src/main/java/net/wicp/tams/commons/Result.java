@@ -1,15 +1,12 @@
 package net.wicp.tams.commons;
 
-import java.util.Locale;
-
+import org.apache.commons.lang.StringUtils;
+import org.apache.tapestry5.json.JSONObject;
 
 import net.wicp.tams.commons.exception.ExceptAll;
 import net.wicp.tams.commons.exception.IExcept;
 import net.wicp.tams.commons.exception.ProjectException;
 import net.wicp.tams.commons.exception.bean.ParamInfoBean;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.tapestry5.json.JSONObject;
 
 /**
  * 操作返回的对象，exceptAll是必须要有的对象

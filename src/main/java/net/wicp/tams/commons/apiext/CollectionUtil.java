@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import net.wicp.tams.commons.exception.ProjectException;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -20,7 +18,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.mvel2.MVEL;
 
-@SuppressWarnings("rawtypes")
+/****
+ * 集合的简便操作方法
+ * 
+ * @author andy.zhou
+ *
+ */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class CollectionUtil {
 	/**
 	 * 把List通过分隔符进行分隔
@@ -199,6 +203,7 @@ public abstract class CollectionUtil {
 	 *            排除的值
 	 * @return 过滤后的list
 	 */
+
 	public static List filter(List oriList, final String colName, String include, String exclude) {
 		List retAry = new ArrayList();
 		if (CollectionUtils.isEmpty(oriList)) {
@@ -266,7 +271,7 @@ public abstract class CollectionUtil {
 	 * 
 	 * @param oriAry
 	 *            源数组
-	 * @return List
+	 * @return List 转换后的list
 	 */
 	public static List<Integer> asList(int[] oriAry) {
 		List<Integer> ret = new ArrayList<Integer>();
@@ -283,7 +288,7 @@ public abstract class CollectionUtil {
 	 * 
 	 * @param oriAry
 	 *            源数组
-	 * @return List
+	 * @return List 转换后的list
 	 */
 	public static List<Integer> asList(String[] oriAry) {
 		List<Integer> ret = new ArrayList<Integer>();
@@ -300,7 +305,7 @@ public abstract class CollectionUtil {
 	 * 
 	 * @param oriList
 	 *            源数组
-	 * @return List
+	 * @return List 转换后的list
 	 */
 	public static List<String> asList(List<?> oriList) {
 		if (oriList == null) {

@@ -40,6 +40,7 @@ public class BatisServiceImpl implements IbatisService {
 		return queryForList(sqlId, json.toMap());
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> queryForList(String sqlId, Map params) {
 		long t1 = System.currentTimeMillis();
 		List list = sqlSession.selectList(sqlId, params);

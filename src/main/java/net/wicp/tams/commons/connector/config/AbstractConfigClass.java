@@ -1,12 +1,16 @@
 package net.wicp.tams.commons.connector.config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 
 import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.Result;
@@ -26,12 +30,6 @@ import net.wicp.tams.commons.constant.param.conn.Request;
 import net.wicp.tams.commons.constant.param.conn.Response;
 import net.wicp.tams.commons.exception.ExceptAll;
 import net.wicp.tams.commons.exception.ProjectException;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
 
 public abstract class AbstractConfigClass {
 	private final static Logger logger = LogHelp.getLogger(AbstractConfigClass.class);
@@ -314,6 +312,7 @@ public abstract class AbstractConfigClass {
 		return CusDynaClass.createCusDynaClass(nodeName, propertyAry);
 	}
 
+	@SuppressWarnings("unchecked")
 	private CusDynaClass createDynaClassCommon(String nodeName) throws ProjectException {
 		final List<Map<ColProperty, String>> colProperty = createColPropertyByRoot(nodeName);
 		// 检查配置文件的相关字段的属性是否齐全
@@ -360,6 +359,7 @@ public abstract class AbstractConfigClass {
 		return className + "_" + nodeName;
 	}
 
+	@SuppressWarnings("unused")
 	private Map<ColProperty, String> packColMap(String name, String alias, boolean isnull, ColGType gtype, ColType type,
 			String defaultValue, Integer length, String max, String min, String format, String className) {
 		Map<ColProperty, String> sysColPro_result = new HashMap<ColProperty, String>();

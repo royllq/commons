@@ -7,19 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.wicp.tams.commons.apiext.XmlUtil;
-import net.wicp.tams.commons.connector.beans.property.AbstractDynaClassProperty;
-import net.wicp.tams.commons.connector.config.AbstractConfigClass;
-import net.wicp.tams.commons.constant.ColProperty;
-import net.wicp.tams.commons.constant.ColType;
-import net.wicp.tams.commons.exception.ExceptAll;
-import net.wicp.tams.commons.exception.ProjectException;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.StringUtils;
+
+import net.wicp.tams.commons.apiext.XmlUtil;
+import net.wicp.tams.commons.connector.config.AbstractConfigClass;
+import net.wicp.tams.commons.constant.ColProperty;
+import net.wicp.tams.commons.constant.ColType;
+import net.wicp.tams.commons.exception.ExceptAll;
+import net.wicp.tams.commons.exception.ProjectException;
 
 public class ConfigClassXml extends AbstractConfigClass {
 

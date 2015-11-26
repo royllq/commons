@@ -14,10 +14,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry5.json.JSONObject;
 import org.slf4j.Logger;
 
+@SuppressWarnings("rawtypes")
 public class DynaBeanHandler extends BasicNoHandler {
 	private static final long serialVersionUID = 1L;
-	private final static Logger logger = LogHelp
-			.getLogger(DynaBeanHandler.class);
+	private final static Logger logger = LogHelp.getLogger(DynaBeanHandler.class);
 
 	private CusDynaClass valueClass;
 
@@ -49,8 +49,7 @@ public class DynaBeanHandler extends BasicNoHandler {
 			isSame = isSameClass(value);
 		}
 		if (!isSame) {
-			logger.error("[{}]的类型不匹配，应该是CusDynaClass,但传进来的参数是[{}]类型", name,
-					value.getClass().getName());
+			logger.error("[{}]的类型不匹配，应该是CusDynaClass,但传进来的参数是[{}]类型", name, value.getClass().getName());
 			return new Result(ExceptAll.Param_typenofit);
 		}
 		return Result.getSuc();
@@ -58,8 +57,7 @@ public class DynaBeanHandler extends BasicNoHandler {
 
 	private boolean isSameClass(Object value) {
 		HashMap<String, AbstractDynaClassProperty> thisProps = this.valueClass.getAllPropertys();
-		AbstractDynaClassProperty[] valProps = ((CusDynaBean) value)
-				.getDynaClass().getDynaProperties();
+		AbstractDynaClassProperty[] valProps = ((CusDynaBean) value).getDynaClass().getDynaProperties();
 		if (thisProps.size() != valProps.length) {
 			return false;
 		}
@@ -78,8 +76,7 @@ public class DynaBeanHandler extends BasicNoHandler {
 		JSONObject retobj = (JSONObject) obj;
 		CusDynaBean dynabean = this.valueClass.newInstance();
 		for (String key : retobj.keys()) {
-			AbstractDynaClassProperty prop = (AbstractDynaClassProperty) dynabean
-					.getDynaClass().getDynaProperty(key);
+			AbstractDynaClassProperty prop = (AbstractDynaClassProperty) dynabean.getDynaClass().getDynaProperty(key);
 			if (prop != null) {
 				prop.setValueByJson(dynabean, retobj.get(key));
 			}
@@ -106,11 +103,10 @@ public class DynaBeanHandler extends BasicNoHandler {
 		}
 		JSONObject retobj = new JSONObject();
 		CusDynaBean cus = (CusDynaBean) singleValue;
-		AbstractDynaClassProperty[] props = cus.getDynaClass()
-				.getDynaProperties();
+		AbstractDynaClassProperty[] props = cus.getDynaClass().getDynaProperties();
 
 		for (AbstractDynaClassProperty prop : props) {
-			Object propValue=cus.get(prop.getName());
+			Object propValue = cus.get(prop.getName());
 			retobj.put(prop.getName(), prop.singleObjToJson(propValue));
 		}
 		return retobj;

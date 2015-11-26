@@ -8,11 +8,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import net.wicp.tams.commons.LogHelp;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import net.wicp.tams.commons.LogHelp;
 
 /***
  * 文件加载、操作等辅助类
@@ -50,6 +49,7 @@ public abstract class IOUtil {
 	 *            要加载属性文件同jar包的类
 	 * @return Properties 属性对象
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Properties fileToProperties(String filePath, Class classz) {
 		Properties returnPro = new Properties();
 		InputStream inputFile = null;

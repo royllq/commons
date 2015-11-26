@@ -91,6 +91,7 @@ public abstract class XmlUtil {
 	 *            属性名
 	 * @return 属性值
 	 */
+	@SuppressWarnings("rawtypes")
 	public static final String findValueByAttrName(ConfigurationNode node, String attrName) {
 		List typeAry = node.getAttributes(attrName);
 		if (CollectionUtils.isEmpty(typeAry)) {
