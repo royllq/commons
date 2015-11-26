@@ -26,7 +26,7 @@ public abstract class SendMsgRabbit {
 		}
 		Channel channel = ConnectionObj.getInstance().getChannel();
 		try {
-			channel.exchangeDeclare(exchange, RabbitExchangeType.fanout.name(), true);
+			//channel.exchangeDeclare(exchange, RabbitExchangeType.fanout.name(), true);
 			channel.basicPublish(exchange, "", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			return Result.getSuc();
 		} catch (IOException e) {
@@ -50,7 +50,7 @@ public abstract class SendMsgRabbit {
 	public static Result sendDicMsg(String queryName, String message) {
 		Channel channel = ConnectionObj.getInstance().getChannel();
 		try {
-			channel.exchangeDeclare(RabbitExchangeType.direct.getDefaultExchange(), RabbitExchangeType.direct.name());
+			//channel.exchangeDeclare(RabbitExchangeType.direct.getDefaultExchange(), RabbitExchangeType.direct.name());
 			channel.basicPublish("", queryName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			return Result.getSuc();
 		} catch (IOException e) {
