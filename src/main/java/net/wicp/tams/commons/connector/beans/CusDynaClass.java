@@ -1,18 +1,11 @@
 package net.wicp.tams.commons.connector.beans;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import net.wicp.tams.commons.connector.beans.property.AbstractDynaClassProperty;
-import net.wicp.tams.commons.connector.config.AbstractConfigClass;
-import net.wicp.tams.commons.constant.ColProperty;
-
-import org.apache.commons.beanutils.BasicDynaBean;
 import org.apache.commons.beanutils.BasicDynaClass;
 import org.apache.commons.beanutils.DynaProperty;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.tapestry5.json.JSONObject;
+
+import net.wicp.tams.commons.connector.beans.property.AbstractDynaClassProperty;
 
 public class CusDynaClass extends BasicDynaClass implements Cloneable {
 	private static final long serialVersionUID = 1L;

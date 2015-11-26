@@ -34,6 +34,12 @@ public abstract class Conf {
 	// 默认区域
 	private static Locale curLocale = new Locale(get("common.i18n"));
 
+	/***
+	 * 配置项需要在属性文件有变化时的回调方法
+	 * 
+	 * @author andy.zhou
+	 *
+	 */
 	public static interface Callback {
 		public void doReshConf(Properties newProperties);
 	}
@@ -134,24 +140,54 @@ public abstract class Conf {
 		reshBacks.put(moudle, callback);
 	}
 
+	/***
+	 * 通过key得到对应的值
+	 * 
+	 * @param key
+	 *            key值
+	 * @return 对应的值
+	 */
 	public static String get(String key) {
 		return String.valueOf(utilProperties.get(key));
 	}
 
+	/***
+	 * 得到指定前缀的所有key及他们对应的值
+	 * 
+	 * @param key
+	 *            key的前缀
+	 * @return 符合条件的结果集
+	 */
 	public static Map<String, String> getPre(String key) {
 		return CollectionUtil.getPropsByKeypre(utilProperties, key);
 	}
 
+	/***
+	 * 设置当前的Locale
+	 * 
+	 * @param curLocale
+	 *            要设置的Locale
+	 */
 	public static void setCurLocale(Locale curLocale) {
 		if (curLocale != null) {
 			Conf.curLocale = curLocale;
 		}
 	}
 
+	/***
+	 * 得到配置文件的副本，防止配置文件的属性被窜改
+	 * 
+	 * @return
+	 */
 	public static Properties copyProperties() {
 		return (Properties) utilProperties.clone();
 	}
 
+	/***
+	 * 得到当前的Locale
+	 * 
+	 * @return 当前的Locale
+	 */
 	public static Locale getCurLocale() {
 		return curLocale;
 	}

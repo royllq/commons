@@ -58,6 +58,17 @@ public class SendMsgRocket {
 		}
 	}
 
+	/***
+	 * 发送消息
+	 * 
+	 * @param topic
+	 *            主题
+	 * @param tag
+	 *            标签
+	 * @param msg
+	 *            发送的信息
+	 * @return 发送结果
+	 */
 	public SendResult SendMsg(String topic, String tag, String msg) {
 		Message sendMsg = new Message(topic, tag, msg.getBytes());
 		try {
@@ -69,10 +80,26 @@ public class SendMsgRocket {
 		}
 	}
 
+	/***
+	 * 给默认主题（配置文件） 发送消息
+	 * 
+	 * @param tag
+	 *            标签
+	 * @param msg
+	 *            发送的信息
+	 * @return 发送结果
+	 */
 	public SendResult SendMsg(String tag, String msg) {
 		return SendMsg(Conf.get("rocketmq.server.defaulttopic"), tag, msg);
 	}
 
+	/***
+	 * 给默认主题（配置文件）的默认标签（配置文件）发送消息
+	 * 
+	 * @param msg
+	 *            发送的信息
+	 * @return 发送结果
+	 */
 	public SendResult SendMsg(String msg) {
 		return SendMsg(Conf.get("rocketmq.server.defaulttopic"), Conf.get("rocketmq.server.defaulttag"), msg);
 	}

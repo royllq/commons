@@ -26,7 +26,7 @@ public class EasyUINodeConf {
 	private Predicate isRoot;//
 	private List<String> checkedList; // 已选择的节点Id集合
 
-	private IConvertValue textConvert;// 把text转成要显示的文本转换器,通过国际化可用
+	private IConvertValue<String> textConvert;// 把text转成要显示的文本转换器,通过国际化可用
 
 	public EasyUINodeConf(String idCol, String textCol, String parentCol) {
 		Validate.notBlank(idCol);
@@ -129,11 +129,11 @@ public class EasyUINodeConf {
 		this.checkedList = checkedList;
 	}
 
-	public IConvertValue getTextConvert() {
+	public IConvertValue<String> getTextConvert() {
 		return textConvert;
 	}
 
-	public void setTextConvert(IConvertValue textConvert) {
+	public void setTextConvert(IConvertValue<String> textConvert) {
 		this.textConvert = textConvert;
 	}
 }

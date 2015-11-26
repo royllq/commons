@@ -4,17 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+
 import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.Result;
-import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.constant.ColProperty;
 import net.wicp.tams.commons.constant.DateFormatCase;
 import net.wicp.tams.commons.exception.ExceptAll;
-import net.wicp.tams.commons.exception.ProjectException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("rawtypes")
 public class DateHandler extends BasicHandler {

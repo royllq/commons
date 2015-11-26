@@ -17,7 +17,7 @@ public abstract class SendMsgRabbit {
 	 *            转发器，一定是fanout类型的
 	 * @param message
 	 *            消息
-	 * @return
+	 * @return 发送的结果
 	 */
 	public static Result sendFanoutMsg(String exchange, String message) {
 		if (StringUtil.isNull(exchange) || StringUtil.isNull(message)) {
@@ -25,7 +25,8 @@ public abstract class SendMsgRabbit {
 		}
 		Channel channel = ConnectionObj.getInstance().getChannel();
 		try {
-			//channel.exchangeDeclare(exchange, RabbitExchangeType.fanout.name(), true);
+			// channel.exchangeDeclare(exchange,
+			// RabbitExchangeType.fanout.name(), true);
 			channel.basicPublish(exchange, "", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			return Result.getSuc();
 		} catch (IOException e) {
@@ -44,12 +45,13 @@ public abstract class SendMsgRabbit {
 	 *            query名称
 	 * @param message
 	 *            消息
-	 * @return
+	 * @return 发送的结果
 	 */
 	public static Result sendDicMsg(String queryName, String message) {
 		Channel channel = ConnectionObj.getInstance().getChannel();
 		try {
-			//channel.exchangeDeclare(RabbitExchangeType.direct.getDefaultExchange(), RabbitExchangeType.direct.name());
+			// channel.exchangeDeclare(RabbitExchangeType.direct.getDefaultExchange(),
+			// RabbitExchangeType.direct.name());
 			channel.basicPublish("", queryName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			return Result.getSuc();
 		} catch (IOException e) {
@@ -62,7 +64,7 @@ public abstract class SendMsgRabbit {
 	 * 
 	 * @param message
 	 *            消息
-	 * @return 返回的结果
+	 * @return 发送的结果
 	 */
 	public static Result sendDicMsg(String message) {
 		return sendDicMsg(AcceptMsgRabbit.DefaultTQuery, message);

@@ -10,21 +10,21 @@ public interface IExcept {
 	/****
 	 * 得到错误的描述，一般来说提供给开发人员查看或记录到log
 	 * 
-	 * @return
+	 * @return 错误的描述
 	 */
 	public String getDesc();
 
 	/***
 	 * 得到错误值
 	 * 
-	 * @return
+	 * @return 错误值
 	 */
 	public int getErrorValue();
 
 	/***
 	 * 得到错误编码
 	 * 
-	 * @return
+	 * @return 错误编码
 	 */
 	public String getErrorCode();
 
@@ -33,15 +33,14 @@ public interface IExcept {
 	 * 
 	 * @param errBean
 	 *            错误信息参数
-	 * @return
+	 * @return 国际化提示信息
 	 */
 	public String getErrMsg(Object errBean);
-
 
 	/****
 	 * 返回错误信息
 	 * 
-	 * @return
+	 * @return 错误信息
 	 */
 	public String getErrMsg();
 

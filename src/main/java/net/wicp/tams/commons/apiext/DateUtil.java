@@ -10,15 +10,13 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
+
 import net.wicp.tams.commons.constant.DateFormatCase;
 import net.wicp.tams.commons.constant.StrPattern;
 import net.wicp.tams.commons.exception.ExceptAll;
 import net.wicp.tams.commons.exception.ProjectException;
-import net.wicp.tams.commons.exception.bean.ParamInfoBean;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.impl.cookie.DateUtils;
 
 /***
  * 时间相关的常用用法
@@ -56,7 +54,7 @@ public abstract class DateUtil {
 							format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 							date = format.parse(strDate);
 						} else {
-							date = DateUtils.parseDate(strDate);
+							date = org.apache.http.client.utils.DateUtils.parseDate(strDate);
 						}
 					}
 				}

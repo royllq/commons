@@ -24,10 +24,20 @@ public class PageAssist {
 		this.allNum = -1;
 	}
 
+	/***
+	 * 得到页面大小
+	 * 
+	 * @return 页面大小
+	 */
 	public int getPageSize() {
 		return pageSize;
 	}
 
+	/***
+	 * 得到页面查询的结果
+	 * 
+	 * @return 页面结果
+	 */
 	public List<?> getResult() {
 		return result;
 	}
@@ -37,10 +47,11 @@ public class PageAssist {
 	}
 
 	/***
-	 * 通过JPQL　得到要count()的字段
+	 * 通过JPQL 得到要count()的字段
 	 * 
 	 * @param queryStr
-	 * @return
+	 *            查询的JPQL
+	 * @return 转为对应count()的JPQL
 	 */
 	public static String getCountCol(String queryStr) {
 		int firstIndex = queryStr.toLowerCase().indexOf(" from");
@@ -52,28 +63,22 @@ public class PageAssist {
 			do {
 				pre--;
 				if ((queryStr.charAt(pre) >= 'a' && queryStr.charAt(pre) <= 'z')
-						|| (queryStr.charAt(pre) >= 'A' && queryStr.charAt(pre) <= 'Z')
-						&& hasChart) {
+						|| (queryStr.charAt(pre) >= 'A' && queryStr.charAt(pre) <= 'Z') && hasChart) {
 					hasChart = false;
 				}
-			} while (pre >= 0
-					&& ((queryStr.charAt(pre) >= 'a' && queryStr.charAt(pre) <= 'z') || (queryStr
-							.charAt(pre) >= 'A' && queryStr.charAt(pre) <= 'Z'))
-					|| hasChart);
+			} while (pre >= 0 && ((queryStr.charAt(pre) >= 'a' && queryStr.charAt(pre) <= 'z')
+					|| (queryStr.charAt(pre) >= 'A' && queryStr.charAt(pre) <= 'Z')) || hasChart);
 
 			int pos = firstDoc;
 			hasChart = true;
 			do {
 				pos++;
 				if ((queryStr.charAt(pos) >= 'a' && queryStr.charAt(pos) <= 'z')
-						|| (queryStr.charAt(pos) >= 'A' && queryStr.charAt(pos) <= 'Z')
-						&& hasChart) {
+						|| (queryStr.charAt(pos) >= 'A' && queryStr.charAt(pos) <= 'Z') && hasChart) {
 					hasChart = false;
 				}
-			} while (pos < firstIndex
-					&& ((queryStr.charAt(pos) >= 'a' && queryStr.charAt(pos) <= 'z') || (queryStr
-							.charAt(pos) >= 'A' && queryStr.charAt(pos) <= 'Z'))
-					|| hasChart);
+			} while (pos < firstIndex && ((queryStr.charAt(pos) >= 'a' && queryStr.charAt(pos) <= 'z')
+					|| (queryStr.charAt(pos) >= 'A' && queryStr.charAt(pos) <= 'Z')) || hasChart);
 			countStr = queryStr.substring(pre + 1, pos);
 		} else {
 			countStr = queryStr.substring(0, firstIndex);
@@ -84,10 +89,20 @@ public class PageAssist {
 		return StringUtil.hasNull(countStr);
 	}
 
+	/***
+	 * 得到当前页号
+	 * 
+	 * @return 当前页号
+	 */
 	public int getPageNo() {
 		return pageNo;
 	}
 
+	/***
+	 * 得到查询结果集(所有页)的总数
+	 * 
+	 * @return
+	 */
 	public long getAllNum() {
 		return allNum;
 	}

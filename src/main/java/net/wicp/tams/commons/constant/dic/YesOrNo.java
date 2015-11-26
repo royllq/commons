@@ -7,7 +7,7 @@ import net.wicp.tams.commons.constant.dic.intf.IEnumCombobox;
 /***
  * 是与否枚举
  * 
- * @author Administrator
+ * @author andy.zhou
  * 
  */
 public enum YesOrNo implements IEnumCombobox {

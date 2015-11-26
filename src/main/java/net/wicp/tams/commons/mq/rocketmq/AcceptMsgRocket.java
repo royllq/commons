@@ -27,7 +27,7 @@ public class AcceptMsgRocket {
 	 *            监听主题
 	 * @param tag
 	 *            监听tag
-	 * @return
+	 * @return true:注册成功 false:注册失败
 	 */
 	public static boolean RegistListener(String group, MessageListenerConcurrently listener, String topic, String tag) {
 		if (StringUtils.isBlank(group)) {
@@ -67,7 +67,7 @@ public class AcceptMsgRocket {
 	 *            监听对象
 	 * @param topic
 	 *            监听主题
-	 * @return
+	 * @return true:注册成功 false:注册失败
 	 */
 	public boolean RegistListener(String group, MessageListenerConcurrently listener, String topic) {
 		return RegistListener(group, listener, topic, null);
@@ -80,7 +80,7 @@ public class AcceptMsgRocket {
 	 *            组
 	 * @param listener
 	 *            监听对象
-	 * @return
+	 * @return true:注册成功 false:注册失败
 	 */
 	public boolean RegistListener(String group, MessageListenerConcurrently listener) {
 		return RegistListener(group, listener, null, null);
@@ -95,7 +95,7 @@ public class AcceptMsgRocket {
 	 *            监听对象
 	 * @param topic
 	 *            监听主题
-	 * @return
+	 * @return true:注册成功 false:注册失败
 	 */
 	public boolean RegistListenerAll(String group, MessageListenerConcurrently listener, String topic) {
 		return RegistListener(group, listener, topic, "*");
@@ -108,7 +108,7 @@ public class AcceptMsgRocket {
 	 *            组
 	 * @param listener
 	 *            监听对象
-	 * @return
+	 * @return true:注册成功 false:注册失败
 	 */
 	public boolean RegistListenerAll(String group, MessageListenerConcurrently listener) {
 		return RegistListener(group, listener, null, "*");
