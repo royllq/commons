@@ -1,13 +1,12 @@
 package net.wicp.tams.commons.connector.beans.property;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+
 import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.constant.ColProperty;
 import net.wicp.tams.commons.exception.ExceptAll;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.enums.EnumUtils;
-import org.slf4j.Logger;
 
 @SuppressWarnings("rawtypes")
 public class EnumHandler extends BasicHandler {

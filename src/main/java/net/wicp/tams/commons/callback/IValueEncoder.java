@@ -16,12 +16,26 @@ package net.wicp.tams.commons.callback;
 
 /****
  * 对象与String互转
- 
+ * 
+ * @author andy.zhou
+ *
  * @param <V>
+ *            对象的类
  */
 public interface IValueEncoder<V> {
-
+	/***
+	 * 对象转换成String，方法页面使用
+	 * 
+	 * @param value
+	 * @return
+	 */
 	String toClient(V value);
 
+	/***
+	 * String转换成对应的对象
+	 * 
+	 * @param clientValue
+	 * @return
+	 */
 	V toValue(String clientValue);
 }

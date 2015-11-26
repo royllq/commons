@@ -1,6 +1,5 @@
 package net.wicp.tams.commons.callback.impl.convertvalue;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;

@@ -20,6 +20,12 @@ import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.apiext.StringUtil;
 
+/***
+ * 亚马逊SQS操作工具
+ * 
+ * @author andy.zhou
+ *
+ */
 public abstract class SqsUtil {
 	private static AmazonSQS sqs = null;
 	private static String defaultMqUrl = null;// 默认MQ的地址
@@ -49,8 +55,10 @@ public abstract class SqsUtil {
 	 * 发送一条消息到MQ
 	 * 
 	 * @param mqName
+	 *            mq名称
 	 * @param msg
-	 * @return
+	 *            要发送的消息
+	 * @return 发送的结果
 	 */
 	public static Result sendMessage(String mqName, String msg) {
 		try {
@@ -68,7 +76,8 @@ public abstract class SqsUtil {
 	 * 发送一条消息到默认的MQ
 	 * 
 	 * @param msg
-	 * @return
+	 *            要发送的消息
+	 * @return 发送的结果
 	 */
 	public static Result sendMessage(String msg) {
 		return sendMessage(null, msg);
@@ -78,9 +87,12 @@ public abstract class SqsUtil {
 	 * 接收消息
 	 * 
 	 * @param mqName
+	 *            mq名称
 	 * @param maxNumber
+	 *            最大取消息数量
 	 * @param isDel
-	 * @return
+	 *            取完消息后是否删除 true:删除 false：不删除
+	 * @return 接收到的消息列表
 	 */
 	public static List<String> receiveMessage(String mqName, int maxNumber, boolean isDel) {
 		String url = StringUtil.isNull(mqName) ? defaultMqUrl : sqs.getQueueUrl(mqName).getQueueUrl();
@@ -102,8 +114,10 @@ public abstract class SqsUtil {
 	 * 接收默认消息队列的maxNumber条消息
 	 * 
 	 * @param maxNumber
+	 *            最大取消息数量
 	 * @param isDel
-	 * @return
+	 *            取完消息后是否删除 true:删除 false：不删除
+	 * @return 接收到的消息列表
 	 */
 	public static List<String> receiveMessage(int maxNumber, boolean isDel) {
 		return receiveMessage(null, maxNumber, isDel);
@@ -113,7 +127,8 @@ public abstract class SqsUtil {
 	 * 接收默认消息队列的一条消息
 	 * 
 	 * @param isDel
-	 * @return
+	 *            取完消息后是否删除 true:删除 false：不删除
+	 * @return 得到的消息
 	 */
 	public static String receiveMessageForOne(boolean isDel) {
 		List<String> retlist = receiveMessage(null, 1, isDel);//

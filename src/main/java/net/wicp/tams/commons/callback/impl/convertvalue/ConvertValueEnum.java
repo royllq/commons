@@ -11,6 +11,7 @@ import net.wicp.tams.commons.constant.dic.intf.IEnumCombobox;
  * @author zhoujunhui
  *
  */
+@SuppressWarnings("rawtypes")
 public class ConvertValueEnum implements IConvertValue<String> {
 	private Object[] objs;
 	private String lan;
@@ -20,6 +21,7 @@ public class ConvertValueEnum implements IConvertValue<String> {
 		this.lan = lan;
 	}
 
+	
 	public ConvertValueEnum(Class classobj, String lan) {
 		this.objs = classobj.getEnumConstants();
 		this.lan = lan;

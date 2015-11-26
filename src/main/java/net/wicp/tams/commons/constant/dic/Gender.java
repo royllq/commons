@@ -7,7 +7,7 @@ import net.wicp.tams.commons.constant.dic.intf.IEnumCombobox;
 /***
  * 性别
  * 
- * @author Administrator
+ * @author andy.zhou
  * 
  */
 public enum Gender implements IEnumCombobox {

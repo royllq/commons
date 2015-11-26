@@ -9,11 +9,11 @@ import net.wicp.tams.commons.exception.ExceptAll;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 
+@SuppressWarnings("rawtypes")
 public class IntegerHandler extends BasicHandler {
 
 	private static final long serialVersionUID = 946199084482013912L;
-	private final static Logger logger = LogHelp
-			.getLogger(IntegerHandler.class);
+	private final static Logger logger = LogHelp.getLogger(IntegerHandler.class);
 
 	public IntegerHandler(String name) {
 		super(name);
@@ -30,14 +30,10 @@ public class IntegerHandler extends BasicHandler {
 	@Override
 	protected Result checkSingleValue(Object value) {
 		if (value != null && !(value instanceof Integer)) {
-			logger.error("[{}]的类型不匹配，应该是Integer,但传进来的参数是[{}]类型", name, value
-					.getClass().getName());
+			logger.error("[{}]的类型不匹配，应该是Integer,但传进来的参数是[{}]类型", name, value.getClass().getName());
 			return new Result(ExceptAll.Param_typenofit);
 		}
-		if (!isNull()
-				&& value == null
-				|| StringUtils
-						.isBlank(StringUtil.hasNull(String.valueOf(value)))) {
+		if (!isNull() && value == null || StringUtils.isBlank(StringUtil.hasNull(String.valueOf(value)))) {
 			logger.error("[{}]不允许传空值", name);
 			return new Result(ExceptAll.project_nonull);
 		}

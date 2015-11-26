@@ -18,11 +18,11 @@ import com.google.gson.GsonBuilder;
 
 import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.Conf.Callback;
-import net.wicp.tams.commons.exception.ProjectException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class RedisClient {
 	private static Logger logger = LoggerFactory.getLogger(RedisClient.class);
 	private static JedisPool jedisPool;// 非切片连接池
@@ -79,9 +79,10 @@ public class RedisClient {
 	}
 
 	/***
-	 * 放资源
+	 * 释放资源
 	 *
 	 * @param jedis
+	 *            要释放的连接
 	 */
 	public static void returnResource(Jedis jedis) {
 		if (jedisPool != null) {
@@ -89,10 +90,17 @@ public class RedisClient {
 		}
 	}
 
-	/***
+	/*****
 	 * 把对象做为Map存放到Redis
 	 * 
+	 * @param jedis
+	 *            连接的引用，外部传入
+	 * @param key
+	 *            要放入的key值
 	 * @param obj
+	 *            要放入的对象
+	 * @param expire
+	 *            超时时间，单位（秒）
 	 */
 	public static <T extends Serializable> void putObjByMap(Jedis jedis, String key, T obj, Integer expire) {
 		Map<String, String> inpumap = ReflectAssist.convertMapFromBean(obj);
@@ -103,9 +111,14 @@ public class RedisClient {
 	}
 
 	/***
-	 * 把对象做为Map存放到Redis
+	 * 把对象做为Map存放到Redis，没有超时时间，永久性放入
 	 * 
+	 * @param jedis
+	 *            连接的引用，外部传入
+	 * @param key
+	 *            要放入的key值
 	 * @param obj
+	 *            要放入的对象
 	 */
 	public static <T extends Serializable> void putObjByMap(Jedis jedis, String key, T obj) {
 		putObjByMap(jedis, key, obj, null);
@@ -114,9 +127,14 @@ public class RedisClient {
 	/***
 	 * 把对象做为Json存放到Redis
 	 * 
+	 * @param jedis
+	 *            连接的引用，外部传入
 	 * @param obj
+	 *            要放入的对象
 	 * @param key
+	 *            要放入的key值
 	 * @param expire
+	 *            超时时间，单位（秒）
 	 */
 	public final static <T extends Serializable> void putObjByJson(Jedis jedis, T obj, String key, Integer expire) {
 		String json = gson.toJson(obj);
@@ -126,23 +144,31 @@ public class RedisClient {
 		}
 	}
 
-	/***
+	/****
 	 * 把对象做为Json存放到Redis
 	 * 
+	 * @param jedis
+	 *            连接的引用，外部传入
 	 * @param obj
+	 *            要放入的对象
 	 * @param key
+	 *            要放入的key值
 	 */
 	public final static <T extends Serializable> void putObjByJson(Jedis jedis, T obj, String key) {
 		putObjByJson(jedis, obj, key, null);
 	}
 
-	/****
+	/***
 	 * 枚举类型的map放到缓存
 	 * 
 	 * @param jedis
+	 *            连接的引用，外部传入
 	 * @param key
+	 *            要放入的key值
 	 * @param inputMap
+	 *            要存放的map，它的key是一个枚举值
 	 */
+
 	public final static <T extends Enum> void putEnumMap(Jedis jedis, String key, Map<T, String> inputMap) {
 		if (jedis == null || MapUtils.isEmpty(inputMap) || StringUtil.isNull(key)) {
 			return;
@@ -154,14 +180,18 @@ public class RedisClient {
 		jedis.hmset(key, input);
 	}
 
-	/***
+	/****
 	 * 得到枚举类的缓存对象
 	 * 
 	 * @param jedis
+	 *            连接的引用，外部传入
 	 * @param key
+	 *            要放入的key值
 	 * @param clazz
+	 *            枚举所对应的类
 	 * @return
 	 */
+
 	public final static <T extends Enum> Map<T, String> getEnumMap(Jedis jedis, String key, Class clazz) {
 		Object[] objs = clazz.getEnumConstants();
 		String[] fields = new String[objs.length];
@@ -189,8 +219,11 @@ public class RedisClient {
 	 * 取指定列的值
 	 * 
 	 * @param jedis
+	 *            连接的引用，外部传入
 	 * @param key
+	 *            要放入的key值
 	 * @param fields
+	 *            要取的列名
 	 * @return
 	 */
 	public static Map<String, String> getMapByField(Jedis jedis, String key, String... fields) {
@@ -211,9 +244,13 @@ public class RedisClient {
 	 * Redis上的值为Map,取对象的值，没有指定字段就取全部
 	 * 
 	 * @param clazz
+	 *            要返回的对象的类
 	 * @param jedis
+	 *            连接的引用，外部传入
 	 * @param key
+	 *            要放入的key值
 	 * @param fields
+	 *            要取的列名
 	 * @return
 	 */
 	public static <T extends Serializable> T getObjByMapValue(Class clazz, Jedis jedis, String key, String... fields) {
@@ -230,8 +267,11 @@ public class RedisClient {
 	 * Redis上的值为Json,取对象的值
 	 * 
 	 * @param clazz
+	 *            要返回的对象的类
 	 * @param jedis
+	 *            连接的引用，外部传入
 	 * @param key
+	 *            要放入的key值
 	 * @return
 	 */
 	public static <T extends Serializable> T getObjByJsonValue(Class clazz, Jedis jedis, String key) {
@@ -240,7 +280,7 @@ public class RedisClient {
 		return retobj;
 	}
 
-	public static void setInitPool(boolean initPool) {
+	private static void setInitPool(boolean initPool) {
 		RedisClient.initPool = initPool;
 	}
 

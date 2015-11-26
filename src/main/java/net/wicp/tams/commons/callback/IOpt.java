@@ -7,6 +7,7 @@ import net.wicp.tams.commons.Result;
  * @author zhoujunhui
  *
  */
+@SuppressWarnings("rawtypes")
 public interface IOpt<V extends Enum> {
 	public Result opt(V enumObj,Object... params);
 }

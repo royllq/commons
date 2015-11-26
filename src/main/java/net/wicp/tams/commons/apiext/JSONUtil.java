@@ -1,19 +1,17 @@
 package net.wicp.tams.commons.apiext;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.wicp.tams.commons.callback.IConvertValue;
-
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry5.json.JSONObject;
 import org.mvel2.templates.TemplateRuntime;
+
+import net.wicp.tams.commons.callback.IConvertValue;
 
 /***
  * JSON对象的扩展
@@ -21,7 +19,7 @@ import org.mvel2.templates.TemplateRuntime;
  * @author andy.zhou
  *
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class JSONUtil {
 	// js里面需要处理的特殊字符集
 	public static final String[][] specialChar = new String[][] { { "\\\\", "\\\\\\\\" }, { "\"null\"", "\"\"" } };
@@ -76,6 +74,7 @@ public abstract class JSONUtil {
 	 *            itemName_zh为是取值的列名,itemName要显示的列名
 	 * @return json格式字符串
 	 */
+
 	public static String getJsonForMap(Map<String, Object> fromMap, IConvertValue[] convert, String... keys) {
 		if (fromMap == null || fromMap.size() == 0) {
 			return null;
@@ -154,13 +153,13 @@ public abstract class JSONUtil {
 						if (convert != null && StringUtils.isNotBlank(colName)) {
 							int index = colName.indexOf(",");
 							String key = "";
-							String oriKey = "";
+							//String oriKey = "";
 							if (index > 0) {
 								key = colName.substring(index + 1);
-								oriKey = colName.substring(0, index);
+								//oriKey = colName.substring(0, index);
 							} else {
 								key = colName;
-								oriKey = colName;
+								//oriKey = colName;
 							}
 							String value = convert.getStr(jsObj.getString(key));
 							jsObj.put(key, value);
@@ -185,7 +184,8 @@ public abstract class JSONUtil {
 	}
 
 	/****
-	 * 支持Map, Map &lt; String, IConvertValue &gt;    key为title 如果是标题有别名方式：aaa,bbb <br>
+	 * 支持Map, Map &lt; String, IConvertValue &gt; key为title 如果是标题有别名方式：aaa,bbb
+	 * <br>
 	 * 则以别名主识别IConvertValue
 	 * 
 	 * @param fromList

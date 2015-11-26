@@ -30,6 +30,7 @@ import net.wicp.tams.commons.web.easyuibean.EasyUINodeConf;
  * @author andy.zhou
  *
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class EasyUiAssist {
 
 	// {"total":28,"rows":[
@@ -51,7 +52,7 @@ public abstract class EasyUiAssist {
 	 *            itemName_zh为是取值的列名,itemName要显示的列名
 	 * @param recordNum
 	 *            记录总数
-	 * @return
+	 * @return Grid的String形式
 	 */
 	public static String getJsonForGrid(List<?> fromList, String[] titles, long recordNum) {
 		StringBuffer buff = new StringBuffer("{\"total\":" + recordNum + ",\"rows\":");
@@ -64,11 +65,18 @@ public abstract class EasyUiAssist {
 	 * 可以自定义转换格式
 	 * 
 	 * @param fromList
+	 *            要取的源数据
 	 * @param titles
+	 *            要取的标题，支持别名，如：new
+	 *            String[]{""itemCode,itemCode","itemName_zh,itemName""}
+	 *            itemName_zh为是取值的列名,itemName要显示的列名
 	 * @param converts
+	 *            转换器数组
 	 * @param recordNum
-	 * @return
+	 *            记录总数
+	 * @return Grid的String形式
 	 */
+
 	public static String getJsonForGrid(List<?> fromList, String[] titles, IConvertValue[] converts, long recordNum) {
 		StringBuffer buff = new StringBuffer("{\"total\":" + recordNum + ",\"rows\":");
 		buff.append(JSONUtil.getJsonForList(fromList, converts, titles));
@@ -76,6 +84,14 @@ public abstract class EasyUiAssist {
 		return buff.toString();
 	}
 
+	/***
+	 * 
+	 * @param fromList
+	 * @param titles
+	 * @param convertsMap
+	 * @param recordNum
+	 * @return Grid的String形式
+	 */
 	public static String getJsonForGrid(List<?> fromList, String[] titles, Map<String, IConvertValue> convertsMap,
 			long recordNum) {
 		StringBuffer buff = new StringBuffer("{\"total\":" + recordNum + ",\"rows\":");
@@ -93,7 +109,7 @@ public abstract class EasyUiAssist {
 	 * @param convertsMap
 	 *            别名转换字段
 	 * @param recordNum
-	 * @return
+	 * @return Grid的String形式
 	 */
 	public static String getJsonForGridAlias(List<?> fromList, String[] aliasTitles,
 			Map<String, IConvertValue> convertsMap, long recordNum) {
@@ -122,7 +138,7 @@ public abstract class EasyUiAssist {
 	/****
 	 * 返回空的集合值
 	 * 
-	 * @return
+	 * @return 空的集合值
 	 */
 	public static String getJsonForGridEmpty() {
 		return getJsonForGrid(null, new String[] {}, 0L);
@@ -132,8 +148,10 @@ public abstract class EasyUiAssist {
 	 * 把数据以json格式返回，不需要指定已有字段。
 	 * 
 	 * @param fromList
+	 *            源业务对象集合
 	 * @param recordNum
-	 * @return
+	 *            记录数量（所有页）
+	 * @return Grid的String
 	 */
 	public static String getJsonForGridAlias(List<?> fromList, long recordNum) {
 		return getJsonForGridAlias(fromList, null, null, recordNum);
@@ -143,8 +161,10 @@ public abstract class EasyUiAssist {
 	 * 指定数据放到Grid里显示
 	 * 
 	 * @param inputObj
-	 * @return
+	 *            要放到Grid的业务对象数组
+	 * @return Grid的String
 	 */
+
 	public static String getJsonForGridByObj(Object... inputObj) {
 		List retList = new ArrayList();
 		if (ArrayUtils.isEmpty(inputObj)) {
@@ -196,7 +216,7 @@ public abstract class EasyUiAssist {
 	 * 
 	 * @param nodes
 	 *            根节点集合
-	 * @return
+	 * @return 树结果
 	 */
 	public static String getTreeFromList(EasyUINode... nodes) {
 		String retstr = "[]";
@@ -215,7 +235,7 @@ public abstract class EasyUiAssist {
 	 * 
 	 * @param nodes
 	 *            根节点集合
-	 * @return
+	 * @return 树结果
 	 */
 	public static String getTreeFromList(List<EasyUINode> nodes) {
 		if (CollectionUtils.isEmpty(nodes)) {
@@ -228,9 +248,12 @@ public abstract class EasyUiAssist {
 	 * 把List转为根节点集合
 	 * 
 	 * @param oriList
+	 *            源业务对象集合
 	 * @param conf
-	 * @return
+	 *            树的配置信息
+	 * @return 多棵树的对象集合
 	 * @throws Exception
+	 *             转换异常
 	 */
 	public static <T> List<EasyUINode> getTreeRoot(List<T> oriList, EasyUINodeConf conf) throws Exception {
 		if (CollectionUtils.isEmpty(oriList) || conf == null) {

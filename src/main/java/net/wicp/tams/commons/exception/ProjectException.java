@@ -57,10 +57,18 @@ public class ProjectException extends Exception {
 				except.getErrorValue(), errmsg, sb.toString());
 	}
 
+	/***
+	 * 得到异常信息
+	 */
 	public String getMessage() {
 		return getMessage(null);
 	}
 
+	/***
+	 * 得到异常对象
+	 * 
+	 * @return 异常对象
+	 */
 	public IExcept getExcept() {
 		return this.except;
 	}

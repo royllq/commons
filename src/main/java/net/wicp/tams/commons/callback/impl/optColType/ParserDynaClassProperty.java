@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.connector.beans.CusDynaClass;
@@ -19,10 +18,6 @@ import net.wicp.tams.commons.connector.beans.property.StringHandler;
 import net.wicp.tams.commons.connector.config.AbstractConfigClass;
 import net.wicp.tams.commons.constant.ColGType;
 import net.wicp.tams.commons.constant.ColProperty;
-import net.wicp.tams.commons.exception.ProjectException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /*****
  * 解析动态Bean的相关操作
@@ -30,10 +25,8 @@ import org.slf4j.LoggerFactory;
  * @author zhoujunhui
  *
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public class ParserDynaClassProperty extends OptAbsColType {
-	private final static Logger logger = LogHelp
-			.getLogger(ParserDynaClassProperty.class);
 	private Map<ColProperty, String> inputMap;
 	private ColGType gtype;
 	private String proName;
@@ -62,6 +55,7 @@ public class ParserDynaClassProperty extends OptAbsColType {
 		return retobj(returnPropery);
 	}
 
+	
 	@Override
 	protected Result doEnums(Object... param) {
 		init(param);

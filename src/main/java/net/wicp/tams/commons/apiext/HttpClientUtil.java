@@ -10,12 +10,11 @@ import java.util.Set;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 
@@ -45,11 +44,11 @@ public abstract class HttpClientUtil {
 	 */
 	public static String sendGet(String url, String ecode) throws ProjectException {
 		String result = null;
-		HttpClient httpClient = new DefaultHttpClient();
+		HttpClientBuilder httpClient = HttpClientBuilder.create();
 		HttpGet get = new HttpGet(url);
 		InputStream in = null;
 		try {
-			HttpResponse response = httpClient.execute(get);
+			HttpResponse response = httpClient.build().execute(get);
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				entity = new BufferedHttpEntity(entity);
@@ -119,7 +118,7 @@ public abstract class HttpClientUtil {
 	 */
 	public static String sendPost(String url, Map<String, String> params) throws ProjectException {
 		String result = null;
-		HttpClient httpClient = new DefaultHttpClient();
+		HttpClientBuilder httpClient = HttpClientBuilder.create();
 		HttpPost get = new HttpPost(url);
 		// 创建表单参数列表
 		List<NameValuePair> qparams = new ArrayList<NameValuePair>();
@@ -131,7 +130,7 @@ public abstract class HttpClientUtil {
 			// 填充表单
 			get.setEntity(new UrlEncodedFormEntity(qparams, Conf.get("common.encode")));
 
-			HttpResponse response = httpClient.execute(get);
+			HttpResponse response = httpClient.build().execute(get);
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				entity = new BufferedHttpEntity(entity);
