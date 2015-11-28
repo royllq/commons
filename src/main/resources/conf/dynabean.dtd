@@ -3,7 +3,7 @@
 <!ELEMENT InterFaceMapping ((PropertyIn, PropertyOut))>
 <!ELEMENT PropertyOut ((COL*))>
 <!ELEMENT PropertyIn ((COL*))>
-<!ELEMENT COL ((COL*))>
+<!ELEMENT COL (#PCDATA,(COL*))>
 <!--
 @attr  type         字段类型
 -->
