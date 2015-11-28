@@ -10,7 +10,7 @@
 <!ATTLIST COL
 	name ID #REQUIRED
 	alias  CDATA #IMPLIED
-	type (string|integer|datetime|dynaBean|javaBean) "string"
+	type (string|integer|datetime|dynaBean|javaBean|bytes) "string"
 	gtype (single|array|map |list) "single"
 	isnull (true|false) "true"
     defaultValue CDATA #IMPLIED
