@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--动态Bean定义-->
+<!--动态Bean定义 #PCDATA-->
 <!ELEMENT InterFaceMapping ((PropertyIn, PropertyOut))>
 <!ELEMENT PropertyOut ((COL*))>
 <!ELEMENT PropertyIn ((COL*))>
-<!ELEMENT COL (#PCDATA)>
+<!ELEMENT COL ((COL*))>
 <!--
 @attr  type         字段类型
 -->
 <!ATTLIST COL
 	name ID #REQUIRED
 	alias  CDATA #IMPLIED
-	type (string|integer|datetime|dynaBean|javaBean|bytes) "string"
+	type (string|integer|datetime|dynaBean|javaBean|bytes|enums) "string"
 	gtype (single|array|map |list) "single"
 	isnull (true|false) "true"
     defaultValue CDATA #IMPLIED
