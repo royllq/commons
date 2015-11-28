@@ -1,4 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE InterFaceMapping PUBLIC  "-//andy.zhou//dynabean desc//ZH" 
+"http://git.oschina.net/rjzjh/commons/raw/master/src/main/resources/conf/dynabean.dtd">
 <InterFaceMapping>
 	<PropertyIn>
 		<COL name="integer" type="integer">整型</COL>
