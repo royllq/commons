@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE InterFaceMapping SYSTEM "D:\workspace\commons-util\src\test\resources\connector\dynabean.dtd">
+<!DOCTYPE InterFaceMapping PUBLIC  "-//andy.zhou//dynabean desc//ZH" 
+"http://git.oschina.net/rjzjh/commons/raw/master/src/test/resources/connector/dynabean.dtd">
 <InterFaceMapping>
 	<PropertyIn>
 		<COL name="single" type="bytes" defaultValue="rjzjh">简单单值</COL>
