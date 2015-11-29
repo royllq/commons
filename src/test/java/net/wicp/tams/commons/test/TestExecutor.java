@@ -4,7 +4,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.wicp.tams.commons.connector.HelperConn;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import net.wicp.tams.commons.connector.ConfigInstance;
 import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.connector.config.xmlParser.XMLNameSpace;
 import net.wicp.tams.commons.connector.executor.IBusiManager;
@@ -14,9 +17,6 @@ import net.wicp.tams.commons.connector.executor.impl.CommonService;
 import net.wicp.tams.commons.constant.param.conn.Request;
 import net.wicp.tams.commons.constant.param.conn.Response;
 import net.wicp.tams.commons.test.exe.BusiManager;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class TestExecutor {
 	private static IBusiManager busi = null;
@@ -37,7 +37,7 @@ public class TestExecutor {
 		clientinfo.put(Request.msgId, String.valueOf(new Date().getTime()));
 		clientinfo.put(Request.senderApplication, "PA_CD");
 		clientinfo.put(Request.senderSystem, "PA_SY");
-		CusDynaBean ci = HelperConn.newControlInfo(clientinfo);
+		CusDynaBean ci = ConfigInstance.getInstance().newControlInfo(clientinfo);
 		inputBean.set(XMLNameSpace.ControlInfo, ci);
 
 		CusDynaBean retBean = treaty.exe(appKey, inputBean);

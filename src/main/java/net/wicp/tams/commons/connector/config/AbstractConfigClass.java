@@ -1,5 +1,6 @@
 package net.wicp.tams.commons.connector.config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +16,11 @@ import org.slf4j.Logger;
 import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.apiext.CollectionUtil;
+import net.wicp.tams.commons.apiext.StringUtil;
+import net.wicp.tams.commons.apiext.UUIDGenerator;
 import net.wicp.tams.commons.callback.impl.optColType.OptAbsColType;
 import net.wicp.tams.commons.callback.impl.optColType.ParserDynaClassProperty;
-import net.wicp.tams.commons.connector.HelperConn;
+import net.wicp.tams.commons.connector.ConfigInstance;
 import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.connector.beans.CusDynaClass;
 import net.wicp.tams.commons.connector.beans.property.AbstractDynaClassProperty;
@@ -26,9 +29,9 @@ import net.wicp.tams.commons.connector.config.xmlParser.XMLNameSpace;
 import net.wicp.tams.commons.constant.ColGType;
 import net.wicp.tams.commons.constant.ColProperty;
 import net.wicp.tams.commons.constant.ColType;
-import net.wicp.tams.commons.constant.param.conn.Request;
 import net.wicp.tams.commons.constant.param.conn.Response;
 import net.wicp.tams.commons.exception.ExceptAll;
+import net.wicp.tams.commons.exception.IExcept;
 import net.wicp.tams.commons.exception.ProjectException;
 
 public abstract class AbstractConfigClass {
@@ -94,7 +97,7 @@ public abstract class AbstractConfigClass {
 			AbstractDynaClassProperty[] newPropertyAry = new AbstractDynaClassProperty[propertyAry.length + 1];
 			System.arraycopy(propertyAry, 0, newPropertyAry, 0, propertyAry.length);
 			AbstractDynaClassProperty ControlInfo = new DynaBeanHandler(XMLNameSpace.ControlInfo,
-					HelperConn.getInputClass());
+					ConfigInstance.getInstance().getInputClass());
 			ControlInfo.putAttribute(ColProperty.gtype, ColGType.single.name());
 			ControlInfo.putAttribute(ColProperty.strict, "false");
 			newPropertyAry[propertyAry.length] = ControlInfo;
@@ -128,7 +131,7 @@ public abstract class AbstractConfigClass {
 			if (clientBean == null) {
 				return retDynaBean;
 			}
-			retDynaBean.set(Request.controlInfo, clientBean);
+			retDynaBean.set(XMLNameSpace.ControlInfo, clientBean);
 			return retDynaBean;
 		} catch (Exception e) {
 			logger.error(String.format("动态类%s新建InputBean实例出错", className), e);
@@ -154,7 +157,7 @@ public abstract class AbstractConfigClass {
 	 * @return 动态Bean
 	 */
 	public final CusDynaBean newInputBean(Properties inputobj) {
-		CusDynaBean clientBean = HelperConn.newControlInfo(inputobj);
+		CusDynaBean clientBean = ConfigInstance.getInstance().newControlInfo(inputobj);
 		return newInputBean(clientBean);
 	}
 
@@ -166,7 +169,7 @@ public abstract class AbstractConfigClass {
 	 * @return 动态Bean
 	 */
 	public final CusDynaBean newInputBean(Map<String, String> inputobj) {
-		CusDynaBean clientBean = HelperConn.newControlInfo(inputobj);
+		CusDynaBean clientBean = ConfigInstance.getInstance().newControlInfo(inputobj);
 		return newInputBean(clientBean);
 	}
 
@@ -180,7 +183,7 @@ public abstract class AbstractConfigClass {
 	private synchronized final CusDynaClass parserOut() throws ProjectException {
 		if (this.outDynaClass == null) {
 			CusDynaClass useDynaClass = (CusDynaClass) createDynaClassCommon(XMLNameSpace.outputRoot);
-			CusDynaClass addclass = HelperConn.getOutClass();
+			CusDynaClass addclass = ConfigInstance.getInstance().getOutClass();
 			AbstractDynaClassProperty respinfoProp = (AbstractDynaClassProperty) addclass
 					.getDynaProperty(Response.respInfo.toString());
 			AbstractDynaClassProperty resultProp = (AbstractDynaClassProperty) addclass
@@ -208,17 +211,17 @@ public abstract class AbstractConfigClass {
 	 *            通信Id
 	 * @return
 	 */
-	public final CusDynaBean newOutBean(ExceptAll exceptAll, String msgId) {
+	public final CusDynaBean newOutBean(IExcept exceptAll, String msgId) {
 		try {
 			CusDynaBean retBean = parserOut().newInstance();
-			CusDynaBean respInfoBean = HelperConn.newRespInfo(msgId);
+			CusDynaBean respInfoBean = ConfigInstance.getInstance().newRespInfo(msgId);
 			retBean.set(Response.respInfo.toString(), respInfoBean);
 			if (exceptAll == null || exceptAll == ExceptAll.no) {
-				retBean.set(Response.result, HelperConn.OK);
+				retBean.set(Response.result, ConfigInstance.OK);
 				retBean.set(Response.errorCode, ExceptAll.no.name());
 			} else {
-				retBean.set(Response.result, HelperConn.ERROR);
-				retBean.set(Response.errorCode, exceptAll.name());
+				retBean.set(Response.result, ConfigInstance.ERROR);
+				retBean.set(Response.errorCode, exceptAll.getErrorCode());
 			}
 			return retBean;
 		} catch (ProjectException e) {
@@ -227,8 +230,8 @@ public abstract class AbstractConfigClass {
 		}
 	}
 
-	public final CusDynaBean newOutBean(ExceptAll exceptAll) {
-		return newOutBean(exceptAll, null);
+	public final CusDynaBean newOutBean(IExcept except) {
+		return newOutBean(except, null);
 	}
 
 	/***
@@ -296,6 +299,50 @@ public abstract class AbstractConfigClass {
 					}
 				}
 			}
+		}
+	}
+
+	/***
+	 * 把旧的class加入属性
+	 * 
+	 * @param oldclass
+	 *            旧类
+	 * @param nodeName
+	 *            新加的节点名，如果为空则表示把这些属性全部加到旧类中，不新开节点
+	 * @param colPropertys
+	 *            加入入的属性
+	 * @return
+	 * @throws ProjectException
+	 */
+	public CusDynaClass createNewClass(CusDynaClass oldclass, String nodeName,
+			List<Map<ColProperty, String>> colPropertys) throws ProjectException {
+		if (CollectionUtils.isEmpty(colPropertys)) {
+			return oldclass;
+		}
+		AbstractDynaClassProperty[] propertyAry = null;
+		if (CollectionUtils.isNotEmpty(colPropertys)) {
+			propertyAry = new AbstractDynaClassProperty[colPropertys.size()];
+			for (int i = 0; i < colPropertys.size(); i++) {
+				Map<ColProperty, String> tempMap = colPropertys.get(i);
+				propertyAry[i] = ParserParaProperty(tempMap);
+			}
+		}
+		AbstractDynaClassProperty[] propertyAryold = oldclass.getDynaProperties();
+		if (StringUtils.isBlank(nodeName)) {
+			AbstractDynaClassProperty[] propertyArynew = new AbstractDynaClassProperty[propertyAryold.length
+					+ propertyAry.length];
+			System.arraycopy(propertyAry, 0, propertyArynew, 0, propertyAry.length);
+			System.arraycopy(propertyAry, propertyAry.length, propertyArynew, 0, propertyAry.length);
+			return CusDynaClass.createCusDynaClass(oldclass.getName(), propertyArynew);
+		} else {
+			CusDynaClass tempclass = CusDynaClass.createCusDynaClass(String.valueOf(UUIDGenerator.getUniqueLong()),
+					propertyAry);
+			AbstractDynaClassProperty ControlInfo = new DynaBeanHandler(nodeName, tempclass);
+			ControlInfo.putAttribute(ColProperty.gtype, ColGType.single.name());
+			ControlInfo.putAttribute(ColProperty.strict, "false");
+			AbstractDynaClassProperty[] propertyArynew = new AbstractDynaClassProperty[propertyAryold.length + 1];
+			propertyArynew[propertyAry.length] = ControlInfo;
+			return CusDynaClass.createCusDynaClass(oldclass.getName(), propertyArynew);
 		}
 	}
 

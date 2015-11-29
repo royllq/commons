@@ -1,7 +1,10 @@
 package net.wicp.tams.commons.connector.executor.impl;
 
+import org.apache.tapestry5.json.JSONObject;
+import org.slf4j.Logger;
+
 import net.wicp.tams.commons.LogHelp;
-import net.wicp.tams.commons.connector.HelperConn;
+import net.wicp.tams.commons.connector.ConfigInstance;
 import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.connector.config.AbstractConfigClass;
 import net.wicp.tams.commons.connector.config.xmlParser.XMLNameSpace;
@@ -13,42 +16,35 @@ import net.wicp.tams.commons.connector.executor.IConnStr;
 import net.wicp.tams.commons.constant.param.conn.Request;
 import net.wicp.tams.commons.exception.ExceptAll;
 
-import org.apache.tapestry5.json.JSONObject;
-import org.slf4j.Logger;
-
-public class CommonService implements IConnInner,IConnStr {
+public class CommonService implements IConnInner, IConnStr {
 	private static Logger logger = LogHelp.getLogger(CommonService.class);
 
 	private IBusiManager busiManager;
 
 	private IConfigManager configManager;
 
-
-	private CusDynaBean exeCommon(String appKey, CusDynaBean inputBean,boolean needCheck) {
+	private CusDynaBean exeCommon(String appKey, CusDynaBean inputBean, boolean needCheck) {
 		if (busiManager == null) {
 			logger.error("busiManager需要业务系统的初始化，请确认");
-			CusDynaBean nullBean = HelperConn
-					.getNullOutBean(ExceptAll.project_nonull);
+			CusDynaBean nullBean = ConfigInstance.getInstance().getNullOutBean(ExceptAll.project_nonull);
 			return nullBean;
 		}
 		if (configManager == null) {
 			logger.error("configManager需要业务系统的初始化，请确认");
-			CusDynaBean nullBean = HelperConn
-					.getNullOutBean(ExceptAll.project_nonull);
+			CusDynaBean nullBean = ConfigInstance.getInstance().getNullOutBean(ExceptAll.project_nonull);
 			return nullBean;
 		}
 		AbstractConfigClass conf = configManager.getConfig(appKey);
-		CusDynaBean outBean=null;
-		if(needCheck){//需要检查客户端
-			CusDynaBean clientInfo = (CusDynaBean) inputBean
-					.get(XMLNameSpace.ControlInfo);
+		CusDynaBean outBean = null;
+		if (needCheck) {// 需要检查客户端
+			CusDynaBean clientInfo = (CusDynaBean) inputBean.get(XMLNameSpace.ControlInfo);
 			if (clientInfo == null) {
 				return conf.newOutBean(ExceptAll.conn_nocontrol);
 			}
 			String msgId = clientInfo.getStrValueByName(Request.msgId);
 			outBean = conf.newOutSuc(msgId);
 			// TODO 客户端较验
-		}else{
+		} else {
 			outBean = conf.newOutSuc();
 		}
 		IBusiApp busiApp = busiManager.getBean(appKey);
@@ -58,11 +54,12 @@ public class CommonService implements IConnInner,IConnStr {
 
 	@Override
 	public CusDynaBean exeNoCheck(String appKey, CusDynaBean inputBean) {
-		return exeCommon(appKey,inputBean,false);
+		return exeCommon(appKey, inputBean, false);
 	}
+
 	@Override
 	public CusDynaBean exe(String appKey, CusDynaBean inputBean) {
-		return exeCommon(appKey,inputBean,true);
+		return exeCommon(appKey, inputBean, true);
 	}
 
 	/***
@@ -76,8 +73,7 @@ public class CommonService implements IConnInner,IConnStr {
 	public String exe(String appKey, String inputStr) {
 		if (busiManager == null) {
 			logger.error("busiManager需要业务系统的初始化，请确认");
-			CusDynaBean nullBean = HelperConn
-					.getNullOutBean(ExceptAll.project_nonull);
+			CusDynaBean nullBean = ConfigInstance.getInstance().getNullOutBean(ExceptAll.project_nonull);
 			return nullBean.getJsonObj().toString(true);
 		}
 		AbstractConfigClass conf = configManager.getConfig(appKey);

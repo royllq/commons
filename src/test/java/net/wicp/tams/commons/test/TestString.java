@@ -29,7 +29,8 @@ public class TestString extends AbsToDynaBean {
 		try {
 			conf = ConfigClassXml.createConfigClassXml("TestString", dir,
 					"TestString.xml");
-			dynabean = conf.parserInputNoCI().newInstance();
+			//dynabean = conf.parserInputNoCI().newInstance();
+			dynabean = conf.parserOutNoCI().newInstance();
 		} catch (ProjectException e) {
 			e.printStackTrace();
 		}

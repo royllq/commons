@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE InterFaceMapping PUBLIC  "-//andy.zhou//dynabean desc//ZH" 
-"http://git.oschina.net/rjzjh/commons/raw/master/src/main/resources/conf/dynabean.dtd">
 <InterFaceMapping>
 	<PropertyIn>
 		<COL name="msgId" type="string">消息唯一标识符，缺省会使用时间戳</COL>
