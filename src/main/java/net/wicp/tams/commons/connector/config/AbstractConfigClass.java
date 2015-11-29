@@ -145,7 +145,7 @@ public abstract class AbstractConfigClass {
 	 * @return 动态Bean
 	 */
 	public final CusDynaBean newInputBean() {
-		CusDynaBean clientBean = null;
+		CusDynaBean clientBean = ConfigInstance.getInstance().newControlInfo();
 		return newInputBean(clientBean);
 	}
 
@@ -331,8 +331,8 @@ public abstract class AbstractConfigClass {
 		if (StringUtils.isBlank(nodeName)) {
 			AbstractDynaClassProperty[] propertyArynew = new AbstractDynaClassProperty[propertyAryold.length
 					+ propertyAry.length];
-			System.arraycopy(propertyAry, 0, propertyArynew, 0, propertyAry.length);
-			System.arraycopy(propertyAry, propertyAry.length, propertyArynew, 0, propertyAry.length);
+			System.arraycopy(propertyAryold, 0, propertyArynew, 0, propertyAryold.length);
+			System.arraycopy(propertyAry, 0, propertyArynew, propertyAryold.length, propertyAry.length);
 			return CusDynaClass.createCusDynaClass(oldclass.getName(), propertyArynew);
 		} else {
 			CusDynaClass tempclass = CusDynaClass.createCusDynaClass(String.valueOf(UUIDGenerator.getUniqueLong()),
@@ -341,7 +341,8 @@ public abstract class AbstractConfigClass {
 			ControlInfo.putAttribute(ColProperty.gtype, ColGType.single.name());
 			ControlInfo.putAttribute(ColProperty.strict, "false");
 			AbstractDynaClassProperty[] propertyArynew = new AbstractDynaClassProperty[propertyAryold.length + 1];
-			propertyArynew[propertyAry.length] = ControlInfo;
+			System.arraycopy(propertyAryold, 0, propertyArynew, 0, propertyAryold.length);
+			propertyArynew[propertyAryold.length] = ControlInfo;
 			return CusDynaClass.createCusDynaClass(oldclass.getName(), propertyArynew);
 		}
 	}

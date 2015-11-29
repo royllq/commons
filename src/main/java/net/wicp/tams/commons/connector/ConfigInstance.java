@@ -17,12 +17,11 @@ import net.wicp.tams.commons.LogHelp;
 import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.connector.beans.CusDynaClass;
 import net.wicp.tams.commons.connector.beans.property.AbstractDynaClassProperty;
-import net.wicp.tams.commons.connector.beans.property.DynaBeanHandler;
 import net.wicp.tams.commons.connector.config.AbstractConfigClass;
 import net.wicp.tams.commons.connector.config.xmlParser.ConfigClassXml;
 import net.wicp.tams.commons.connector.config.xmlParser.XMLNameSpace;
-import net.wicp.tams.commons.constant.ColGType;
 import net.wicp.tams.commons.constant.ColProperty;
+import net.wicp.tams.commons.constant.param.conn.Request;
 import net.wicp.tams.commons.constant.param.conn.Response;
 import net.wicp.tams.commons.exception.IExcept;
 import net.wicp.tams.commons.exception.ProjectException;
@@ -51,17 +50,17 @@ public class ConfigInstance {
 						tempobj.inputClass = conf.parserInputNoCI();
 						tempobj.outClass = conf.parserOutNoCI();
 
-						String cusconf = Conf.get("connector.dynabean.client.cus.conf");//有配置客户自定义的模板
+						String cusconf = Conf.get("connector.dynabean.client.cus.conf");// 有配置客户自定义的模板
 						if (tempobj.inputClass != null && StringUtils.isNotBlank(cusconf)) {
 							try {
 								IClientCus clientCus = (IClientCus) Class.forName(cusconf).newInstance();
 								List<Map<ColProperty, String>> input = clientCus.confClientInput();
 								if (CollectionUtils.isNotEmpty(input)) {
-									tempobj.inputClass = conf.createNewClass(tempobj.inputClass, "cus", input);
+									tempobj.inputClass = conf.createNewClass(tempobj.inputClass, null, input);
 								}
 								List<Map<ColProperty, String>> output = clientCus.confClientOutput();
 								if (CollectionUtils.isNotEmpty(output)) {
-									tempobj.outClass = conf.createNewClass(tempobj.outClass, "cus", output);
+									tempobj.outClass = conf.createNewClass(tempobj.outClass, null, output);
 								}
 							} catch (Exception e) {
 								logger.error("客户自定义的模板错误", e);
@@ -125,6 +124,14 @@ public class ConfigInstance {
 				retbean.set(name, inputobj.getProperty(name));
 			}
 		}
+		return retbean;
+	}
+
+	public CusDynaBean newControlInfo() {
+		CusDynaBean retbean = this.inputClass.newInstance();
+		retbean.set(Request.senderSystem, Conf.get("connector.dynabean.client.system"));
+		retbean.set(Request.senderApplication, Conf.get("connector.dynabean.client.application"));
+		retbean.set(Request.version, Conf.get("connector.dynabean.client.version"));
 		return retbean;
 	}
 

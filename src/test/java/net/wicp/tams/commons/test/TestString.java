@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.connector.beans.CusDynaBean;
 import net.wicp.tams.commons.connector.config.AbstractConfigClass;
 import net.wicp.tams.commons.connector.config.xmlParser.ConfigClassXml;
@@ -30,7 +31,7 @@ public class TestString extends AbsToDynaBean {
 			conf = ConfigClassXml.createConfigClassXml("TestString", dir,
 					"TestString.xml");
 			//dynabean = conf.parserInputNoCI().newInstance();
-			dynabean = conf.parserOutNoCI().newInstance();
+			dynabean = conf.newInputBean();
 		} catch (ProjectException e) {
 			e.printStackTrace();
 		}
