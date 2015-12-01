@@ -2,7 +2,6 @@ package net.wicp.tams.commons.apiext;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.security.MessageDigest;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
@@ -232,34 +231,6 @@ public abstract class StringUtil {
 	}
 
 	/***
-	 * 产生MD5编码
-	 * 
-	 * @param s
-	 *            要编码的字符串
-	 * @return MD5编码
-	 */
-	public final static String MD5(String s) {
-		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-		try {
-			byte[] strTemp = s.getBytes();
-			MessageDigest mdTemp = MessageDigest.getInstance("MD5");
-			mdTemp.update(strTemp);
-			byte[] md = mdTemp.digest();
-			int j = md.length;
-			char str[] = new char[j * 2];
-			int k = 0;
-			for (int i = 0; i < j; i++) {
-				byte byte0 = md[i];
-				str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-				str[k++] = hexDigits[byte0 & 0xf];
-			}
-			return new String(str);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	/***
 	 * String转为对象，handler为空就是基本数据类型
 	 *
 	 * @param type
@@ -366,5 +337,62 @@ public abstract class StringUtil {
 			packObj(fieldvalue, fieldName.substring(indexdot + 1), value);
 			BeanUtils.setProperty(retobj, fieldNameTrue, fieldvalue);
 		}
+	}
+
+	/**
+	 * Convert byte[] to hex
+	 * string.这里我们可以将byte转换成int，然后利用Integer.toHexString(int)来转换成16进制字符串。
+	 * 
+	 * @param src
+	 *            byte[] data
+	 * @return hex string
+	 */
+	public static String bytesToHexString(byte[] src) {
+		StringBuilder stringBuilder = new StringBuilder("");
+		if (src == null || src.length <= 0) {
+			return null;
+		}
+		for (int i = 0; i < src.length; i++) {
+			int v = src[i] & 0xFF;
+			String hv = Integer.toHexString(v);
+			if (hv.length() < 2) {
+				stringBuilder.append(0);
+			}
+			stringBuilder.append(hv);
+		}
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * Convert hex string to byte[]
+	 * 
+	 * @param hexString
+	 *            the hex string
+	 * @return byte[]
+	 */
+	public static byte[] hexStringToBytes(String hexString) {
+		if (hexString == null || hexString.equals("")) {
+			return null;
+		}
+		hexString = hexString.toUpperCase();
+		int length = hexString.length() / 2;
+		char[] hexChars = hexString.toCharArray();
+		byte[] d = new byte[length];
+		for (int i = 0; i < length; i++) {
+			int pos = i * 2;
+			d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+		}
+		return d;
+	}
+
+	/**
+	 * Convert char to byte
+	 * 
+	 * @param c
+	 *            char
+	 * @return byte
+	 */
+	public static byte charToByte(char c) {
+		return (byte) "0123456789ABCDEF".indexOf(c);
 	}
 }
