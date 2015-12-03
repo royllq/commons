@@ -263,9 +263,11 @@ public abstract class EasyUiAssist {
 		List<EasyUINode> nodes = new ArrayList<EasyUINode>();
 		for (Object oriObj : oriList) {
 			String id = BeanUtils.getProperty(oriObj, conf.getIdCol());
-			String text = BeanUtils.getProperty(oriObj, conf.getTextCol());
+			String text = "";
 			if (conf.getTextConvert() != null) {
-				text = conf.getTextConvert().getStr(text);
+				text = conf.getTextConvert().getStr(oriObj);
+			} else {
+				text = BeanUtils.getProperty(oriObj, conf.getTextCol());
 			}
 			String parentId = null;
 			try {

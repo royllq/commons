@@ -7,7 +7,6 @@ import org.apache.commons.lang3.Validate;
 
 import net.wicp.tams.commons.callback.IConvertValue;
 
-
 /****
  * 用户对象与EasyUINode的转换器
  * 
@@ -25,8 +24,10 @@ public class EasyUINodeConf {
 	private String[] attrCols;// 附加属性字段集合
 	private Predicate isRoot;//
 	private List<String> checkedList; // 已选择的节点Id集合
-
-	private IConvertValue<String> textConvert;// 把text转成要显示的文本转换器,通过国际化可用
+	/***
+	 * 文本转换器，传进的对象为业务对象
+	 */
+	private IConvertValue<Object> textConvert;// 把text转成要显示的文本转换器,通过国际化可用
 
 	public EasyUINodeConf(String idCol, String textCol, String parentCol) {
 		Validate.notBlank(idCol);
@@ -37,14 +38,25 @@ public class EasyUINodeConf {
 		this.parentCol = parentCol;
 	}
 
-	public EasyUINodeConf(String idCol, String textCol, String parentCol,
-			String indexCol) {
+	/***
+	 * 构造没有父的树，这种树都是根节点
+	 * 
+	 * @param idCol
+	 * @param textCol
+	 */
+	public EasyUINodeConf(String idCol, String textCol) {
+		Validate.notBlank(idCol);
+		Validate.notBlank(textCol);
+		this.idCol = idCol;
+		this.textCol = textCol;
+	}
+
+	public EasyUINodeConf(String idCol, String textCol, String parentCol, String indexCol) {
 		this(idCol, textCol, parentCol);
 		this.indexCol = indexCol;
 	}
 
-	public EasyUINodeConf(String idCol, String textCol, String parentCol,
-			String indexCol, String iconClsCol) {
+	public EasyUINodeConf(String idCol, String textCol, String parentCol, String indexCol, String iconClsCol) {
 		this(idCol, textCol, parentCol, indexCol);
 		this.iconClsCol = iconClsCol;
 	}
@@ -129,11 +141,11 @@ public class EasyUINodeConf {
 		this.checkedList = checkedList;
 	}
 
-	public IConvertValue<String> getTextConvert() {
+	public IConvertValue<Object> getTextConvert() {
 		return textConvert;
 	}
 
-	public void setTextConvert(IConvertValue<String> textConvert) {
+	public void setTextConvert(IConvertValue<Object> textConvert) {
 		this.textConvert = textConvert;
 	}
 }

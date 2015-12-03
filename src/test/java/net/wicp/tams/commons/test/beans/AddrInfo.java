@@ -1,9 +1,5 @@
 package net.wicp.tams.commons.test.beans;
 
-import org.apache.tapestry5.json.JSONObject;
-
-import com.google.gson.Gson;
-
 public class AddrInfo {
 	private String addr;
 	private String post;

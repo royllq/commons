@@ -5,13 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 
 import net.wicp.tams.commons.apiext.PwdUtil;
 import net.wicp.tams.commons.apiext.RedisClient;
-import net.wicp.tams.commons.apiext.StringUtil;
 import redis.clients.jedis.Jedis;
 
 public class TestApiext {
