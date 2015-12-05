@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.tapestry5.json.JSONObject;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;
 
 import net.wicp.tams.commons.LogHelp;
@@ -28,7 +30,7 @@ import net.wicp.tams.commons.web.service.IPageBuild;
 public class BatisServiceImpl implements IbatisService {
 	private final Logger logger = LogHelp.getLogger(getClass());
 
-	private SqlSession sqlSession;
+	private SqlSessionFactory sqlSessionFactory;
 
 	private IPageBuild pageBuild;
 
@@ -43,7 +45,7 @@ public class BatisServiceImpl implements IbatisService {
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> queryForList(String sqlId, Map params) {
 		long t1 = System.currentTimeMillis();
-		List list = sqlSession.selectList(sqlId, params);
+		List list = getSqlSession().selectList(sqlId, params);
 		long t2 = System.currentTimeMillis();
 		logger.info("\"{}\"查询耗时{}ms：", sqlId, (t2 - t1));
 		return list;
@@ -57,7 +59,7 @@ public class BatisServiceImpl implements IbatisService {
 		long t1 = System.currentTimeMillis();
 		PageAssist pc = new PageAssist(pageSize, pageNo);
 		if (countNum < 0) {// 如果总记录数不为空则不再计算记录数
-			Object obj = sqlSession.selectOne(countSqlIdTrue, params);
+			Object obj = getSqlSession().selectOne(countSqlIdTrue, params);
 			if (obj != null) {
 				int allNum = (Integer) obj;
 				pc.setAllNum(allNum);
@@ -69,13 +71,13 @@ public class BatisServiceImpl implements IbatisService {
 		long t2 = System.currentTimeMillis();
 		logger.info("{}：查询总数耗时{}ms：", listSqlId, (t2 - t1));
 		if (pagedByDb) {// 真分页
-			List list = sqlSession.selectList(listSqlId, params, rowbound);
+			List list = getSqlSession().selectList(listSqlId, params, rowbound);
 			pc.setResult(list);
 			long t3 = System.currentTimeMillis();
 			logger.info("{}：真分页查询耗时{}ms：", listSqlId, (t3 - t2));
 			return pc;
 		} else {// 假分页也就是不分页
-			List list = sqlSession.selectList(listSqlId, params);
+			List list = getSqlSession().selectList(listSqlId, params);
 			pc.setResult(list);
 			long t3 = System.currentTimeMillis();
 			logger.info("{}：假分页查询耗时{}ms：", listSqlId, (t3 - t2));
@@ -87,21 +89,21 @@ public class BatisServiceImpl implements IbatisService {
 	@Override
 	public PageAssist queryForPagedList(String listSqlId, String countSqlId, Map params, HttpServletRequest request,
 			boolean pagedByDb) {
-		PageAssist pageAssist=  pageBuild.build(request);
+		PageAssist pageAssist = pageBuild.build(request);
 		return queryForPagedList(listSqlId, countSqlId, params, pageAssist.getPageSize(), pageAssist.getPageNo(),
 				pageAssist.getAllNum(), pagedByDb);
 	}
 
 	@Override
 	public PageAssist queryForPagedList(String listSqlId, Map params, HttpServletRequest request, boolean pagedByDb) {
-		PageAssist pageAssist=  pageBuild.build(request);
+		PageAssist pageAssist = pageBuild.build(request);
 		return queryForPagedList(listSqlId, null, params, pageAssist.getPageSize(), pageAssist.getPageNo(),
 				pageAssist.getAllNum(), pagedByDb);
 	}
 
 	@Override
 	public PageAssist queryForPagedList(String listSqlId, Map params, HttpServletRequest request) {
-		PageAssist pageAssist=  pageBuild.build(request);
+		PageAssist pageAssist = pageBuild.build(request);
 		return queryForPagedList(listSqlId, null, params, pageAssist.getPageSize(), pageAssist.getPageNo(),
 				pageAssist.getAllNum(), true);
 	}
@@ -113,7 +115,7 @@ public class BatisServiceImpl implements IbatisService {
 		PreparedStatement proc = null;
 		ResultSet rs = null;
 		try {
-			Connection conn = sqlSession.getConnection();
+			Connection conn = getSqlSession().getConnection();
 			proc = conn.prepareStatement(sql);
 			for (int i = 0; inParams != null && i < inParams.length; i++) {
 				proc.setObject(i + 1, inParams[i]);
@@ -154,9 +156,9 @@ public class BatisServiceImpl implements IbatisService {
 	@Override
 	public int saveOrUpdateEntity(String sqlId, Object entity, boolean update) {
 		if (update) {
-			return sqlSession.update(sqlId, entity);
+			return getSqlSession().update(sqlId, entity);
 		} else {
-			return sqlSession.insert(sqlId, entity);
+			return getSqlSession().insert(sqlId, entity);
 		}
 	}
 
@@ -173,7 +175,7 @@ public class BatisServiceImpl implements IbatisService {
 
 	@Override
 	public void deleteEntity(String sqlId, Object parameterObject) {
-		sqlSession.delete(sqlId, parameterObject);
+		getSqlSession().delete(sqlId, parameterObject);
 	}
 
 	@Override
@@ -192,13 +194,17 @@ public class BatisServiceImpl implements IbatisService {
 		return saveOrUpdateEntity(sqlId, params, false);
 	}
 
-	//////////////////////// get set方法////////////////////////////////////
-	public SqlSession getSqlSession() {
-		return sqlSession;
+	private final SqlSession getSqlSession() {
+		return this.sqlSessionFactory.openSession();
 	}
 
-	public void setSqlSession(SqlSession sqlSession) {
-		this.sqlSession = sqlSession;
+	//////////////////////// get set方法////////////////////////////////////
+	public SqlSessionFactory getSqlSessionFactory() {
+		return sqlSessionFactory;
+	}
+
+	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+		this.sqlSessionFactory = sqlSessionFactory;
 	}
 
 	public IPageBuild getPageBuild() {
