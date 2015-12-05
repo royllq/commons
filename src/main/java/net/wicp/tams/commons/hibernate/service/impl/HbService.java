@@ -21,6 +21,8 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.engine.spi.TypedValue;
 import org.hibernate.internal.AbstractQueryImpl;
 import org.slf4j.Logger;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
 
@@ -183,6 +185,7 @@ public class HbService implements IHbService {
 	@Override
 	public Session getSession(){
 		return this.sessionFactory.getCurrentSession();
+		//return this.sessionFactory.openSession();
 	}
 
 	// ///////////////////////////////////////////////////////////////////////////////
