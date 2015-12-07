@@ -16,7 +16,8 @@ import org.apache.tapestry5.json.JSONObject;
 
 import net.wicp.tams.commons.apiext.StringUtil;
 
-public class EasyUINode implements Comparable<EasyUINode> {
+public class EasyUINode implements Comparable<EasyUINode>, java.io.Serializable {
+	private static final long serialVersionUID = -2202324630016098159L;
 
 	private String id;// 扩展，easyui可以没有id，但在真实环境中必须要有id
 
@@ -63,7 +64,7 @@ public class EasyUINode implements Comparable<EasyUINode> {
 		Validate.notBlank(this.id);
 		Validate.notBlank(this.text);
 		JSONObject retobj = new JSONObject("id", this.id, "text", this.text, "index", index);
-		retobj.put("parentId", parent == null ? "" : StringUtil.hasNull(parent.getIconCls(), ""));
+		retobj.put("parentId", parent == null ? "" : StringUtil.hasNull(parent.getId(), ""));
 		if (StringUtils.isNotBlank(this.iconCls))
 			retobj.put("iconCls", this.iconCls);
 		if (checked != null)
