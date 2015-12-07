@@ -3,6 +3,7 @@ package net.wicp.tams.commons;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -50,8 +51,11 @@ public abstract class Conf {
 			public void run() {
 				FileInputStream fileInputStream = null;
 				try {
-					String url = Thread.currentThread().getContextClassLoader().getResource("/commonsUtil.properties")
-							.getPath();
+					URL jarurl = Thread.currentThread().getContextClassLoader().getResource("/commonsUtil.properties");// 绝对路径
+					if (jarurl == null) {
+						jarurl = Thread.currentThread().getContextClassLoader().getResource("commonsUtil.properties");
+					}
+					String url = jarurl.getPath();
 					File file = new File(url);
 					long curmodified = file.lastModified();
 					if (curmodified > lastModified) {
