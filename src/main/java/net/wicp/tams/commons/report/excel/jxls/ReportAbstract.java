@@ -14,7 +14,6 @@ import java.util.Random;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import net.sf.jxls.transformer.XLSTransformer;
 import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.apiext.IOUtil;
 import net.wicp.tams.commons.apiext.StringUtil;
@@ -70,7 +69,7 @@ public abstract class ReportAbstract {
 			exportDir.mkdir();
 		}
 		String exportFileNameRandom = Integer.toString(Math.abs(new Random().nextInt()));
-		XLSTransformer transformer = new XLSTransformer();
+		//XLSTransformer transformer = new XLSTransformer();
 		Map<String, Object> inputMap = getInputMap();
 		String srcFileUrl = IOUtil.mergeFolderAndFilePath(srcFilePath, srcFileName);
 		int lastDotIndex= destFileName.lastIndexOf(".") ;
@@ -81,7 +80,7 @@ public abstract class ReportAbstract {
 		InputStream is = inputStream != null ? inputStream : new BufferedInputStream(new FileInputStream(srcFileUrl));
 		System.setProperty("javax.xml.parsers.SAXParserFactory",
 				"com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");// 设置解析Excel的类，它会首先找到
-		Workbook resultWorkBook = transformer.transformXLS(is, inputMap);
+		//Workbook resultWorkBook = transformer.transformXLS(is, inputMap);
 		is.close();
 		this.resultWorkBook = resultWorkBook;
 		if (isSaveFile) {
