@@ -44,7 +44,7 @@ public abstract class StringUtil {
 		}
 		String inputstr = trimSpace(String.valueOf(inputObj));
 		if (NullIsTrue) {
-			return inputstr.equalsIgnoreCase("null");
+			return inputstr.equalsIgnoreCase("null")||StringUtils.isBlank(inputstr);
 		} else {
 			return StringUtils.isBlank(inputstr);
 		}
