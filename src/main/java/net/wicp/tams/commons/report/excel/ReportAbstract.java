@@ -2,19 +2,20 @@ package net.wicp.tams.commons.report.excel;
 
 import org.apache.log4j.Logger;
 
+import net.wicp.tams.commons.Conf;
+import net.wicp.tams.commons.constant.PathType;
+
 public abstract class ReportAbstract {
 	private Logger logger = Logger.getLogger(getClass());
-	// private final HttpServletResponse response;// 直接返回到页面
-	// private final OutputStream output;// 直接传入文件的OutputStream表示要导出为文件
-	/// private final String fileName;// 从默认路径 下的文件名
+	protected final static String tempdir = PathType.getPath(Conf.get("jxls.dir.temp"));
+	protected final static String exportDefault = PathType.getPath(Conf.get("jxls.dir.export"));
 
-	// private OutputStream os = new BufferedOutputStream(new
-	// FileOutputStream(destFileUrl));
+	protected final String tempName;
 
-	private final String tempName;
+	public abstract void export(boolean issave);
 
 	/****
-	 * 直接导出文件
+	 * 没有模板文件直接导出文件
 	 * 
 	 * @param response
 	 */
