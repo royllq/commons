@@ -1,10 +1,14 @@
 package net.wicp.tams.commons.report.excel;
 
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -20,7 +24,7 @@ public abstract class ReportAbstract {
 
 	protected final String tempName;
 
-	public String exportExcel(boolean isSaveFile) {
+	public String exportExcel(OutputStream os, boolean isSaveFile) {
 		InputStream is = null;
 		try {
 			is = StringUtil.isNull(tempName) ? null
@@ -28,7 +32,6 @@ public abstract class ReportAbstract {
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException("模板文件不存在");
 		}
-		OutputStream os = null;
 		export(is, os);
 		if (is != null) {
 			try {
@@ -38,6 +41,26 @@ public abstract class ReportAbstract {
 			}
 		}
 		return "";
+	}
+
+	public void exportExcel(HttpServletResponse response) {
+		try {
+			exportExcel(response.getOutputStream(), false);
+		} catch (IOException e) {
+			logger.error("关闭输入流出错", e);
+			throw new RuntimeException("导出文件出错");
+		}
+	}
+
+	public String exportExcel(String fileName) {
+		OutputStream os;
+		try {
+			os = new BufferedOutputStream(new FileOutputStream(IOUtil.mergeFolderAndFilePath(exportDefault, fileName)));
+			return exportExcel(os, true);
+		} catch (FileNotFoundException e) {
+			logger.error("关闭输入流出错", e);
+			throw new RuntimeException("导出文件出错");
+		}
 	}
 
 	public abstract void export(InputStream is, OutputStream os);

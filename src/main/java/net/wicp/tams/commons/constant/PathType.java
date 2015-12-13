@@ -46,7 +46,7 @@ public enum PathType {
 		String retstr = inputpathStr;
 		switch (pathType) {
 		case web:
-			URL classpathurl = Thread.currentThread().getContextClassLoader().getResource("/");
+			URL classpathurl = Thread.currentThread().getContextClassLoader().getResource("");//"/"
 			File file = new File(classpathurl.getPath());
 			String webrootstr = file.getParentFile().getParentFile().getPath();
 			retstr = IOUtil.mergeFolderAndFilePath(webrootstr, inputpathStr);
