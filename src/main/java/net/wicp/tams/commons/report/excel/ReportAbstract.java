@@ -26,7 +26,7 @@ public abstract class ReportAbstract {
 	protected final String tempName;
 	protected List<String> headers;// excel的标题
 
-	public String exportExcel(OutputStream os, boolean isSaveFile) {
+	public void exportExcel(OutputStream os) {
 		InputStream is = null;
 		try {
 			is = StringUtil.isNull(tempName) ? null
@@ -42,12 +42,11 @@ public abstract class ReportAbstract {
 				logger.info("关闭输入流出错");
 			}
 		}
-		return "";
 	}
 
 	public void exportExcel(HttpServletResponse response) {
 		try {
-			exportExcel(response.getOutputStream(), false);
+			exportExcel(response.getOutputStream());
 		} catch (IOException e) {
 			logger.error("关闭输入流出错", e);
 			throw new RuntimeException("导出文件出错");
@@ -61,8 +60,10 @@ public abstract class ReportAbstract {
 			if (!outdir.exists()) {
 				outdir.mkdir();
 			}
-			os = new FileOutputStream(IOUtil.mergeFolderAndFilePath(exportDefault, fileName));
-			return exportExcel(os, true);
+			String outpath = IOUtil.mergeFolderAndFilePath(exportDefault, fileName);
+			os = new FileOutputStream(outpath);
+			exportExcel(os);
+			return outpath;
 		} catch (FileNotFoundException e) {
 			logger.error("打开输出流出错", e);
 			throw new RuntimeException("导出文件出错");
