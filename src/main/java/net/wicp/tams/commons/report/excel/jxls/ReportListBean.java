@@ -13,9 +13,15 @@ public class ReportListBean extends net.wicp.tams.commons.report.excel.ReportAbs
 
 	private final List<?> datalist;// 要导出的数据
 	private final String[] cols;// 需要导出的列名
-	private List<String> headers;// excel的标题
 
 	public ReportListBean(List<?> datalist, String... cols) {
+		super();
+		this.datalist = CollectionUtils.isEmpty(datalist) ? new ArrayList<>() : datalist;
+		this.cols = cols;
+	}
+
+	public ReportListBean(String tempName, List<?> datalist, String... cols) {
+		super(tempName);
 		this.datalist = CollectionUtils.isEmpty(datalist) ? new ArrayList<>() : datalist;
 		this.cols = cols;
 	}
@@ -30,15 +36,11 @@ public class ReportListBean extends net.wicp.tams.commons.report.excel.ReportAbs
 				e.printStackTrace();
 			}
 		}
+		if (headers == null) {
+			headers = new ArrayList<>();
+		}
+
 		exporter.gridExport(headers, datalist, CollectionUtil.arrayJoin(cols, ","), os);
-	}
-
-	public List<String> getHeaders() {
-		return headers;
-	}
-
-	public void setHeaders(List<String> headers) {
-		this.headers = headers;
 	}
 
 }

@@ -1,12 +1,14 @@
 package net.wicp.tams.commons.report.excel;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +25,7 @@ public abstract class ReportAbstract {
 	protected final static String exportDefault = PathType.getPath(Conf.get("jxls.dir.export"));
 
 	protected final String tempName;
+	protected List<String> headers;// excel的标题
 
 	public String exportExcel(OutputStream os, boolean isSaveFile) {
 		InputStream is = null;
@@ -55,16 +58,21 @@ public abstract class ReportAbstract {
 	public String exportExcel(String fileName) {
 		OutputStream os;
 		try {
-			os = new BufferedOutputStream(new FileOutputStream(IOUtil.mergeFolderAndFilePath(exportDefault, fileName)));
+			File outdir = new File(exportDefault);
+			if (!outdir.exists()) {
+				outdir.mkdir();
+			}
+			os = new FileOutputStream(IOUtil.mergeFolderAndFilePath(exportDefault, fileName));
 			return exportExcel(os, true);
 		} catch (FileNotFoundException e) {
-			logger.error("关闭输入流出错", e);
+			logger.error("打开输出流出错", e);
 			throw new RuntimeException("导出文件出错");
 		}
 	}
 
 	public abstract void export(InputStream is, OutputStream os);
 
+	////////////////////////////////////////////////////// getset方法///////////////////////////////////////////////////////////////
 	/****
 	 * 没有模板文件直接导出文件
 	 * 
@@ -76,6 +84,14 @@ public abstract class ReportAbstract {
 
 	public ReportAbstract(String tempName) {
 		this.tempName = tempName;
+	}
+
+	public List<String> getHeaders() {
+		return headers;
+	}
+
+	public void setHeaders(List<String> headers) {
+		this.headers = headers;
 	}
 
 }

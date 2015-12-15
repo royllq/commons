@@ -54,11 +54,7 @@ public abstract class IOUtil {
 		Properties returnPro = new Properties();
 		InputStream inputFile = null;
 		try {
-			if (classz != null) {
-				inputFile = classz.getResourceAsStream(filePath);
-			} else {
-				inputFile = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
-			}
+			inputFile = fileToInputStream(filePath, classz);
 			returnPro.load(inputFile);
 		} catch (FileNotFoundException e) {
 			logger.error("找不到文件{}", filePath);
@@ -75,6 +71,25 @@ public abstract class IOUtil {
 			}
 		}
 		return returnPro;
+	}
+
+	/****
+	 * 通过class加载文件
+	 * 
+	 * @param filePath
+	 *            文件所在路径
+	 * @param classz
+	 *            class
+	 * @return
+	 */
+	public static InputStream fileToInputStream(String filePath, Class classz) {
+		InputStream inputFile = null;
+		if (classz != null) {
+			inputFile = classz.getResourceAsStream(filePath);
+		} else {
+			inputFile = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+		}
+		return inputFile;
 	}
 
 	/***

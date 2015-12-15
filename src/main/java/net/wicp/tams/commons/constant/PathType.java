@@ -53,7 +53,7 @@ public enum PathType {
 			break;
 
 		case clp:
-			URL classpath = Thread.currentThread().getContextClassLoader().getResource("/");
+			URL classpath = Thread.currentThread().getContextClassLoader().getResource("");
 			retstr = IOUtil.mergeFolderAndFilePath(classpath.getPath(), inputpathStr);
 			break;
 		case rel:
