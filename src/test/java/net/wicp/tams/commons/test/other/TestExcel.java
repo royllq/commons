@@ -5,6 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,10 +19,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.junit.Test;
-import org.jxls.template.SimpleExporter;
+import org.jxls.common.Context;
+import org.jxls.jdbc.JdbcHelper;
+import org.jxls.util.JxlsHelper;
 
 import net.wicp.tams.commons.report.excel.ReportAbstract;
 import net.wicp.tams.commons.report.excel.jxls.ReportListBean;
+import net.wicp.tams.commons.report.excel.jxls.ReportSql;
 import net.wicp.tams.commons.test.beans.Employee;
 
 public class TestExcel {
@@ -30,24 +39,23 @@ public class TestExcel {
 		abs.setHeaders(headers);
 		abs.exportExcel("exportListNoTemp.xls");
 	}
+
 	@Test
 	public void exportListTemp() throws IOException {
-		/*try (InputStream is = TestExcel.class.getResourceAsStream("/template/excel/simple_export_template.xlsx")) {
-            try  {
-            	OutputStream os2 = new FileOutputStream("simple_expor2.xlsx");
-            	SimpleExporter exporter = new SimpleExporter();
-                exporter.registerGridTemplate(is);
-                List<String>  headers = Arrays.asList("Name", "Payment", "Birth Date");
-                exporter.gridExport(headers, employees, "name,payment, birthDate", os2);
-            }catch(Exception e){
-            	e.printStackTrace();
-            }
-        }*/
-		
 		List<String> headers = Arrays.asList("Name", "Birthday", "Payment");
 		ReportAbstract abs = new ReportListBean("simple_export_template.xlsx", employees, "name, birthDate, payment");
 		abs.setHeaders(headers);
 		abs.exportExcel("exportListTemp.xls");
+	}
+
+	@Test
+	public void exportSql() throws IOException, ClassNotFoundException, SQLException, ParseException {
+		Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+		try (Connection conn = DriverManager.getConnection("jdbc:derby:memory:testDB;create=true")) {
+			initData(conn);
+			ReportAbstract abs = new ReportSql("sql_demo_template.xls", conn);
+			abs.exportExcel("exportSql.xls");
+		}
 	}
 
 	private static List<Employee> generateSampleEmployeeData() {
@@ -63,5 +71,25 @@ public class TestExcel {
 			// TODO: handle exception
 		}
 		return employees;
+	}
+
+	private static void initData(Connection conn) throws SQLException, ParseException {
+		String createTableSlq = "CREATE TABLE employee (" + "id INT NOT NULL, " + "name VARCHAR(20) NOT NULL, "
+				+ "birthdate DATE, " + "payment DECIMAL, " + "PRIMARY KEY (id))";
+		String insertSql = "INSERT INTO employee VALUES (?,?,?,?)";
+		List<Employee> employees = generateSampleEmployeeData();
+		try (Statement stmt = conn.createStatement()) {
+			stmt.executeUpdate(createTableSlq);
+			int k = 1;
+			try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+				for (Employee employee : employees) {
+					insertStmt.setInt(1, k++);
+					insertStmt.setString(2, employee.getName());
+					insertStmt.setDate(3, new Date(employee.getBirthDate().getTime()));
+					insertStmt.setBigDecimal(4, employee.getPayment());
+					insertStmt.executeUpdate();
+				}
+			}
+		}
 	}
 }
