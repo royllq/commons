@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +21,7 @@ import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
 import net.wicp.tams.commons.Conf;
+import net.wicp.tams.commons.Conf.Callback;
 import net.wicp.tams.commons.LogHelp;
 
 public class ConnectionObj implements ShutdownListener {
@@ -28,6 +30,20 @@ public class ConnectionObj implements ShutdownListener {
 	private static volatile ConnectionObj INSTANCE;
 	private Connection conn = null;
 	private Channel channel = null;
+
+	/***
+	 * 支持配置文件的动态刷新，如果属性文件中有“rabbitmq.”开头的属性被修改了，那么将会触发Callback类的doReshConf方法，
+	 * 关闭旧的通道和连接，把单例实例设置为null，这样，在下次获取该单例时就会用新的配置来初始化连接和通道。
+	 */
+	static {
+		Conf.addCallBack("rabbitmq", new Callback() {
+			@Override
+			public void doReshConf(Properties newProperties) {
+				closeChannelAndConnection();
+				INSTANCE = null;
+			}
+		}, "rabbitmq.%s");
+	}
 
 	/***
 	 * 双重检查
