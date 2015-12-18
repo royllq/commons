@@ -36,15 +36,25 @@ public class TestApiext {
 		String pwd2 = PwdUtil.Base64ToString("yfD4lfuYq5FZ9R/QKX4jbQ==");
 		Assert.assertEquals("c9f0f895fb98ab9159f51fd0297e236d", pwd2);
 	}
-	
-	/*@Test
-	public void testgetContextType()  {
-		List<AddrInfo> list1=null;
-		Class  class1= ReflectAssist.getContextType(list1);
-		list1=new ArrayList<>();
-		list1.add(new AddrInfo());
-		Class  class2= ReflectAssist.getContextType(list1);
-		System.out.println("aa");
-	}*/
-	
+
+	@Test
+	public void Encrypt3DES() {
+		String key1 = "fox@mail.com";
+		String origValue1 = "andy@@@@@中文";
+		String encryptStr = PwdUtil.Encrypt3DES(origValue1, key1);
+		String decrypt3DES = PwdUtil.Decrypt3DES(encryptStr, key1);
+		Assert.assertEquals(origValue1, decrypt3DES);
+		String origValue2 = "#andy@中文2";
+		String encryptStr2 = PwdUtil.Encrypt3DES(origValue2);
+		String decrypt3DES2 = PwdUtil.Decrypt3DES(encryptStr2);
+		Assert.assertEquals(origValue2, decrypt3DES2);
+	}
+
+	/*
+	 * @Test public void testgetContextType() { List<AddrInfo> list1=null; Class
+	 * class1= ReflectAssist.getContextType(list1); list1=new ArrayList<>();
+	 * list1.add(new AddrInfo()); Class class2=
+	 * ReflectAssist.getContextType(list1); System.out.println("aa"); }
+	 */
+
 }
