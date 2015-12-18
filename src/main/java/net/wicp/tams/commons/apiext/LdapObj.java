@@ -38,6 +38,11 @@ public class LdapObj {
 		this.ctx = ctx;
 	}
 
+	/***
+	 * 得到单例
+	 * 
+	 * @return
+	 */
 	public static final LdapObj getInstance() {
 		if (INSTANCE == null) {
 			synchronized (lockobj) {
@@ -70,7 +75,8 @@ public class LdapObj {
 	 * 得到OU
 	 * 
 	 * @param ou
-	 * @return
+	 *            要查询的ou
+	 * @return 找到的ou如果异常或没有返回为null
 	 */
 	public Attributes getOu(String ou) {
 		try {
@@ -107,6 +113,13 @@ public class LdapObj {
 		}
 	}
 
+	/***
+	 * 通过uid得到用户路径
+	 * 
+	 * @param uid
+	 *            要查询的uid
+	 * @return 返回的用户路径
+	 */
 	public String getUserDN(String uid) {
 		if (StringUtil.isNull(uid)) {
 			return null;
@@ -142,6 +155,17 @@ public class LdapObj {
 		return list;
 	}
 
+	/***
+	 * 添加用户
+	 * 
+	 * @param uid
+	 *            用户uid
+	 * @param ou
+	 *            用户组织
+	 * @param usermap
+	 *            用户属性
+	 * @return 添加用户的结果
+	 */
 	public Result addUser(String uid, String ou, Map<String, String> usermap) {
 		if (StringUtil.isNull(uid)) {
 			return Result.getError("uid不能为空");
