@@ -1,7 +1,6 @@
 package net.wicp.tams.commons.test.other;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +8,9 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import net.wicp.tams.commons.apiext.LdapObj;
 import net.wicp.tams.commons.apiext.PwdUtil;
 import net.wicp.tams.commons.apiext.RedisClient;
-import net.wicp.tams.commons.apiext.ReflectAssist;
-import net.wicp.tams.commons.test.beans.AddrInfo;
 import redis.clients.jedis.Jedis;
 
 public class TestApiext {
@@ -49,6 +47,8 @@ public class TestApiext {
 		String decrypt3DES2 = PwdUtil.Decrypt3DES(encryptStr2);
 		Assert.assertEquals(origValue2, decrypt3DES2);
 	}
+	
+	
 
 	/*
 	 * @Test public void testgetContextType() { List<AddrInfo> list1=null; Class
