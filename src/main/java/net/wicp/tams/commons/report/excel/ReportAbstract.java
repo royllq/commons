@@ -17,6 +17,7 @@ import net.wicp.tams.commons.Conf;
 import net.wicp.tams.commons.apiext.IOUtil;
 import net.wicp.tams.commons.apiext.StringUtil;
 import net.wicp.tams.commons.constant.PathType;
+import net.wicp.tams.commons.web.J2EEAssist;
 
 public abstract class ReportAbstract {
 	private Logger logger = Logger.getLogger(getClass());
@@ -44,15 +45,25 @@ public abstract class ReportAbstract {
 		}
 	}
 
-	public void exportExcel(HttpServletResponse response) {
-		try {
-			exportExcel(response.getOutputStream());
-		} catch (IOException e) {
-			logger.error("关闭输入流出错", e);
-			throw new RuntimeException("导出文件出错");
-		}
+	/***
+	 * 导出指定文件名，且以response方式返回给客户端
+	 * 
+	 * @param response
+	 *            要返回信息
+	 * @param fileName
+	 *            要导出的文件名
+	 */
+	public void exportExcel(HttpServletResponse response, String fileName) {
+		exportExcel(J2EEAssist.getExcelOS(response, fileName, true));
 	}
 
+	/***
+	 * 导出指定文件名的excel
+	 * 
+	 * @param fileName
+	 *            指定的文件名
+	 * @return
+	 */
 	public String exportExcel(String fileName) {
 		OutputStream os;
 		try {
