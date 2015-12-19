@@ -2,8 +2,11 @@ package net.wicp.tams.commons.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
+
+import net.wicp.tams.commons.Result;
 
 public abstract class J2EEAssist {
 
@@ -30,5 +33,34 @@ public abstract class J2EEAssist {
 		} catch (IOException e) {
 			return null;
 		}
+	}
+
+	/***
+	 * 返回json数据
+	 * 
+	 * @param response
+	 * @param jsonMsg
+	 */
+	public static void returnJsonResponse(HttpServletResponse response, String jsonMsg) {
+		response.setContentType("text/html");
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(jsonMsg);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/***
+	 * 返回json数据
+	 * 
+	 * @param response
+	 * @param optResult
+	 *            要返回的结果封装
+	 */
+	public static void returnJsonResponse(HttpServletResponse response, Result optResult) {
+		returnJsonResponse(response, optResult.getJsonObj().toString(true));
 	}
 }
