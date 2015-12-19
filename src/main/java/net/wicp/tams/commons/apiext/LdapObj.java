@@ -48,12 +48,12 @@ public class LdapObj {
 			synchronized (lockobj) {
 				if (INSTANCE == null) {
 					Hashtable<String, String> env = new Hashtable<String, String>();
-					env.put(Context.INITIAL_CONTEXT_FACTORY, Conf.get("ldap.server.factory"));
+					env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 					env.put(Context.PROVIDER_URL, Conf.get("ldap.server.url") + Conf.get("ldap.server.basedn"));
 					env.put(Context.SECURITY_AUTHENTICATION, "simple");
 					env.put(Context.SECURITY_PRINCIPAL, Conf.get("ldap.server.admin"));
 					env.put(Context.SECURITY_CREDENTIALS, Conf.get("ldap.server.password"));
-					env.put("com.sun.jndi.ldap.connect.timeout", "3000");
+					env.put("com.sun.jndi.ldap.connect.timeout", Conf.get("ldap.server.timeout"));
 					try {
 						LdapContext ctx = new InitialLdapContext(env, connCtls);
 						INSTANCE = new LdapObj(ctx);
