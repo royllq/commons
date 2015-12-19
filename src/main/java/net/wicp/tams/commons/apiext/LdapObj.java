@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -18,6 +19,7 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
+import javax.security.auth.callback.Callback;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -36,6 +38,24 @@ public class LdapObj {
 
 	private LdapObj(LdapContext ctx) {
 		this.ctx = ctx;
+	}
+
+	static {
+		Conf.addCallBack("ldap", new Conf.Callback() {
+
+			@Override
+			public void doReshConf(Properties newProperties) {
+				if (INSTANCE != null && INSTANCE.ctx != null) {
+					try {
+						INSTANCE.ctx.close();
+					} catch (NamingException e) {
+						logger.error("关闭Ldap连接失败", e);
+					}
+					INSTANCE = null;
+				}
+
+			}
+		}, "ldap.server.%s");
 	}
 
 	/***
