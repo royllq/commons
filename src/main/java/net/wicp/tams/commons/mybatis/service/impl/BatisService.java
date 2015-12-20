@@ -27,7 +27,7 @@ import net.wicp.tams.commons.web.PageAssist;
 import net.wicp.tams.commons.web.service.IPageBuild;
 
 @SuppressWarnings("rawtypes")
-public class BatisServiceImpl implements IbatisService {
+public class BatisService implements IbatisService {
 	private final Logger logger = LogHelp.getLogger(getClass());
 
 	private SqlSessionFactory sqlSessionFactory;
