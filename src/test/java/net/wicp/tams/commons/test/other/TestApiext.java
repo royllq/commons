@@ -33,6 +33,8 @@ public class TestApiext {
 		Assert.assertEquals("yfD4lfuYq5FZ9R/QKX4jbQ==", pwd);
 		String pwd2 = PwdUtil.Base64ToString("yfD4lfuYq5FZ9R/QKX4jbQ==");
 		Assert.assertEquals("c9f0f895fb98ab9159f51fd0297e236d", pwd2);
+		
+		System.out.println(PwdUtil.MD5("8"));;
 	}
 
 	@Test
