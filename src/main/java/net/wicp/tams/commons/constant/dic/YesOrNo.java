@@ -29,7 +29,7 @@ public enum YesOrNo implements IEnumCombobox {
 
 	@Override
 	public String getDesc_zh() {
-		return this.name();
+		return this.desc;
 	}
 
 	@Override
