@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import net.wicp.tams.commons.Result;
 import net.wicp.tams.commons.callback.IConvertValue;
 import net.wicp.tams.commons.constant.DateFormatCase;
+import net.wicp.tams.commons.constant.dic.YesOrNo;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class ReflectAssist {
@@ -478,6 +479,38 @@ public abstract class ReflectAssist {
 			logger.error("复制属性出错", e);
 			return Result.getError(e.getMessage());
 		}
+	}
+
+	/***
+	 * 合并对象
+	 * 
+	 * @param to
+	 *            目标对象
+	 * @param from
+	 *            要被合并的对象
+	 * @param copyNull
+	 *            是否复制空对象 true:空值也合并 false:空值不合并
+	 * @param removes
+	 *            希望排除的字段
+	 */
+	public static void mergeObj(Object to, Object from, boolean copyNull, String... removes) {
+		if (from == null)
+			return;
+		List<String> fields = findGetField(from.getClass());
+		for (String field : fields) {
+			if (ArrayUtils.contains(removes, field)) {
+				continue;
+			}
+			try {
+				Object value = PropertyUtils.getProperty(from, field);
+				if ((!copyNull && value == null)) {
+					continue;
+				}
+				BeanUtils.copyProperty(to, field, value);
+			} catch (Exception e) {
+			}
+		}
+
 	}
 
 }
