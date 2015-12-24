@@ -2,6 +2,7 @@ package net.wicp.tams.commons.web;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -366,6 +367,18 @@ public abstract class EasyUiAssist {
 				nodes.clear();
 			}
 		}
+	}
+
+	public static Map<String, IConvertValue> getConvertMap(Object... keysAndValues) {
+		Map<String, IConvertValue> convertmap = new HashMap<String, IConvertValue>();
+		if (ArrayUtils.isEmpty(keysAndValues)) {
+			return convertmap;
+		}
+		int i = 0;
+		while (i < keysAndValues.length) {
+			convertmap.put(String.valueOf(keysAndValues[i++]), (IConvertValue) keysAndValues[i++]);
+		}
+		return convertmap;
 	}
 
 }

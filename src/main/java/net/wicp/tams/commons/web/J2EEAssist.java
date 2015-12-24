@@ -3,10 +3,15 @@ package net.wicp.tams.commons.web;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import net.wicp.tams.commons.Result;
+import net.wicp.tams.commons.callback.IConvertValue;
 
 public abstract class J2EEAssist {
 
@@ -63,4 +68,7 @@ public abstract class J2EEAssist {
 	public static void returnJsonResponse(HttpServletResponse response, Result optResult) {
 		returnJsonResponse(response, optResult.getJsonObj().toString(true));
 	}
+
+
+
 }
