@@ -100,6 +100,16 @@ public interface IbatisService {
 	 */
 	public PageAssist queryForPagedList(final String listSqlId, final Map params, HttpServletRequest request);
 
+	/***
+	 * 请求的翻页信息
+	 * 
+	 * @param listSqlId
+	 * @param params
+	 * @param reqPageAssist
+	 * @return
+	 */
+	public PageAssist queryForPagedList(final String listSqlId, final Map params, PageAssist reqPageAssist);
+
 	/**
 	 * 用sql语句执行查询操作
 	 * 

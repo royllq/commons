@@ -104,6 +104,12 @@ public class BatisService implements IbatisService {
 	@Override
 	public PageAssist queryForPagedList(String listSqlId, Map params, HttpServletRequest request) {
 		PageAssist pageAssist = pageBuild.build(request);
+		return queryForPagedList(listSqlId, params, pageAssist);
+	}
+
+	@Override
+	public PageAssist queryForPagedList(String listSqlId, Map params, PageAssist reqPageAssist) {
+		PageAssist pageAssist = reqPageAssist == null ? pageBuild.build(null) : reqPageAssist;
 		return queryForPagedList(listSqlId, null, params, pageAssist.getPageSize(), pageAssist.getPageNo(),
 				pageAssist.getAllNum(), true);
 	}

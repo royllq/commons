@@ -87,22 +87,6 @@ public interface IHbService {
 	 */
 	public <T extends Serializable> List<T> findByExample(T entity, String... excludes);
 
-	/***
-	 * 翻页查询数据
-	 * 
-	 * @param criteria
-	 * @param pageAssist
-	 */
-	public PageAssist findByCriteriaPage(Criteria criteria, PageAssist pageAssist);
-
-	/***
-	 * 通过内置的翻页对象进行翻页，PageAssist由系统默认生成
-	 * 
-	 * @param criteria
-	 * @return
-	 */
-	public PageAssist findByCriteriaPage(Criteria criteria);
-
 	/****
 	 * 通过requesty请求来构建翻页
 	 * 
@@ -112,13 +96,7 @@ public interface IHbService {
 	 */
 	public PageAssist findByCriteriaPage(Criteria criteria, HttpServletRequest request);
 
-	/***
-	 * Query的翻页查询
-	 * 
-	 * @param queryparam
-	 * @return
-	 */
-	public PageAssist findByQueryPage(Query queryparam, PageAssist pageAssistparam);
+	public PageAssist findByCriteriaPage(Criteria criteria, PageAssist reqPageAssist);
 
 	/***
 	 * Query的翻页查询，PageAssist由系统默认生成
@@ -126,7 +104,9 @@ public interface IHbService {
 	 * @param queryparam
 	 * @return
 	 */
-	public PageAssist findByQueryPage(Query queryparam);
+	public PageAssist findByQueryPage(Query queryparam, HttpServletRequest request);
+
+	public PageAssist findByQueryPage(Query queryparam, PageAssist reqPageAssist);
 
 	/****
 	 * 得到当前的session

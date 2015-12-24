@@ -110,7 +110,7 @@ public class HbService implements IHbService {
 
 	@Override
 	public PageAssist findByCriteriaPage(Criteria criteria, PageAssist pageAssist) {
-		PageAssist pageAssistTrue = pageAssist == null ? pageBuild.build() : pageAssist;
+		PageAssist pageAssistTrue = pageAssist == null ? pageBuild.build(null) : pageAssist;
 		if (pageAssistTrue.getAllNum() < 0) {
 			long totalCount = ((Long) criteria.setProjection(Projections.rowCount()).uniqueResult()).longValue();
 			pageAssistTrue.setAllNum(totalCount);
@@ -129,14 +129,8 @@ public class HbService implements IHbService {
 	}
 
 	@Override
-	public PageAssist findByCriteriaPage(Criteria criteria) {
-		PageAssist init = pageBuild.build();
-		return findByCriteriaPage(criteria, init);
-	}
-
-	@Override
 	public PageAssist findByQueryPage(Query queryparam, PageAssist pageAssistparam) {
-		PageAssist pageAssistTrue = pageAssistparam == null ? pageBuild.build() : pageAssistparam;
+		PageAssist pageAssistTrue = pageAssistparam == null ? pageBuild.build(null) : pageAssistparam;
 		int pageSize = pageAssistTrue.getPageSize();
 		int pageNo = pageAssistTrue.getPageNo();
 		long allNum = pageAssistTrue.getAllNum();
@@ -179,13 +173,15 @@ public class HbService implements IHbService {
 	}
 
 	@Override
-	public PageAssist findByQueryPage(Query queryparam) {
-		return findByQueryPage(queryparam, null);
+	public PageAssist findByQueryPage(Query queryparam, HttpServletRequest request) {
+		PageAssist init = pageBuild.build(request);
+		return findByQueryPage(queryparam, init);
 	}
+
 	@Override
-	public Session getSession(){
+	public Session getSession() {
 		return this.sessionFactory.getCurrentSession();
-		//return this.sessionFactory.openSession();
+		// return this.sessionFactory.openSession();
 	}
 
 	// ///////////////////////////////////////////////////////////////////////////////
