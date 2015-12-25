@@ -482,7 +482,21 @@ public abstract class ReflectAssist {
 	}
 
 	/***
-	 * 合并对象
+	 * 合并对象，不合并空对象和空字符串
+	 * 
+	 * @param to
+	 *            目标对象
+	 * @param from
+	 *            要被合并的对象
+	 * @param removes
+	 *            希望排除的字段
+	 */
+	public static void mergeObj(Object to, Object from, String... removes) {
+		mergeObj(to, from, false, false, removes);
+	}
+
+	/***
+	 * 合并对象，空字符串还是会合并。
 	 * 
 	 * @param to
 	 *            目标对象
@@ -494,6 +508,24 @@ public abstract class ReflectAssist {
 	 *            希望排除的字段
 	 */
 	public static void mergeObj(Object to, Object from, boolean copyNull, String... removes) {
+		mergeObj(to, from, copyNull, true, removes);
+	}
+
+	/***
+	 * 合并对象
+	 * 
+	 * @param to
+	 *            目标对象
+	 * @param from
+	 *            要被合并的对象
+	 * @param copyNull
+	 *            是否复制空对象 true:空值也合并 false:空值不合并
+	 * @param copyBlank
+	 *            是否复制空字符吕 true:空字符串也合并 false:空字符串不合并
+	 * @param removes
+	 *            希望排除的字段
+	 */
+	public static void mergeObj(Object to, Object from, boolean copyNull, boolean copyBlank, String... removes) {
 		if (from == null)
 			return;
 		List<String> fields = findGetField(from.getClass());
@@ -503,14 +535,13 @@ public abstract class ReflectAssist {
 			}
 			try {
 				Object value = PropertyUtils.getProperty(from, field);
-				if ((!copyNull && value == null)) {
+				if ((!copyNull && value == null) || (!copyBlank && StringUtil.isNull(value))) {
 					continue;
 				}
 				BeanUtils.copyProperty(to, field, value);
 			} catch (Exception e) {
 			}
 		}
-
 	}
 
 }
