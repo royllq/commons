@@ -3,6 +3,8 @@ package net.wicp.tams.commons;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tapestry5.json.JSONObject;
 
+import net.wicp.tams.commons.I18N.MessageUtils;
+import net.wicp.tams.commons.apiext.StringUtil;
 import net.wicp.tams.commons.exception.ExceptAll;
 import net.wicp.tams.commons.exception.IExcept;
 import net.wicp.tams.commons.exception.ProjectException;
@@ -18,8 +20,6 @@ public class Result implements java.io.Serializable{
 	private IExcept except;// 异常编码
 	private Object[] retObjs;// 操作成功后，如果想带一些返回值在此设置
 
-	// ////////////临时用变量不对外公开//////////////////////////
-	private static Result suc = null;
 
 	/**
 	 * 由异常来构建返回结果
@@ -56,12 +56,18 @@ public class Result implements java.io.Serializable{
 	 * @return
 	 */
 	public static Result getSuc() {
-		if (suc == null) {
-			suc = new Result(true);
-			suc.except = ExceptAll.no;
-		}
+		return getSuc(null);
+	}
+	
+	public static Result getSuc(String sucInfo) {
+		sucInfo=StringUtil.isNull(sucInfo)?MessageUtils.getInstance().getString("common.hint.success"):sucInfo;
+		Result	suc = new Result(true);
+		suc.setMessage(sucInfo);
+		suc.except = ExceptAll.no;
 		return suc;
 	}
+	
+	
 
 	/***
 	 * 得到错误的结果
