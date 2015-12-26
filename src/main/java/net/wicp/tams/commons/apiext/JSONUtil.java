@@ -86,11 +86,12 @@ public abstract class JSONUtil {
 			String[] keyAry = key.split(",");
 			String valCol = StringUtil.trimSpace(keyAry[0]);
 			String showCol = StringUtil.trimSpace(keyAry[keyAry.length - 1]);
-			Object value = fromMap.get(valCol);
-			String valueTrue = value == null ? null : String.valueOf(value);
+			Object value = StringUtil.isNull(valCol)?fromMap:fromMap.get(valCol);
+			//boolean isall=StringUtil.isNull(valCol)?true:false;//是传整个对象
+			String valueTrue="";
 			if (convert != null && convert.length > i && convert[i] != null) {
 				IConvertValue convertTrue = convert[i];
-				valueTrue = valueTrue == null ? "" : convertTrue.getStr(valueTrue);
+				valueTrue = value == null ? "" : convertTrue.getStr(value);
 			}
 			if (i != 0) {
 				buff.append(",");
@@ -132,12 +133,17 @@ public abstract class JSONUtil {
 				String singJoson = getJsonForMap((Map) object, converts, titles);
 				buff.append(singJoson + ",");
 			} else {
+				
 				StringBuffer jsonTempStr = new StringBuffer("@{'{");
 				for (int i = 0; i < titles.length; i++) {
 					String[] titleAry = titles[i].split(",");
 					String valCol = StringUtil.trimSpace(titleAry[0]);
 					String showCol = StringUtil.trimSpace(titleAry[titleAry.length - 1]);
-					jsonTempStr.append("\"" + showCol + "\":\"'+" + valCol + "+'\"");
+					if(StringUtil.isNull(valCol)){
+						jsonTempStr.append("\"" + showCol + "\":\"\"");
+					}else{
+						jsonTempStr.append("\"" + showCol + "\":\"'+" + valCol + "+'\"");
+					}
 					if (i != titles.length - 1) {
 						jsonTempStr.append(",");
 					}
@@ -154,14 +160,14 @@ public abstract class JSONUtil {
 							int index = colName.indexOf(",");
 							String key = "";
 							//String oriKey = "";
-							if (index > 0) {
+							if (index >= 0) {
 								key = colName.substring(index + 1);
 								//oriKey = colName.substring(0, index);
 							} else {
 								key = colName;
 								//oriKey = colName;
 							}
-							String value = convert.getStr(jsObj.getString(key));
+							String value = index==0?convert.getStr(object):convert.getStr(jsObj.getString(key));
 							jsObj.put(key, value);
 						}
 					}
