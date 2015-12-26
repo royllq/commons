@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -171,6 +172,19 @@ public abstract class CollectionUtil {
 		Collection retCollection = (Collection) CollectionUtils.find(inputCollection, predicate);
 		CollectionUtils.filter(inputCollection, predicate);
 		return retCollection;
+	}
+
+	/***
+	 * 把集合去重
+	 * 
+	 * @param collection
+	 *            要操作的集合
+	 */
+	public static void distinctFilter(Collection collection) {
+		Set<?> temps = new HashSet<>();
+		temps.addAll(collection);
+		collection.clear();
+		collection.addAll(temps);
 	}
 
 	/***
