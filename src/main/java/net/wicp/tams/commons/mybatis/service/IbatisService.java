@@ -24,7 +24,7 @@ public interface IbatisService {
 	 *            key/value值对
 	 * @return
 	 */
-	public List<Map<String, Object>> queryForList(String sqlId, Object... keysAndValues);
+	public List queryForList(String sqlId, Object... keysAndValues);
 
 	/***
 	 * 通过sqlId和参数得到Map列表
@@ -34,7 +34,7 @@ public interface IbatisService {
 	 *            参数
 	 * @return 元素为Map
 	 */
-	public List<Map<String, Object>> queryForList(String sqlId, Map params);
+	public List queryForList(String sqlId, Map params);
 
 	/**
 	 * Ibatis获取分页数据的统一方法

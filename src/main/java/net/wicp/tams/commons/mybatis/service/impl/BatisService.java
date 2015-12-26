@@ -17,7 +17,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.tapestry5.json.JSONObject;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;
 
 import net.wicp.tams.commons.LogHelp;
@@ -34,7 +33,7 @@ public class BatisService implements IbatisService {
 
 	private IPageBuild pageBuild;
 
-	public List<Map<String, Object>> queryForList(String sqlId, Object... keysAndValues) {
+	public List queryForList(String sqlId, Object... keysAndValues) {
 		if (ArrayUtils.isEmpty(keysAndValues)) {
 			return queryForList(sqlId, new HashMap());
 		}
@@ -42,8 +41,8 @@ public class BatisService implements IbatisService {
 		return queryForList(sqlId, json.toMap());
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> queryForList(String sqlId, Map params) {
+
+	public List queryForList(String sqlId, Map params) {
 		long t1 = System.currentTimeMillis();
 		List list = getSqlSession().selectList(sqlId, params);
 		long t2 = System.currentTimeMillis();
