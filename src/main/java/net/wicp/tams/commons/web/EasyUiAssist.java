@@ -10,18 +10,14 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.json.JSONArray;
-import org.mvel2.templates.TemplateRuntime;
 
 import net.wicp.tams.commons.apiext.CollectionUtil;
 import net.wicp.tams.commons.apiext.JSONUtil;
 import net.wicp.tams.commons.apiext.ReflectAssist;
-import net.wicp.tams.commons.apiext.StringUtil;
 import net.wicp.tams.commons.callback.IConvertValue;
-import net.wicp.tams.commons.exception.ExceptAll;
-import net.wicp.tams.commons.exception.ProjectException;
 import net.wicp.tams.commons.web.easyuibean.EasyUINode;
 import net.wicp.tams.commons.web.easyuibean.EasyUINodeConf;
 
@@ -136,6 +132,29 @@ public abstract class EasyUiAssist {
 		return getJsonForGrid(fromList, titles, convertsMap, recordNum);
 	}
 
+	/***
+	 * 构造treegrid方法
+	 * 
+	 * @param fromList
+	 * @param parentCol
+	 *            存放父字段的列名
+	 * @param aliasTitles
+	 * @param convertsMap
+	 * @param recordNum
+	 * @return
+	 */
+	public static String getJsonForTreeGridAlias(List<?> fromList, String parentCol, String[] aliasTitles,
+			Map<String, IConvertValue> convertsMap, long recordNum) {
+		if (StringUtils.isNotBlank(parentCol)) {
+			aliasTitles = ArrayUtils.add(aliasTitles, String.format("%s,_parentId", parentCol));
+		}
+		return getJsonForGridAlias(fromList, aliasTitles, convertsMap, recordNum);
+	}
+
+	public static String getJsonForTreeGridAlias(List<?> fromList, String parentCol, long recordNum) {
+		return getJsonForTreeGridAlias(fromList, parentCol, null, null, recordNum);
+	}
+
 	/****
 	 * 返回空的集合值
 	 * 
@@ -176,8 +195,6 @@ public abstract class EasyUiAssist {
 		}
 		return getJsonForGridAlias(retList, retList.size());
 	}
-
-	
 
 	/****
 	 * 把根节点转为json Str字符串
